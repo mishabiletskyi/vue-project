@@ -1,6 +1,6 @@
 // --- Генератор нікнеймів для бічної панелі ---
 const adjectives = ['Silent', 'Golden', 'Crystal', 'Shadow', 'Rapid', 'Cosmic', 'Quantum', 'Phantom', 'Electric', 'Frozen', 'Crimson', 'Azure', 'Solar', 'Lunar', 'Iron'];
-const subjects = ['Gambler', 'Joker', 'Spectre', 'Pioneer', 'Voyager', 'Phoenix', 'Oracle', 'Striker', 'Guardian', 'Reaper', 'Nomad', 'Paladin', 'Viper', 'Titan', 'Wizard'];
+const subjects = ['Gambler', 'Saca', 'Spectre', 'Pioneer', 'Voyager', 'Phoenix', 'Oracle', 'Striker', 'Guardian', 'Reaper', 'Nomad', 'Paladin', 'Viper', 'Titan', 'Wizard'];
 const allPossibleNames = [];
 for (const adj of adjectives) {
   for (const subj of subjects) {
