@@ -26,7 +26,7 @@ function login(credentials) {
   if (!stored) return false
   const storedUser = JSON.parse(stored)
   const valid =
-    credentials.username === storedUser.username &&
+    credentials.email === storedUser.email &&
     credentials.password === storedUser.password
   if (valid) {
     localStorage.setItem('isLoggedIn', 'true')
