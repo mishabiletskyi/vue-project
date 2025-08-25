@@ -1,51 +1,149 @@
 <script setup>
-import LeftSidebar from '../components/LeftSidebar.vue';
-import RightSidebar from '../components/RightSidebar.vue';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const email = ref('')
+const message = ref('')
+
+function onSubmit() {
+  message.value = 'Если такой e-mail существует, мы отправили инструкцию по восстановлению.'
+  setTimeout(() => router.push('/login'), 1000)
+}
 </script>
 
 <template>
-  <div class="main-layout container">
-    <LeftSidebar />
-    <div class="main-content">
-      <div class="auth-form">
-        <img class="auth-logo" src="/img/passrec.png" alt="Password recovery" />
+  <div class="auth-container">
+    <router-link to="/login" class="nav-btn back-btn" aria-label="Назад">‹</router-link>
+    <router-link to="/" class="nav-btn close-btn" aria-label="Закрыть">×</router-link>
+    <div class="recovery-box">
+      <div class="recovery-form">
         <h1>Восстановление пароля</h1>
-        <form>
-          <input type="email" placeholder="Email" required />
-          <button type="submit" class="btn btn-lg">Отправить ссылку</button>
+        <p>Пожалуйста, введи свои данные ниже, чтобы сбросить пароль.</p>
+        <form @submit.prevent="onSubmit">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" v-model="email" placeholder="Введите e-mail" required />
+          <button type="submit">Подтвердить</button>
+          <p v-if="message" class="success">{{ message }}</p>
         </form>
-        <router-link to="/login" class="link">Назад ко входу</router-link>
       </div>
     </div>
-    <RightSidebar />
+    <div class="image-section">
+      <img src="/img/passrec.png" alt="passrec" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.auth-form {
-  max-width: 400px;
-  margin: 0 auto;
+.auth-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+.recovery-box {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.recovery-form {
+  width: 640px;
+  background: #14161b;
   padding: 32px;
-  background: var(--card);
-  border-radius: var(--radius);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.recovery-form h1 {
+  margin: 0 0 24px;
+  font-size: 2rem;
+}
+.recovery-form p {
+  margin: 0 0 24px;
+  color: #94a3b8;
+}
+.recovery-form label {
+  display: block;
+  margin-bottom: 8px;
+}
+.recovery-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2f3a;
+  background: #0b0c10;
+  color: #f1f5f9;
+}
+.recovery-form input:focus {
+  outline: none;
+  border-color: #ff4d00;
+}
+.recovery-form button {
+  width: 100%;
+  padding: 14px;
+  background: #ff4d00;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .3s;
+}
+.recovery-form button:hover {
+  background: #ff1a1a;
+}
+.image-section {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0b0c10;
+}
+.image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nav-btn {
+  position: absolute;
+  top: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #f1f5f9;
+  text-decoration: none;
+  transition: color .2s;
+  padding: 8px;
+}
+.nav-btn.close-btn {
+  right: 20px;
+}
+.nav-btn.back-btn {
+  left: 20px;
+}
+.nav-btn:hover {
+  color: #ff4d00;
+}
+.success {
+  color: #ff9a00;
+  margin-top: 8px;
   text-align: center;
 }
-.auth-logo {
-  width: 120px;
-  margin: 0 auto 24px;
-}
-.auth-form input {
-  width: 100%;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  background-color: #1d1f26;
-  border: 1px solid #2a2f3a;
-  border-radius: 8px;
-  color: var(--text);
-}
-.auth-form .link {
-  display: block;
-  margin-top: 8px;
-  color: var(--accent);
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+    height: auto;
+  }
+  .recovery-box, .image-section {
+    width: 100%;
+  }
+  .image-section {
+    height: 200px;
+  }
+  .recovery-form {
+    width: 100%;
+    margin: 24px;
+  }
 }
 </style>
