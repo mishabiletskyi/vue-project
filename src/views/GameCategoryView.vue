@@ -23,9 +23,14 @@ defineProps({
     <RightSidebar />
   </div>
 </template>
-
 <style scoped>
 .page-header { margin-bottom: 32px; }
 .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; }
 .page-header p { color: var(--muted); }
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 2rem; }
+}
+@media (max-width: 480px) {
+  .page-header h1 { font-size: 1.75rem; }
+}
 </style>

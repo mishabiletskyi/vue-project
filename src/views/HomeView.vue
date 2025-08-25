@@ -41,3 +41,20 @@ import { popularGames } from '@/data/mockData.js'; // Використовуєм
     <RightSidebar />
   </div>
 </template>
+<style scoped>
+@media (max-width: 768px) {
+  .promo {
+    flex-direction: column;
+    text-align: center;
+  }
+  .promo .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .promo .btn {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+}
+</style>

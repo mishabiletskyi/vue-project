@@ -53,4 +53,19 @@ const filteredGames = computed(() => {
   outline: none;
   border-color: var(--accent);
 }
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  .search-bar input {
+    max-width: 100%;
+    padding: 14px 16px;
+  }
+}
+@media (max-width: 480px) {
+  .search-bar input {
+    padding: 16px;
+    font-size: 1.1rem;
+  }
+}
 </style>
