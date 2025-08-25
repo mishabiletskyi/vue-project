@@ -1,10 +1,31 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuth } from '@/composables/useAuth';
 
+const router = useRouter();
+const { isLoggedIn, logout } = useAuth();
 const isMobileMenuOpen = ref(false);
 
 function toggleMobileMenu() {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
+}
+
+function goToLogin() {
+  router.push('/login');
+}
+
+function goToRegister() {
+  router.push('/register');
+}
+
+function goToCabinet() {
+  router.push('/cabinet');
+}
+
+function handleLogout() {
+  logout();
+  router.push('/');
 }
 </script>
 
@@ -25,8 +46,14 @@ function toggleMobileMenu() {
       </nav>
 
       <div class="auth desktop-auth">
-        <a href="#" class="btn btn-ghost">Войти</a>
-        <a href="#" class="btn btn-ghost">Регистрация</a>
+        <template v-if="isLoggedIn">
+          <button class="btn btn-ghost" @click="goToCabinet">Мой кабинет</button>
+          <button class="btn btn-ghost" @click="handleLogout">Выйти</button>
+        </template>
+        <template v-else>
+          <button class="btn btn-ghost" @click="goToLogin">Войти</button>
+          <button class="btn btn-ghost" @click="goToRegister">Регистрация</button>
+        </template>
       </div>
 
       <button class="burger-menu" @click="toggleMobileMenu" aria-label="Открыть меню" :class="{ 'is-active': isMobileMenuOpen }">
@@ -44,8 +71,14 @@ function toggleMobileMenu() {
           <li><a href="#support" @click="toggleMobileMenu">Поддержка</a></li>
         </ul>
         <div class="auth">
-           <a href="#" class="btn btn-ghost">Войти</a>
-           <a href="#" class="btn">Регистрация</a>
+           <template v-if="isLoggedIn">
+             <button class="btn btn-ghost" @click="() => { goToCabinet(); toggleMobileMenu(); }">Мой кабинет</button>
+             <button class="btn btn-ghost" @click="() => { handleLogout(); toggleMobileMenu(); }">Выйти</button>
+           </template>
+           <template v-else>
+             <button class="btn btn-ghost" @click="() => { goToLogin(); toggleMobileMenu(); }">Войти</button>
+             <button class="btn" @click="() => { goToRegister(); toggleMobileMenu(); }">Регистрация</button>
+           </template>
         </div>
     </nav>
   </header>
