@@ -1,41 +1,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+// Імпортуємо дані з центрального файлу
+import { playerNamesArray, gameData } from '@/data/mockData.js';
 
-// --- 1. ВЕЛИЧЕЗНА БАЗА НІКНЕЙМІВ БЕЗ ЦИФР ---
-const adjectives = [
-  'Silent', 'Golden', 'Crystal', 'Shadow', 'Rapid', 'Cosmic', 'Quantum', 'Phantom', 
-  'Electric', 'Frozen', 'Crimson', 'Azure', 'Solar', 'Lunar', 'Iron'
-];
-const subjects = [
-  'Gambler', 'Joker', 'Spectre', 'Pioneer', 'Voyager', 'Phoenix', 'Oracle', 'Striker',
-  'Guardian', 'Reaper', 'Nomad', 'Paladin', 'Viper', 'Titan', 'Wizard'
-];
-
-// Створюємо всі можливі комбінації (15 * 15 = 225 унікальних імен)
-const allPossibleNames = [];
-for (const adj of adjectives) {
-  for (const subj of subjects) {
-    allPossibleNames.push(`${adj}${subj}`);
-  }
-}
-
-// Перемішуємо масив, щоб порядок був випадковим (алгоритм Fisher-Yates)
-for (let i = allPossibleNames.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [allPossibleNames[i], allPossibleNames[j]] = [allPossibleNames[j], allPossibleNames[i]];
-}
-
-const playerNamesArray = allPossibleNames;
-let currentNameIndex = 0; // Лічильник для унікальних імен
-
-const gameData = [
-  { name: 'Gates of Olympus', image: '/img/rbarimg1.png' },
-  { name: 'Sweet Bonanza', image: '/img/rbarimg2.png' },
-  { name: 'The Dog House', image: '/img/rbarimg3.png' },
-  { name: 'Book of Dead', image: '/img/BookofRa.gif' },
-  { name: 'Sugar Rush', image: '/img/SugarRush.gif' },
-  { name: 'Big Bass Bonanza', image: '/img/SweetBonanza.gif' },
-];
+// Лічильник для унікальних імен, щоб вони не повторювались
+let currentNameIndex = 0; 
 
 // --- Стан компонента ---
 const winners = ref([]);
@@ -55,7 +24,7 @@ function generateRandomWinner() {
   return {
     id: Date.now() + Math.random(),
     gameName: randomGame.name,
-    playerName: uniquePlayerName, // Використовуємо унікальне ім'я
+    playerName: uniquePlayerName,
     amount: formattedAmount,
     image: randomGame.image
   };
@@ -71,6 +40,7 @@ function updateWinnersList() {
 
 // --- Життєвий цикл компонента ---
 onMounted(() => {
+  // Плавне початкове завантаження списку
   let initialFillCount = 0;
   const initialFillInterval = setInterval(() => {
     if (initialFillCount < maxWinnersInList) {
@@ -78,12 +48,14 @@ onMounted(() => {
       initialFillCount++;
     } else {
       clearInterval(initialFillInterval);
+      // Запускаємо основний інтервал оновлення після заповнення
       mainUpdateInterval = setInterval(updateWinnersList, 3000);
     }
   }, 300);
 });
 
 onUnmounted(() => {
+  // Очищуємо інтервал при зникненні компонента
   clearInterval(mainUpdateInterval);
 });
 </script>
@@ -112,8 +84,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* --- 2. БІЛЬШ ПЛАВНА АНІМАЦІЯ --- */
-
+/* Плавна анімація */
 .winner-list-enter-from {
   opacity: 0;
   transform: translateY(-30px);
@@ -124,7 +95,6 @@ onUnmounted(() => {
 }
 .winner-list-enter-active,
 .winner-list-leave-active {
-  /* Збільшуємо тривалість і змінюємо функцію для плавності */
   transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .winner-list-leave-active {
@@ -132,7 +102,6 @@ onUnmounted(() => {
   width: 100%;
 }
 .winner-list-move {
-  /* Анімація зсуву також робимо плавнішою */
   transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 </style>
