@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import GameCategoryView from '../views/GameCategoryView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import GameCategoryView from '../views/GameCategoryView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
-    return { top: 0 }
+    return { top: 0 };
   },
   routes: [
     {
@@ -44,8 +44,13 @@ const router = createRouter({
       name: 'roulette',
       component: GameCategoryView,
       props: { title: 'Рулетка', description: 'Всі види рулетки: Європейська, Американська та інші.' }
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/AccountView.vue')
     }
   ]
-})
+});
 
-export default router
+export default router;
