@@ -44,6 +44,21 @@ const router = createRouter({
       name: 'roulette',
       component: GameCategoryView,
       props: { title: 'Рулетка', description: 'Всі види рулетки: Європейська, Американська та інші.' }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/AccountView.vue')
     }
   ]
 })
