@@ -56,4 +56,32 @@ import { allGames } from '@/data/mockData.js';
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 }
+@media (max-width: 1024px) {
+  .hero {
+    height: 35vh;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .hero {
+    height: 30vh;
+    padding: 0 16px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  .games-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
