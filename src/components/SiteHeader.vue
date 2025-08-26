@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import useAuth from '../composables/useAuth.js'
 
 const router = useRouter()
-const { isLoggedIn, logout } = useAuth()
+const { isLoggedIn, logout, balance } = useAuth()
 
 const isMobileMenuOpen = ref(false)
 
@@ -16,6 +16,11 @@ function handleLogout() {
   logout()
   toggleMobileMenu()
   router.push('/')
+}
+
+function goToDeposit() {
+  toggleMobileMenu()
+  router.push('/deposit')
 }
 </script>
 
@@ -37,6 +42,7 @@ function handleLogout() {
 
       <div class="auth desktop-auth">
         <template v-if="isLoggedIn">
+          <button class="btn btn-ghost" @click="goToDeposit">Баланс: {{ balance }} ₽</button>
           <router-link to="/account" class="btn btn-ghost">Мой кабинет</router-link>
           <button class="btn btn-ghost" @click="handleLogout">Выйти</button>
         </template>
@@ -67,6 +73,7 @@ function handleLogout() {
       </ul>
       <div class="auth">
         <template v-if="isLoggedIn">
+          <button class="btn btn-ghost" @click="goToDeposit">Баланс: {{ balance }} ₽</button>
           <router-link to="/account" class="btn btn-ghost" @click="toggleMobileMenu">Мой кабинет</router-link>
           <button class="btn btn-ghost" @click="handleLogout">Выйти</button>
         </template>
