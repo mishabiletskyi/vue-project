@@ -12,11 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@intercom/messenger-js-sdk": "^0.0.17",
-=======
-    "@intercom/messenger-js-sdk": "^1.0.0",
->>>>>>> c30a83dab5ad52ceb84cd08cefdde5500fbfdb48
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
