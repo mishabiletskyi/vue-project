@@ -16,6 +16,8 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
+Create a `.env` file based on `.env.example` and provide your Supabase project URL and anonymous key so deposit records can be stored.
+
 ### Compile and Hot-Reload for Development
 
 ```sh
