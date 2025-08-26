@@ -26,3 +26,7 @@ export async function saveDeposit(data) {
     console.error('Error saving deposit', err)
   }
 }
+
+export default {
+  saveDeposit
+}

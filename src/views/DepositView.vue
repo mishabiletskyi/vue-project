@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { saveDeposit } from '../lib/supabase'
+import { saveDeposit } from '@/lib/supabase'
 
 const cardNumber = ref('')
 const expiry = ref('')
