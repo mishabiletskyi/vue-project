@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
 // Імпортуємо дані з центрального файлу
 import { playerNamesArray, gameData } from '@/data/mockData.js';
 
@@ -10,6 +11,7 @@ let currentNameIndex = 0;
 const winners = ref([]);
 const maxWinnersInList = 10; 
 let mainUpdateInterval = null;
+const router = useRouter();
 
 // --- Функція для генерації одного випадкового переможця ---
 function generateRandomWinner() {
@@ -66,7 +68,7 @@ onUnmounted(() => {
       <div class="title">Топ переможці сьогодні</div>
       <TransitionGroup name="winner-list" tag="ul" class="winners-list">
         <li class="winner-item" v-for="winner in winners" :key="winner.id">
-          <a href="#" class="winner-link">
+          <a href="#" class="winner-link" @click.prevent="router.push('/deposit')">
             <div class="winner-thumb">
               <img :src="winner.image" alt="Картинка гри" />
             </div>
