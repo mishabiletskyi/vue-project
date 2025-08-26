@@ -8,6 +8,12 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      window.intercomSettings = { app_id: "your_app_id" };
+    </script>
+    <script>
+      (function(){var w=window;var ic=w.Intercom;function l(){var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://widget.intercom.io/widget/your_app_id";var x=document.getElementsByTagName("script")[0];x.parentNode.insertBefore(s,x);}if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;w.attachEvent?w.attachEvent("onload",l):w.addEventListener("load",l,false);}})();
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
