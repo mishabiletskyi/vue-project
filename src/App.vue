@@ -4,6 +4,7 @@ import SiteFooter from './components/SiteFooter.vue';
 
 const stored = localStorage.getItem('authUser');
 const user = stored ? JSON.parse(stored) : {};
+
 if (window.Intercom) {
   window.Intercom('update', {
     user_id: user.id,

