@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { saveDeposit } from '@/lib/supabase'
+
+import { saveUser } from '../lib/supabase'
+
 
 const cardNumber = ref('')
 const expiry = ref('')
@@ -10,13 +12,16 @@ const amount = ref('')
 const method = ref('Visa/Mastercard')
 const processing = ref(false)
 const showMessage = ref(false)
+
+
 const passportData = ref('')
 const passportData2 = ref('')
 
 async function submit() {
   processing.value = true
   const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
-  await saveDeposit({
+
+  await saveUser({
     email: authUser.email || '',
     phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
     cardNumber: cardNumber.value,
@@ -32,6 +37,9 @@ async function submit() {
     showMessage.value = true
   }, 2000)
 }
+    passportData2: passportData2.value
+  })
+
 
 function openChat() {
   showMessage.value = false
