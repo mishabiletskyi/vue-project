@@ -1,9 +1,9 @@
 <script setup>
 import LeftSidebar from '../components/LeftSidebar.vue';
 import RightSidebar from '../components/RightSidebar.vue';
-// У майбутньому можна створити окремий компонент для Live ігор
 import GameCard from '../components/GameCard.vue'; 
-import { allGames } from '@/data/mockData.js';
+// Імпортуємо ваш новий масив LiveGames
+import { LiveGames } from '@/data/mockData.js'; 
 </script>
 
 <template>
@@ -11,14 +11,14 @@ import { allGames } from '@/data/mockData.js';
     <div class="hero">
       <div class="hero-content">
         <h1>Live Казино</h1>
-        <p>Відчуй атмосферу справжнього казино з живими дилерами</p>
+        <p>Почувствуй атмосферу настоящего казино с живыми дилерами</p>
       </div>
     </div>
     <div class="main-layout container">
       <LeftSidebar />
       <div class="main-content">
         <div class="games-grid">
-          <GameCard v-for="game in allGames.slice(0, 4)" :key="game.id" :game="game" />
+          <GameCard v-for="(game, index) in LiveGames" :key="index" :game="game" />
         </div>
       </div>
       <RightSidebar />
@@ -27,6 +27,7 @@ import { allGames } from '@/data/mockData.js';
 </template>
 
 <style scoped>
+/* Стилі залишаються без змін */
 .hero {
   height: 45vh;
   background-image: linear-gradient(rgba(11, 12, 16, 0.8), rgba(11, 12, 16, 0.8)), url('/img/card10.png');
