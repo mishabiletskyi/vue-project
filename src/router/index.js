@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GameCategoryView from '../views/GameCategoryView.vue'
+import { allGames, rouletteGames } from '@/data/mockData.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,46 +32,21 @@ const router = createRouter({
       path: '/new',
       name: 'new',
       component: GameCategoryView,
-      props: { title: 'Новинки', description: 'Найновіші ігри від провідних провайдерів.' }
+      props: { title: 'Новинки', description: 'Новейшие игры от ведущих провайдеров.', games: allGames }
     },
     {
       path: '/drops-wins',
       name: 'drops-wins',
       component: GameCategoryView,
-      props: { title: 'Drops & Wins', description: 'Бери участь у щоденних розіграшах призів.' }
+      props: { title: 'Drops & Wins', description: 'Участвуй в ежедневных розыгрышах призов.', games: allGames }
     },
     {
       path: '/roulette',
       name: 'roulette',
       component: GameCategoryView,
-      props: { title: 'Рулетка', description: 'Всі види рулетки: Європейська, Американська та інші.' }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue')
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue')
-    },
-    {
-      path: '/password-recovery',
-      name: 'password-recovery',
-      component: () => import('../views/PasswordRecoveryView.vue')
-    },
-    {
-      path: '/account',
-      name: 'account',
-      component: () => import('../views/AccountView.vue')
-    },
-    {
-      path: '/deposit',
-      name: 'deposit',
-      component: () => import('../views/DepositView.vue')
+      props: { title: 'Рулетка', description: 'Все виды рулетки: европейская, американская и другие.', games: rouletteGames }
     }
   ]
 })
- 
+
 export default router

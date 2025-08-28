@@ -2,11 +2,13 @@
 import LeftSidebar from '../components/LeftSidebar.vue';
 import RightSidebar from '../components/RightSidebar.vue';
 import GamesGrid from '../components/GamesGrid.vue';
-import { allGames } from '@/data/mockData.js';
+// Цей імпорт більше не потрібен, оскільки ігри будуть приходити через props
+// import { allGames } from '@/data/mockData.js';
 
 defineProps({
   title: String,
-  description: String
+  description: String,
+  games: Array
 });
 </script>
 
@@ -18,19 +20,14 @@ defineProps({
         <h1>{{ title }}</h1>
         <p>{{ description }}</p>
       </div>
-      <GamesGrid :games="allGames" />
+      <GamesGrid :games="games" />
     </div>
     <RightSidebar />
   </div>
 </template>
+
 <style scoped>
 .page-header { margin-bottom: 32px; }
 .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; }
 .page-header p { color: var(--muted); }
-@media (max-width: 768px) {
-  .page-header h1 { font-size: 2rem; }
-}
-@media (max-width: 480px) {
-  .page-header h1 { font-size: 1.75rem; }
-}
 </style>
