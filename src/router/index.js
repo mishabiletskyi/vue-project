@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GameCategoryView from '../views/GameCategoryView.vue'
+import DropsAndWinsView from '../views/DropsAndWinsView.vue'; // Новий компонент
 import { allGames, rouletteGames } from '@/data/mockData.js';
 
 const router = createRouter({
@@ -32,19 +33,18 @@ const router = createRouter({
       path: '/new',
       name: 'new',
       component: GameCategoryView,
-      props: { title: 'Новинки', description: 'Новейшие игры от ведущих провайдеров.', games: allGames }
+      props: { title: 'Новинки', description: 'Найновіші ігри від провідних провайдерів.', games: allGames }
     },
     {
       path: '/drops-wins',
       name: 'drops-wins',
-      component: GameCategoryView,
-      props: { title: 'Drops & Wins', description: 'Участвуй в ежедневных розыгрышах призов.', games: allGames }
+      component: DropsAndWinsView // Використовуємо новий компонент
     },
     {
       path: '/roulette',
       name: 'roulette',
       component: GameCategoryView,
-      props: { title: 'Рулетка', description: 'Все виды рулетки: европейская, американская и другие.', games: rouletteGames }
+      props: { title: 'Рулетка', description: 'Всі види рулетки: Європейська, Американська та інші.', games: rouletteGames }
     }
   ]
 })
