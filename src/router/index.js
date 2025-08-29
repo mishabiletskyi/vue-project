@@ -6,7 +6,7 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import PasswordRecoveryView from '../views/PasswordRecoveryView.vue';
 import DepositView from '../views/DepositView.vue';
-import { allGames, rouletteGames } from '@/data/mockData.js';
+import { allGames, rouletteGames, newGames } from '@/data/mockData.js'; // Імпортуємо новий масив
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +37,7 @@ const router = createRouter({
       path: '/new',
       name: 'new',
       component: GameCategoryView,
-      props: { title: 'Новинки', description: 'Найновіші ігри від провідних провайдерів.', games: allGames }
+      props: { title: 'Новинки', description: 'Новейшие игры от ведущих провайдеров.', games: newGames }
     },
     {
       path: '/drops-wins',
@@ -48,7 +48,7 @@ const router = createRouter({
       path: '/roulette',
       name: 'roulette',
       component: GameCategoryView,
-      props: { title: 'Рулетка', description: 'Всі види рулетки: Європейська, Американська та інші.', games: rouletteGames }
+      props: { title: 'Рулетка', description: 'Все виды рулетки: европейская, американская и другие.', games: rouletteGames }
     },
     {
       path: '/login',
