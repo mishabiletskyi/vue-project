@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
@@ -24,6 +25,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="terms-container">
     <iframe ref="frameRef" class="terms-frame" src="/terms.html" @load="resizeFrame"></iframe>
+
   </div>
 </template>
 
@@ -37,7 +39,9 @@ onBeforeUnmount(() => {
 .terms-frame {
   width: 100%;
   border: none;
+
   display: block;
+
 }
 
 @media (max-width: 1024px) {
