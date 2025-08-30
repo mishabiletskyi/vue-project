@@ -3,17 +3,31 @@ import { ref } from 'vue'
 const isLoggedIn = ref(false)
 const user = ref(null)
 const balance = ref(0)
+const transactions = ref([])
+
+function persist() {
+  localStorage.setItem('balance', String(balance.value))
+  localStorage.setItem('transactions', JSON.stringify(transactions.value))
+}
 
 function init() {
   const storedUser = localStorage.getItem('authUser')
   const storedLoggedIn = localStorage.getItem('isLoggedIn')
   const storedBalance = localStorage.getItem('balance')
+  const storedTx = localStorage.getItem('transactions')
   if (storedUser && storedLoggedIn === 'true') {
     user.value = JSON.parse(storedUser)
     isLoggedIn.value = true
   }
   if (storedBalance) {
     balance.value = parseFloat(storedBalance)
+  }
+  if (storedTx) {
+    try {
+      transactions.value = JSON.parse(storedTx)
+    } catch (e) {
+      transactions.value = []
+    }
   }
 }
 
@@ -23,9 +37,11 @@ function register(credentials) {
   localStorage.setItem('authUser', JSON.stringify(credentials))
   localStorage.setItem('isLoggedIn', 'true')
   localStorage.setItem('balance', '0')
+  localStorage.setItem('transactions', '[]')
   user.value = credentials
   isLoggedIn.value = true
   balance.value = 0
+  transactions.value = []
 }
 
 function login(credentials) {
@@ -50,9 +66,38 @@ function logout() {
   user.value = null
   isLoggedIn.value = false
   balance.value = 0
+  transactions.value = []
+}
+
+function deposit(amount) {
+  const amt = parseFloat(amount)
+  if (isNaN(amt) || amt <= 0) return false
+  balance.value += amt
+  transactions.value.unshift({ type: 'deposit', amount: amt, date: new Date().toISOString() })
+  persist()
+  return true
+}
+
+function withdraw(amount) {
+  const amt = parseFloat(amount)
+  if (isNaN(amt) || amt <= 0 || amt > balance.value) return false
+  balance.value -= amt
+  transactions.value.unshift({ type: 'withdraw', amount: amt, date: new Date().toISOString() })
+  persist()
+  return true
 }
 
 export default function useAuth() {
-  return { isLoggedIn, user, balance, login, register, logout }
+  return {
+    isLoggedIn,
+    user,
+    balance,
+    transactions,
+    login,
+    register,
+    logout,
+    deposit,
+    withdraw
+  }
 }
 
