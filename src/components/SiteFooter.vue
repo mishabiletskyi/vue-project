@@ -14,7 +14,7 @@
         <h3 class="footer-title">Поддержка</h3>
         <ul class="footer-links">
           <li><a href="#">Центр помощи</a></li>
-          <li><a href="#">Правила и условия</a></li>
+          <li><RouterLink to="/terms">Правила и условия</RouterLink></li>
           <li><a href="#">Политика конфиденциальности</a></li>
         </ul>
       </div>
