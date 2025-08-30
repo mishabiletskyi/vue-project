@@ -1,35 +1,40 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import useAuth from '../composables/useAuth.js'
-import AccountSidebar from '../components/account/AccountSidebar.vue'
-import AccountOverview from '../components/account/AccountOverview.vue'
-import AccountTransactions from '../components/account/AccountTransactions.vue'
-import AccountBonuses from '../components/account/AccountBonuses.vue'
-import AccountSettings from '../components/account/AccountSettings.vue'
+import { ref } from 'vue'
 
-const router = useRouter()
-const { user, logout } = useAuth()
+import AccountPersonal from '../components/account/AccountPersonal.vue'
+import AccountDocuments from '../components/account/AccountDocuments.vue'
+import AccountPassword from '../components/account/AccountPassword.vue'
+import AccountLimits from '../components/account/AccountLimits.vue'
 
-const email = computed(() => user.value?.email || '')
-const activeTab = ref('overview')
+const tabs = [
+  { id: 'personal', label: 'Личный кабинет' },
+  { id: 'documents', label: 'Документы' },
+  { id: 'password', label: 'Смена пароля' },
+  { id: 'limits', label: 'Лимиты' }
+]
+
+const activeTab = ref('personal')
 
 const components = {
-  overview: AccountOverview,
-  transactions: AccountTransactions,
-  bonuses: AccountBonuses,
-  settings: AccountSettings
-}
-
-function handleLogout() {
-  logout()
-  router.push('/')
+  personal: AccountPersonal,
+  documents: AccountDocuments,
+  password: AccountPassword,
+  limits: AccountLimits
 }
 </script>
 
 <template>
   <div class="account-page">
-    <AccountSidebar :active="activeTab" :email="email" @change="tab => activeTab = tab" @logout="handleLogout" />
+    <nav class="tabs">
+      <button
+        v-for="t in tabs"
+        :key="t.id"
+        :class="{ active: activeTab === t.id }"
+        @click="activeTab = t.id"
+      >
+        {{ t.label }}
+      </button>
+    </nav>
     <div class="account-content">
       <component :is="components[activeTab]" />
     </div>
@@ -38,11 +43,33 @@ function handleLogout() {
 
 <style scoped>
 .account-page {
-  display: flex;
-  min-height: calc(100vh - 140px);
-}
-.account-content {
-  flex: 1;
   padding: 24px;
 }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tabs button {
+  padding: 12px 20px;
+  background: #1e232d;
+  color: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.tabs button.active {
+  background: #ff4d00;
+  color: #fff;
+}
+
+.account-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
 </style>
+
