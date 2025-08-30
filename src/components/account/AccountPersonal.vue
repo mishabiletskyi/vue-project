@@ -18,19 +18,47 @@ const form = reactive({
 
 const message = ref('')
 
+const avatar = ref('')
+
+
 onMounted(() => {
   const saved = JSON.parse(localStorage.getItem('personalInfo') || '{}')
   Object.assign(form, saved)
+  avatar.value = localStorage.getItem('avatar') || ''
+
 })
 
 function save() {
   localStorage.setItem('personalInfo', JSON.stringify(form))
   message.value = 'Данные сохранены'
 }
+
+
+function onAvatarChange(e) {
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = () => {
+      avatar.value = reader.result
+      localStorage.setItem('avatar', avatar.value)
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
 </script>
 
 <template>
   <form class="personal-form" @submit.prevent="save">
+    <div class="avatar-upload">
+      <img v-if="avatar" :src="avatar" alt="Аватар" class="avatar" />
+      <label class="upload-label">
+        Загрузить фото профиля
+        <input type="file" accept="image/*" @change="onAvatarChange" />
+      </label>
+    </div>
+
+
     <h2>Личная информация</h2>
     <div class="grid">
       <label>
@@ -102,11 +130,41 @@ function save() {
   padding: 24px;
   border-radius: 12px;
   max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-upload {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.upload-label {
+  cursor: pointer;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #1e232d;
+  color: #f1f5f9;
+}
+
+.upload-label input {
+  display: none;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -145,6 +203,25 @@ button:hover {
   margin-top: 12px;
   color: #ff9a00;
   text-align: center;
+}
+
+
+@media (max-width: 600px) {
+  .personal-form {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>
 

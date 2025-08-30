@@ -66,6 +66,7 @@ function save() {
 <style scoped>
 .limits {
   max-width: 600px;
+  margin: 0 auto;
 }
 
 .block {
@@ -73,12 +74,14 @@ function save() {
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 .row {
   display: flex;
   gap: 16px;
   margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 select {
@@ -109,6 +112,13 @@ button:hover {
   margin-top: 12px;
   color: #ff9a00;
   text-align: center;
+}
+
+
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
 }
 </style>
 

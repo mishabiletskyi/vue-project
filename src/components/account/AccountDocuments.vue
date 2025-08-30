@@ -47,6 +47,10 @@ function upload() {
 <style scoped>
 .documents {
   max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .drop-area {
@@ -55,6 +59,10 @@ function upload() {
   text-align: center;
   margin-bottom: 16px;
   cursor: pointer;
+  width: 100%;
+  border-radius: 12px;
+  background: #14161b;
+  transition: border-color 0.3s;
 }
 
 .drop-area.over {
@@ -73,6 +81,7 @@ button {
   color: #fff;
   cursor: pointer;
   transition: background 0.3s;
+  width: 100%;
 }
 
 button:hover {
@@ -82,6 +91,13 @@ button:hover {
 button:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+
+@media (max-width: 480px) {
+  .drop-area {
+    padding: 24px;
+  }
 }
 </style>
 
