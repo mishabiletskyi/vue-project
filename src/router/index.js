@@ -28,7 +28,8 @@ const router = createRouter({
     { path: '/password-recovery', name: 'password-recovery', component: PasswordRecoveryView },
     { path: '/deposit', name: 'deposit', component: DepositView },
     { path: '/account', name: 'account', component: AccountView, meta: { requiresAuth: true } },
-    { path: '/terms', name: 'terms', component: () => import('../views/TermsView.vue') }
+    { path: '/terms', name: 'terms', component: () => import('../views/TermsView.vue') },
+    { path: '/privacy', name: 'privacy', component: () => import('../views/PrivacyView.vue') }
   ]
 })
 
