@@ -114,9 +114,11 @@ button:hover {
   text-align: center;
 }
 
+
 @media (max-width: 600px) {
   .row {
     flex-direction: column;
   }
 }
 </style>
+

@@ -17,18 +17,22 @@ const form = reactive({
 })
 
 const message = ref('')
+
 const avatar = ref('')
+
 
 onMounted(() => {
   const saved = JSON.parse(localStorage.getItem('personalInfo') || '{}')
   Object.assign(form, saved)
   avatar.value = localStorage.getItem('avatar') || ''
+
 })
 
 function save() {
   localStorage.setItem('personalInfo', JSON.stringify(form))
   message.value = 'Данные сохранены'
 }
+
 
 function onAvatarChange(e) {
   const file = e.target.files[0]
@@ -41,6 +45,7 @@ function onAvatarChange(e) {
     reader.readAsDataURL(file)
   }
 }
+
 </script>
 
 <template>
@@ -52,6 +57,7 @@ function onAvatarChange(e) {
         <input type="file" accept="image/*" @change="onAvatarChange" />
       </label>
     </div>
+
 
     <h2>Личная информация</h2>
     <div class="grid">
@@ -159,6 +165,8 @@ function onAvatarChange(e) {
   gap: 16px;
   margin-bottom: 24px;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 label {
@@ -197,6 +205,7 @@ button:hover {
   text-align: center;
 }
 
+
 @media (max-width: 600px) {
   .personal-form {
     padding: 16px;
@@ -215,3 +224,4 @@ button:hover {
   }
 }
 </style>
+

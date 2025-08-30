@@ -93,9 +93,11 @@ button:disabled {
   cursor: default;
 }
 
+
 @media (max-width: 480px) {
   .drop-area {
     padding: 24px;
   }
 }
 </style>
+

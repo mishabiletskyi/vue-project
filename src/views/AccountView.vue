@@ -91,4 +91,31 @@ const components = {
     width: 100%;
   }
 }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tabs button {
+  padding: 12px 20px;
+  background: #1e232d;
+  color: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.tabs button.active {
+  background: #ff4d00;
+  color: #fff;
+}
+
+.account-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
 </style>
+
