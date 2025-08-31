@@ -4,7 +4,7 @@ import RightSidebar from '../components/RightSidebar.vue';
 import ImageSlider from '../components/ImageSlider.vue';
 import GamesGrid from '../components/GamesGrid.vue';
 import Leaderboard from '../components/Leaderboard.vue';
-import { popularGames } from '@/data/mockData.js'; // Використовуємо @ для чистого шляху
+import { popularGames } from '@/data/mockData.js';
 </script>
 
 <template>
@@ -26,14 +26,13 @@ import { popularGames } from '@/data/mockData.js'; // Використовуєм
             <h2>Бонусы для новых игроков</h2>
             <p>100% на первый депозит + 50 FS.</p>
           </div>
-          <a href="#" class="btn btn-lg">Забрать бонус</a>
+          <router-link to="/bonuses" class="btn btn-lg">Забрать бонус</router-link>
         </div>
       </section>
 
       <section id="tournaments" class="section">
         <header class="section-head">
           <h2>Еженедельные турниры</h2>
-          <p>Играй в любимые слоты и попади в таблицу лидеров.</p>
         </header>
         <Leaderboard />
       </section>
@@ -41,6 +40,7 @@ import { popularGames } from '@/data/mockData.js'; // Використовуєм
     <RightSidebar />
   </div>
 </template>
+
 <style scoped>
 @media (max-width: 768px) {
   .promo {
