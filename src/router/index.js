@@ -7,7 +7,7 @@ import RegisterView from '../views/RegisterView.vue';
 import PasswordRecoveryView from '../views/PasswordRecoveryView.vue';
 import DepositView from '../views/DepositView.vue';
 import BonusView from '../views/BonusView.vue';
-import { allGames, rouletteGames, newGames } from '@/data/mockData.js';
+import { rouletteGames, newGames } from '@/data/mockData.js';
 import AccountView from '../views/AccountView.vue'
 
 const router = createRouter({
@@ -56,6 +56,21 @@ const router = createRouter({
       path: '/bonuses',
       name: 'bonuses',
       component: BonusView
+    },
+    {
+      path: '/games',
+      name: 'games',
+      component: () => import('../views/GamesView.vue')
+    },
+    {
+      path: '/tournaments',
+      name: 'tournaments',
+      component: () => import('../views/TournamentsView.vue')
+    },
+    {
+      path: '/support',
+      name: 'support',
+      component: () => import('../views/SupportView.vue')
     },
     {
       path: '/login',
