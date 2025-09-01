@@ -1,20 +1,79 @@
 // --- Генератор нікнеймів для бічної панелі ---
-const adjectives = ['Silent', 'Golden', 'Crystal', 'Shadow', 'Rapid', 'Cosmic', 'Quantum', 'Phantom', 'Electric', 'Frozen', 'Crimson', 'Azure', 'Solar', 'Lunar', 'Iron'];
-const subjects = ['Gambler', 'Saca', 'Spectre', 'Pioneer', 'Voyager', 'Phoenix', 'Oracle', 'Striker', 'Guardian', 'Reaper', 'Nomad', 'Paladin', 'Viper', 'Titan', 'Wizard'];
-const allPossibleNames = [];
-for (const adj of adjectives) {
-  for (const subj of subjects) {
-    allPossibleNames.push(`${adj}${subj}`);
+// --- БАЗОВІ СЛОВА ДЛЯ ГЕНЕРАЦІЇ ---
+
+// Англійською мовою
+const prefixes = ['Lucky', 'Ace', 'Royal', 'Grand', 'Mega', 'Poker', 'Slot', 'Cash', 'Gold', 'Dr', 'Mr', 'Big', 'Mad', 'Spin'];
+const nouns = ['Shark', 'Joker', 'King', 'Queen', 'Spade', 'Heart', 'Chip', 'Spinner', 'Whale', 'Hunter', 'Wolf', 'Lion', 'Dragon', 'Winner', 'Player', 'Bet'];
+const names = ['Alex', 'Mike', 'Anna', 'Kate', 'John', 'Chris', 'Steve', 'Jack', 'Lana', 'Maria', 'Ivan', 'Serg', 'Den', 'Max', 'Olga'];
+const coolWords = ['Shadow', 'Phantom', 'Blaze', 'Vortex', 'Spectre', 'Ronin', 'Zenith', 'Cipher', 'Matrix', 'Gamble', 'Winner', 'Raptor', 'Cobra'];
+
+// Російською мовою
+const cyrillicPrefixes = ['Король', 'Туз', 'Фартовый', 'Император', 'Мега', 'Царь', 'Капитан', 'Лорд'];
+const cyrillicNouns = ['Карт', 'Фишек', 'Спинов', 'Удачи', 'Джoкeр', 'Джекпот', 'Охотник', 'Волк', 'Дракон', 'Победы'];
+const cyrillicNames = ['Дима', 'Олег', 'Иван', 'Анна', 'Лена', 'Макс', 'Сергей', 'Юрий', 'Катя', 'Света'];
+const cyrillicCoolWords = ['Фантом', 'Удача', 'Профи', 'Легенда', 'Счастливчик', 'Призрак', 'Зенит', 'Магнат', 'Миллион'];
+
+// --- ЛОГІКА ГЕНЕРАЦІЇ ---
+
+const generatedNames = new Set();
+
+// Шаблон 1: Префікс + Іменник (напр. LuckyShark, MegaSpinner)
+for (const prefix of prefixes) {
+  for (const noun of nouns) {
+    generatedNames.add(`${prefix}${noun}`);
   }
 }
+
+// Шаблон 2: Ім'я + Числа (напр. Alex777, Kate_88)
+for (const name of names) {
+  const number = Math.floor(Math.random() * 900) + 100; // 100-999
+  const year = Math.floor(Math.random() * (2005 - 1980 + 1)) + 1980; // 1980-2005
+  generatedNames.add(`${name}${number}`);
+  generatedNames.add(`${name}_${year}`);
+}
+
+// Шаблон 3: Одиночні круті слова + числа (напр. Shadow21, xPhantomx)
+for (const word of coolWords) {
+    const number = Math.floor(Math.random() * 99) + 1; // 1-99
+    generatedNames.add(`${word}${number}`);
+    if (Math.random() > 0.7) {
+        generatedNames.add(`x${word}x`);
+    }
+}
+
+// Шаблон 4: Кириличні ніки (напр. КорольФишек, Дима_777)
+for (const prefix of cyrillicPrefixes) {
+    for (const noun of cyrillicNouns) {
+        generatedNames.add(`${prefix}${noun}`);
+    }
+}
+for (const name of cyrillicNames) {
+    const number = ['77', '88', '99', '777', '888'][Math.floor(Math.random() * 5)];
+    generatedNames.add(`${name}${number}`);
+    generatedNames.add(`${name}_${number}`);
+}
+for (const word of cyrillicCoolWords) {
+    generatedNames.add(word); // Деякі ніки без чисел
+    generatedNames.add(`${word}${Math.floor(Math.random() * 99) + 1}`);
+}
+
+// --- ФІНАЛІЗАЦІЯ ---
+
+// Перетворюємо Set в масив, щоб гарантувати унікальність
+let allPossibleNames = Array.from(generatedNames);
+
+// Перемішуємо масив для випадкового порядку
 for (let i = allPossibleNames.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
   [allPossibleNames[i], allPossibleNames[j]] = [allPossibleNames[j], allPossibleNames[i]];
 }
+
+// Експортуємо фінальний список
 export const playerNamesArray = allPossibleNames;
 
 // --- Дані про ігри для бічної панелі ---
 export const gameData = [
+  // --- Оригінальний список ---
   { name: 'Gates of Olympus', image: '/img/rbarimg1.png' },
   { name: 'Sweet Bonanza', image: '/img/rbarimg2.png' },
   { name: 'The Dog House', image: '/img/rbarimg3.png' },
@@ -23,19 +82,38 @@ export const gameData = [
   { name: 'Sugar Rush', image: '/img/SugarRush.gif' },
   { name: '5 Fruit Invaders', image: '/img/5FruitInvaders.gif' },
   { name: 'Joker Stoker', image: '/img/JokerStoker.gif' },
-  { name: 'Crown Coins', image: '/img/CrownCoins.gif' },
+  { name: 'Crown Coins', image: '/img/CrownCoins.gif' }, // Оновлено з нового списку
   { name: 'Diamond Mines', image: '/img/DiamondMines.gif' },
   { name: 'Legacy Of The Sages', image: '/img/LegacyOfTheSages.jpg' },
   { name: 'Gonzo\'s Quest', image: '/img/GonzosQuest.png' },
   { name: 'Starburst', image: '/img/rbarimg2.png' },
   { name: 'Tutankhamuns Thomb', image: '/img/TutankhamunsThomb.jpg' },
   { name: 'Money Minter', image: '/img/MoneyMinter.jpg' },
+  { name: 'Neon Roulette', image: '/img/Neon Roulette_300x300.jpg' },
+  { name: 'Auto Roulette 1', image: '/img/AutoRoulette1.png' },
+  { name: 'Fruit Party 1', image: '/img/FruitParty1.png' },
+  { name: 'Book of Ra Magic', image: '/img/BookofRaMagic.png' },
+  { name: 'Book Of Rebirth', image: '/img/BookOfRebirth.png' },
+  { name: 'The Dog House Multihold', image: '/img/TheDogHouseMultihold.png' },
+  { name: 'Cleocatra', image: '/img/Cleocatra.png' },
+  { name: '100 Super Hot', image: '/img/100SuperHot.png' },
+  { name: 'Shining Crown', image: '/img/ShiningCrown.png' },
+  { name: '888 Bonus Combo', image: '/img/888BonusCombo.png' },
+  { name: 'The Grand Rooster Hold And Win', image: '/img/TheGrandRoosterHoldAndWin.png' },
+  { name: 'Futuristic Fruits', image: '/img/FuturisticFruits.jpg' },
+  { name: 'Hells Hot 7s', image: '/img/HellsHot7s.png' },
+  { name: 'Johns Book', image: '/img/JohnsBook.jpg' },
+  { name: 'Oath of Steel', image: '/img/OathofSteel.png' },
+  { name: 'Lucky Hot Coins', image: '/img/LuckyHotCoins.jpg' },
+  { name: 'Dice Invaders', image: '/img/DiceInvaders.png' },
+  { name: 'Lucky Ladys Charm Deluxe Buy Bonus', image: '/img/LuckyLadysCharmDeluxeBuyBonus.jpg' },
+  { name: 'Veracruz Wild', image: '/img/VeracruzWild.png' },
 ];
 
 // --- Дані для таблиці лідерів ---
 function generateLeaderboardData() {
   const leaderboard = [];
-  let score = 120000;
+  let score = 120904;
   const nicknames = [...playerNamesArray].sort(() => 0.5 - Math.random());
   for (let i = 0; i < 100; i++) {
     leaderboard.push({ place: i + 1, player: nicknames[i] || `Player${i + 1}`, score });
@@ -73,7 +151,6 @@ export const allGames = [
   { id: 24, 'title': 'FruitsonIce', provider: 'Red Tiger Gaming', image: '/img/FruitsonIce.png' },
   { id: 25, 'title': '100JuicyFruits', provider: 'Big Time Gaming', image: '/img/100JuicyFruits.png' },
   { id: 26, 'title': 'European Roulette VIP', provider: 'Blueprint Gaming', image: '/img/EuropeanRouletteVIP.png' },
-
   { id: 28, 'title': 'American Blackjack', provider: 'Thunderkick', image: '/img/AmericanBlackjack(1).png' },
   { id: 29, 'title': 'Texas Holdem', provider: 'Relax Gaming', image: '/img/TexasHoldem.png' },
   { id: 30, 'title': 'Vegas Holdem', provider: 'Wazdan', image: '/img/VegasHoldem.png' },
@@ -90,12 +167,6 @@ export const allGames = [
   { id: 41, 'title': 'Book Of Winners Lotto', provider: 'Spinomenal', image: '/img/BookOfWinnersLotto.png' },
   { id: 42, 'title': 'Demi Gods VI', provider: 'Pariplay', image: '/img/DemiGodsVI.jpg' },
   { id: 43, 'title': 'CrownCoins', provider: 'Betsoft', image: '/img/CrownCoins.gif' },
-
-  
-  
-
-  
-  
   { id: 56, 'title': 'Neon Roulette', provider: 'Spinomenal', image: '/img/Neon Roulette_300x300.jpg' },
   { id: 57, 'title': 'Auto Roulette 1', provider: 'Playtech', image: '/img/AutoRoulette1.png' },
   { id: 58, 'title': 'Fruit Party 1', provider: 'Yggdrasil', image: '/img/FruitParty1.png' },
@@ -322,101 +393,99 @@ export const popularGames = allGames.slice(0, 12);
 // --- Список популярних ігор для LiveGames ---
 
 export const LiveGames = [
-  { name: 'LiveONEBlackjack', image: '/img/LiveONEBlackjack.png' },
-  { name: 'LiveMegaWheel', image: '/img/LiveMegaWheel.png' },
-  { name: 'LiveBlackjack21', image: '/img/LiveBlackjack21.png' },
-  { name: 'LiveBlackjack30Azure', image: '/img/LiveBlackjack30Azure.png' },
-  { name: 'LivePowerUpRoulette', image: '/img/LivePowerUpRoulette.png' },
-  { name: 'LiveBlackjack17', image: '/img/LiveBlackjack17.png' },
-  { name: 'LiveRouletteAzure', image: '/img/LiveRouletteAzure.png' },
-  { name: 'LiveRouletteMacao', image: '/img/LiveRouletteMacao.png' },
-  { name: 'LiveSweetBonanzaCandyLand', image: '/img/LiveSweetBonanzaCandyLand.jpeg' }, 
-  { name: 'Blackjack11', image: '/img/Blackjack11.png' },
-  { name: 'Blackjack12', image: '/img/Blackjack12.png' },
-  { name: 'Blackjack14', image: '/img/Blackjack14.png' },
-  { name: 'Blackjack16', image: '/img/Blackjack16.png' },
-  { name: 'Blackjack25Azure', image: '/img/Blackjack25Azure.png' },
-  { name: 'Blackjack99Azure', image: '/img/Blackjack99Azure.png' },
-  { name: 'Blackjack101Azure', image: '/img/Blackjack101Azure.png' },
-  { name: 'BlackjackBonusWheel1000', image: '/img/BlackjackBonusWheel1000.png' },
-  { name: 'BlackjackVIP', image: '/img/BlackjackVIP.png' },
-  { name: 'Casino Holdem', image: '/img/CasinoHoldem.png' },
-  { name: 'Crazy Time', image: '/img/CrazyTime.png' },
-  { name: 'Speed Baccarat 1', image: '/img/SpeedBaccarat1.png' },
-  { name: 'Live Blackjack 30 Azure', image: '/img/LiveBlackjack30Azure.png' },
-  { name: 'Speed Baccarat 2', image: '/img/SpeedBaccarat2.png' },
-  { name: 'Caribbean Stud Poker', image: '/img/CaribbeanStudPoker.png' },
-  { name: 'Texas Holdem Bonus Poker', image: '/img/TexasHoldemBonusPoker.png' },
-  { name: 'Infinite Free Bet Blackjack', image: '/img/InfiniteFreeBetBlackjack.png' },
-  { name: 'Speed Baccarat', image: '/img/SpeedBaccarat.png' },
-  { name: 'Dream Catcher', image: '/img/DreamCatcher.png' },
-  { name: 'LiveONEBlackjack', image: '/img/LiveONEBlackjack.png' },
-  { name: 'Lightning Baccarat', image: '/img/Lightning_Baccarat.png' },
-  { name: 'Monopoly Big Baller', image: '/img/MonopolyBigBaller.png' },
+  { id: 333, name: 'Live ONE Blackjack', image: '/img/LiveONEBlackjack.png' },
+  { id: 334, name: 'Live Mega Wheel', image: '/img/LiveMegaWheel.png' },
+  { id: 335, name: 'Live Blackjack 21', image: '/img/LiveBlackjack21.png' },
+  { id: 336, name: 'Live Blackjack 30 Azure', image: '/img/LiveBlackjack30Azure.png' },
+  { id: 337, name: 'Live Power Up Roulette', image: '/img/LivePowerUpRoulette.png' },
+  { id: 338, name: 'Live Blackjack 17', image: '/img/LiveBlackjack17.png' },
+  { id: 339, name: 'Live Roulette Azure', image: '/img/LiveRouletteAzure.png' },
+  { id: 340, name: 'Live Roulette Macao', image: '/img/LiveRouletteMacao.png' },
+  { id: 341, name: 'Live Sweet Bonanza CandyLand', image: '/img/LiveSweetBonanzaCandyLand.jpeg' }, 
+  { id: 342, name: 'Blackjack 11', image: '/img/Blackjack11.png' },
+  { id: 343, name: 'Blackjack 12', image: '/img/Blackjack12.png' },
+  { id: 344, name: 'Blackjack 14', image: '/img/Blackjack14.png' },
+  { id: 345, name: 'Blackjack 16', image: '/img/Blackjack16.png' },
+  { id: 346, name: 'Blackjack 25 Azure', image: '/img/Blackjack25Azure.png' },
+  { id: 347, name: 'Blackjack 99 Azure', image: '/img/Blackjack99Azure.png' },
+  { id: 348, name: 'Blackjack 101 Azure', image: '/img/Blackjack101Azure.png' },
+  { id: 349, name: 'Blackjack Bonus Wheel 1000', image: '/img/BlackjackBonusWheel1000.png' },
+  { id: 350, name: 'Blackjack VIP', image: '/img/BlackjackVIP.png' },
+  { id: 351, name: 'Casino Holdem', image: '/img/CasinoHoldem.png' },
+  { id: 352, name: 'Crazy Time', image: '/img/CrazyTime.png' },
+  { id: 353, name: 'Speed Baccarat 1', image: '/img/SpeedBaccarat1.png' },
+  { id: 354, name: 'Live Blackjack 30 Azure', image: '/img/LiveBlackjack30Azure.png' },
+  { id: 355, name: 'Speed Baccarat 2', image: '/img/SpeedBaccarat2.png' },
+  { id: 356, name: 'Caribbean Stud Poker', image: '/img/CaribbeanStudPoker.png' },
+  { id: 357, name: 'Texas Holdem Bonus Poker', image: '/img/TexasHoldemBonusPoker.png' },
+  { id: 358, name: 'Infinite Free Bet Blackjack', image: '/img/InfiniteFreeBetBlackjack.png' },
+  { id: 359, name: 'Speed Baccarat', image: '/img/SpeedBaccarat.png' },
+  { id: 360, name: 'Dream Catcher', image: '/img/DreamCatcher.png' },
+  { id: 361, name: 'Lightning Baccarat', image: '/img/Lightning_Baccarat.png' },
+  { id: 362, name: 'Monopoly Big Baller', image: '/img/MonopolyBigBaller.png' },
 ];
 
 export const rouletteGames = [
-  { id: 272, name: 'MiniRoulette', image: '/img/MiniRoulette.png' },
-  { id: 273, name: 'P_Roulette', image: '/img/P_Roulette.png' },
- 
-  { id: 275, name: 'PriveLoungeRouletteDeluxe', image: '/img/PriveLoungeRouletteDeluxe.png' },
-  { id: 276, name: 'Roulette Auto_TableID229_250x250', image: '/img/Roulette Auto_TableID229_250x250.png' },
-  { id: 277, name: 'Roulette(1)', image: '/img/Roulette(1).png' },
-  { id: 278, name: 'Roulette(2)', image: '/img/Roulette(2).png' },
+  { id: 272, name: 'Mini Roulette', image: '/img/MiniRoulette.png' },
+  { id: 273, name: 'P Roulette', image: '/img/P_Roulette.png' },
+  { id: 275, name: 'Prive Lounge Roulette Deluxe', image: '/img/PriveLoungeRouletteDeluxe.png' },
+  { id: 276, name: 'Roulette Auto', image: '/img/Roulette Auto_TableID229_250x250.png' },
+  { id: 277, name: 'Roulette (1)', image: '/img/Roulette(1).png' },
+  { id: 278, name: 'Roulette (2)', image: '/img/Roulette(2).png' },
   { id: 279, name: 'Roulette', image: '/img/Roulette.png' },
-  { id: 280, name: 'Roulette1', image: '/img/Roulette1.png' },
-  { id: 281, name: 'Roulette2', image: '/img/Roulette2.png' },
-  { id: 282, name: 'RouletteAdvanced', image: '/img/RouletteAdvanced.png' },
-  { id: 283, name: 'RouletteAmerican', image: '/img/RouletteAmerican.png' },
-  { id: 284, name: 'RouletteClassic', image: '/img/RouletteClassic.png' },
-  { id: 285, name: 'RouletteEU', image: '/img/RouletteEU.png' },
-  { id: 286, name: 'RouletteSpanish1', image: '/img/RouletteSpanish1.png' },
-  { id: 287, name: 'RouletteSpanish2', image: '/img/RouletteSpanish2.png' },
-  { id: 288, name: 'RouletteX', image: '/img/RouletteX.png' },
-  { id: 289, name: 'RoyalRichesRoulette', image: '/img/RoyalRichesRoulette.png' },
-  { id: 290, name: 'RoyalRichesSpanishRoulette', image: '/img/RoyalRichesSpanishRoulette.png' },
-  { id: 291, name: 'SpeedRoulette', image: '/img/SpeedRoulette.png' },
-  { id: 292, name: 'SpeedRoulette1', image: '/img/SpeedRoulette1.png' },
-  { id: 293, name: 'SpeedRoulette2', image: '/img/SpeedRoulette2.png' },
-  { id: 294, name: 'TurkishRoulette', image: '/img/TurkishRoulette.png' },
-  { id: 295, name: 'VGL-oracleblazeroulette.200x200squareEN', image: '/img/VGL-oracleblazeroulette.200x200squareEN.png' },
-  { id: 296, name: 'VipAmericanRoulette', image: '/img/VipAmericanRoulette.png' },
-  { id: 297, name: 'VIPAutoRoulette', image: '/img/VIPAutoRoulette.png' },
-  { id: 298, name: 'VipEuropeanRoulette', image: '/img/VipEuropeanRoulette.png' },
-  { id: 299, name: 'VulcanoRoulette', image: '/img/VulcanoRoulette.png' },
-  { id: 300, name: 'XXXtremeLightingRoulette', image: '/img/XXXtremeLightingRoulette.png' },
-  { id: 301, name: 'ZoomRoulette', image: '/img/ZoomRoulette.png' },
-  { id: 302, name: 'ClassicRoulette', image: '/img/ClassicRoulette.jpg' },
-  { id: 303, name: 'LiveRoulette', image: '/img/LiveRoulette.jpg' },
-  { id: 304, name: 'N1Roulette', image: '/img/N1Roulette.jpg' },
-  { id: 305, name: 'Neon Roulette_300x300', image: '/img/Neon Roulette_300x300.jpg' },
-  { id: 306, name: 'RacingRouletteHorses', image: '/img/RacingRouletteHorses.jpg' },
-  { id: 307, name: 'S1Roulette', image: '/img/S1Roulette.jpg' },
-  { id: 308, name: 'S2Roulette', image: '/img/S2Roulette.jpg' },
-  { id: 309, name: 'VGL-bulgariaroulette.400x400squareEN', image: '/img/VGL-bulgariaroulette.400x400squareEN.jpg' },
-  { id: 310, name: 'VGL-oracle360roulette.200x200squareEN', image: '/img/VGL-oracle360roulette.200x200squareEN.jpg' },
-  { id: 311, name: 'VGL-portomasoroulette.200x200squareEN', image: '/img/VGL-portomasoroulette.200x200squareEN.jpg' },
-  { id: 312, name: '3DRoulette2066', image: '/img/3DRoulette2066.png' },
-  { id: 313, name: '500xAutoRouletteImperial', image: '/img/500xAutoRouletteImperial.png' },
-  { id: 314, name: '500xTurkishRoulette', image: '/img/500xTurkishRoulette.png' },
-  { id: 315, name: '777xGalaxyRoulette', image: '/img/777xGalaxyRoulette.png' },
-  { id: 316, name: 'AmericanRoulette(1)', image: '/img/AmericanRoulette(1).png' },
-  { id: 317, name: 'AmericanRoulette(2)', image: '/img/AmericanRoulette(2).png' },
-  { id: 318, name: 'AmericanRoulette', image: '/img/AmericanRoulette.png' },
-  { id: 319, name: 'AutoLightningRoulette', image: '/img/AutoLightningRoulette.png' },
-  { id: 320, name: 'AutoRoulette', image: '/img/AutoRoulette.png' },
-  { id: 321, name: 'AutoRoulette1(1)', image: '/img/AutoRoulette1(1).png' },
-  { id: 322, name: 'AutoRoulette1', image: '/img/AutoRoulette1.png' },
-  { id: 323, name: 'AutoRouletteNoir', image: '/img/AutoRouletteNoir.png' },
-  { id: 324, name: 'BucharestRoulette', image: '/img/BucharestRoulette.png' },
-  { id: 325, name: 'CasinoMaltaDualPlayRoulette', image: '/img/CasinoMaltaDualPlayRoulette.png' },
-  { id: 326, name: 'CasinoRoulette', image: '/img/CasinoRoulette.png' },
-  { id: 327, name: 'CRoulette', image: '/img/CRoulette.png' },
-  { id: 328, name: 'DiamondVIPRoulette', image: '/img/DiamondVIPRoulette.png' },
-  { id: 329, name: 'DoubleBallRoulette', image: '/img/DoubleBallRoulette.png' },
-  { id: 330, name: 'DragonaraDualPlayRoulette', image: '/img/DragonaraDualPlayRoulette.png' },
-  { id: 331, name: 'DRoulette', image: '/img/DRoulette.png' },
-  { id: 332, name: 'EuropeanRoulette(1)', image: '/img/EuropeanRoulette(1).png' },
+  { id: 280, name: 'Roulette 1', image: '/img/Roulette1.png' },
+  { id: 281, name: 'Roulette 2', image: '/img/Roulette2.png' },
+  { id: 282, name: 'Roulette Advanced', image: '/img/RouletteAdvanced.png' },
+  { id: 283, name: 'Roulette American', image: '/img/RouletteAmerican.png' },
+  { id: 284, name: 'Roulette Classic', image: '/img/RouletteClassic.png' },
+  { id: 285, name: 'Roulette EU', image: '/img/RouletteEU.png' },
+  { id: 286, name: 'Roulette Spanish 1', image: '/img/RouletteSpanish1.png' },
+  { id: 287, name: 'Roulette Spanish 2', image: '/img/RouletteSpanish2.png' },
+  { id: 288, name: 'Roulette X', image: '/img/RouletteX.png' },
+  { id: 289, name: 'Royal Riches Roulette', image: '/img/RoyalRichesRoulette.png' },
+  { id: 290, name: 'Royal Riches Spanish Roulette', image: '/img/RoyalRichesSpanishRoulette.png' },
+  { id: 291, name: 'Speed Roulette', image: '/img/SpeedRoulette.png' },
+  { id: 292, name: 'Speed Roulette 1', image: '/img/SpeedRoulette1.png' },
+  { id: 293, name: 'Speed Roulette 2', image: '/img/SpeedRoulette2.png' },
+  { id: 294, name: 'Turkish Roulette', image: '/img/TurkishRoulette.png' },
+  { id: 295, name: 'Oracle Blaze Roulette', image: '/img/VGL-oracleblazeroulette.200x200squareEN.png' },
+  { id: 296, name: 'Vip American Roulette', image: '/img/VipAmericanRoulette.png' },
+  { id: 297, name: 'VIP Auto Roulette', image: '/img/VIPAutoRoulette.png' },
+  { id: 298, name: 'Vip European Roulette', image: '/img/VipEuropeanRoulette.png' },
+  { id: 299, name: 'Vulcano Roulette', image: '/img/VulcanoRoulette.png' },
+  { id: 300, name: 'XXXtreme Lighting Roulette', image: '/img/XXXtremeLightingRoulette.png' },
+  { id: 301, name: 'Zoom Roulette', image: '/img/ZoomRoulette.png' },
+  { id: 302, name: 'Classic Roulette', image: '/img/ClassicRoulette.jpg' },
+  { id: 303, name: 'Live Roulette', image: '/img/LiveRoulette.jpg' },
+  { id: 304, name: 'N1 Roulette', image: '/img/N1Roulette.jpg' },
+  { id: 305, name: 'Neon Roulette', image: '/img/Neon Roulette_300x300.jpg' },
+  { id: 306, name: 'Racing Roulette Horses', image: '/img/RacingRouletteHorses.jpg' },
+  { id: 307, name: 'S1 Roulette', image: '/img/S1Roulette.jpg' },
+  { id: 308, name: 'S2 Roulette', image: '/img/S2Roulette.jpg' },
+  { id: 309, name: 'Bulgaria Roulette', image: '/img/VGL-bulgariaroulette.400x400squareEN.jpg' },
+  { id: 310, name: 'Oracle 360 Roulette', image: '/img/VGL-oracle360roulette.200x200squareEN.jpg' },
+  { id: 311, name: 'Portomaso Roulette', image: '/img/VGL-portomasoroulette.200x200squareEN.jpg' },
+  { id: 312, name: '3D Roulette 2066', image: '/img/3DRoulette2066.png' },
+  { id: 313, name: '500x Auto Roulette Imperial', image: '/img/500xAutoRouletteImperial.png' },
+  { id: 314, name: '500x Turkish Roulette', image: '/img/500xTurkishRoulette.png' },
+  { id: 315, name: '777x Galaxy Roulette', image: '/img/777xGalaxyRoulette.png' },
+  { id: 316, name: 'American Roulette (1)', image: '/img/AmericanRoulette(1).png' },
+  { id: 317, name: 'American Roulette (2)', image: '/img/AmericanRoulette(2).png' },
+  { id: 318, name: 'American Roulette', image: '/img/AmericanRoulette.png' },
+  { id: 319, name: 'Auto Lightning Roulette', image: '/img/AutoLightningRoulette.png' },
+  { id: 320, name: 'Auto Roulette', image: '/img/AutoRoulette.png' },
+  { id: 321, name: 'Auto Roulette 1 (1)', image: '/img/AutoRoulette1(1).png' },
+  { id: 322, name: 'Auto Roulette 1', image: '/img/AutoRoulette1.png' },
+  { id: 323, name: 'Auto Roulette Noir', image: '/img/AutoRouletteNoir.png' },
+  { id: 324, name: 'Bucharest Roulette', image: '/img/BucharestRoulette.png' },
+  { id: 325, name: 'Casino Malta Dual Play Roulette', image: '/img/CasinoMaltaDualPlayRoulette.png' },
+  { id: 326, name: 'Casino Roulette', image: '/img/CasinoRoulette.png' },
+  { id: 327, name: 'C Roulette', image: '/img/CRoulette.png' },
+  { id: 328, name: 'Diamond VIP Roulette', image: '/img/DiamondVIPRoulette.png' },
+  { id: 329, name: 'Double Ball Roulette', image: '/img/DoubleBallRoulette.png' },
+  { id: 330, name: 'Dragonara Dual Play Roulette', image: '/img/DragonaraDualPlayRoulette.png' },
+  { id: 331, name: 'D Roulette', image: '/img/DRoulette.png' },
+  { id: 332, name: 'European Roulette (1)', image: '/img/EuropeanRoulette(1).png' },
 ];
 
 // --- Нові дані для Новинок ---

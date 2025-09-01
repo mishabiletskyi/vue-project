@@ -1,8 +1,22 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { saveUser } from '../lib/supabase'
 import useAuth from '../composables/useAuth.js'
 import AccountTransactions from '../components/account/AccountTransactions.vue'
+
+// Іконки для криптовалют у форматі SVG Data URI
+const cryptoIcons = {
+  btc: '/imgCripto/bitcoin.svg',
+  eth: '/imgCripto/ethereum.svg',
+  usdt: '/imgCripto/tether.svg',
+  bnb: '/imgCripto/bnb.svg',
+  sol: '/imgCripto/solana.svg',
+  xrp: '/imgCripto/xrp.svg',
+  doge: '/imgCripto/dogecoin.svg',
+  ada: '/imgCripto/cardano.svg',
+  trx: '/imgCripto/tron.svg',
+  ton: '/imgCripto/ton.svg',
+};
 
 const { balance, deposit: addDeposit, withdraw: doWithdraw } = useAuth()
 const activeTab = ref('deposit')
@@ -15,7 +29,7 @@ const tabs = [
 // Перемикач способу оплати
 const paymentMethod = ref('card') // 'card' або 'crypto'
 
-// Пополнение (картой)
+// --- Поповнення (картою) ---
 const cardNumber = ref('')
 const expiry = ref('')
 const cvv = ref('')
@@ -27,9 +41,84 @@ const showMessage = ref(false)
 const errors = ref({})
 const cardType = ref('')
 
-// Пополнение (крипто)
-const cryptoAddress = ref('bc1qxy2kgdygjrsqtzq2n0yrf24p0ngn9px8t5y92r')
-const qrCodeUrl = ref('')
+// --- Поповнення (крипто) ---
+// 1. Оновлений список ТОП-10 криптовалют + крипто-рубль
+const cryptoOptions = [
+  { id: 'btc', name: 'Bitcoin (BTC)', network: 'Bitcoin', address: 'bc1qYourBitcoinAddressHereRandomChars', instructions: 'Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.' },
+  { id: 'eth', name: 'Ethereum (ETH)', network: 'ERC20', address: '0xYourEthereumAddressHereRandomChars', instructions: 'Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**' },
+  { id: 'usdt', name: 'Tether (USDT TRC20)', network: 'TRC20', address: 'TYourTrc20AddressHereRandomChars', instructions: 'Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.' },
+  { id: 'bnb', name: 'BNB (BNB)', network: 'BEP20', address: '0xYourBnbBEP20AddressHereRandom', instructions: 'Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.' },
+  { id: 'sol', name: 'Solana (SOL)', network: 'Solana', address: 'SoLYourSolanaAddressHereRandomChars', instructions: 'Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.' },
+  { id: 'xrp', name: 'Ripple (XRP)', network: 'Ripple', address: 'rYourRippleAddressHereDestinationTag', instructions: 'Отправляйте только XRP. Для некоторых кошельков может потребоваться **Destination Tag**. Уточните в поддержке, если он нужен.' },
+  { id: 'doge', name: 'Dogecoin (DOGE)', network: 'Dogecoin', address: 'DYourDogecoinAddressHereRandomChars', instructions: 'Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.' },
+  { id: 'ada', name: 'Cardano (ADA)', network: 'Cardano', address: 'addr1YourCardanoAddressHereRandomCharsLong', instructions: 'Отправляйте только ADA в сети Cardano. Адреса Cardano начинаются с "addr1".' },
+  { id: 'trx', name: 'TRON (TRX)', network: 'TRC20', address: 'TYourTronTrxAddressHereRandomChars', instructions: 'Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.' },
+  { id: 'ton', name: 'Toncoin (TON)', network: 'TON', address: 'UQYourToncoinAddressHereRandomChars', instructions: 'Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON.' },
+].map(option => ({ ...option, icon: cryptoIcons[option.id] }));
+
+const selectedCryptoOption = ref(cryptoOptions[0])
+const isUpdatingCrypto = ref(false)
+const copyMessage = ref('')
+const dropdownRef = ref(null)
+const isDropdownOpen = ref(false)
+
+// Логіка для кастомного випадаючого списку
+function toggleDropdown() {
+  isDropdownOpen.value = !isDropdownOpen.value;
+}
+
+function selectOption(option) {
+  if (selectedCryptoOption.value.id === option.id) {
+    isDropdownOpen.value = false;
+    return;
+  }
+  
+  isUpdatingCrypto.value = true;
+  isDropdownOpen.value = false;
+  
+  setTimeout(() => {
+    selectedCryptoOption.value = option;
+    isUpdatingCrypto.value = false;
+  }, 1200);
+}
+
+// Закриття списку при кліку поза ним
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+
+// Обчислювані властивості для поточної обраної опції
+const currentCryptoAddress = computed(() => selectedCryptoOption.value.address)
+const currentQrCodeUrl = computed(() => {
+  if (selectedCryptoOption.value.id === 'rub') return ''
+  return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentCryptoAddress.value)}`
+})
+const currentCryptoInstructions = computed(() => selectedCryptoOption.value.instructions)
+
+// Оновлена функція копіювання
+function copyAddress() {
+  if (copyMessage.value) return 
+  navigator.clipboard.writeText(currentCryptoAddress.value)
+    .then(() => {
+      copyMessage.value = 'Адрес скопирован!'
+      setTimeout(() => { copyMessage.value = '' }, 3000) 
+    })
+    .catch(err => {
+      console.error('Не удалось скопировать текст: ', err)
+      copyMessage.value = 'Ошибка копирования'
+      setTimeout(() => { copyMessage.value = '' }, 3000)
+    });
+}
 
 function detectCardType(number) {
   number = number.replace(/\s/g, '')
@@ -130,7 +219,6 @@ async function submit() {
   }, 2000)
 }
 
-// Вывод
 const wCardNumber = ref('')
 const wAmount = ref('')
 const wErrors = ref({})
@@ -173,23 +261,6 @@ function openChat() {
     window.Intercom('show')
   }
 }
-
-function copyAddress() {
-  navigator.clipboard.writeText(cryptoAddress.value)
-    .then(() => {
-      alert('Адрес скопирован!');
-    })
-    .catch(err => {
-      console.error('Не удалось скопировать текст: ', err);
-    });
-}
-
-watch(cryptoAddress, (newVal) => {
-  if (newVal) {
-    qrCodeUrl.value = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(newVal)}`
-  }
-}, { immediate: true })
-
 </script>
 
 <template>
@@ -283,14 +354,54 @@ watch(cryptoAddress, (newVal) => {
       </form>
 
       <div v-if="paymentMethod === 'crypto'" class="crypto-section">
-        <h3>Оплата криптовалютой (USDT TRC20)</h3>
-        <p>Для пополнения баланса переведите средства на указанный ниже адрес. После оплаты обратитесь в службу поддержки, предоставив скриншот транзакции для зачисления средств.</p>
-        <div class="qr-code">
-          <img :src="qrCodeUrl" alt="QR Code" />
+        <div class="form-group">
+          <label for="crypto-select">Выберите способ оплаты</label>
+          <div class="custom-dropdown" ref="dropdownRef">
+            <div class="dropdown-selected" @click="toggleDropdown">
+              <img :src="selectedCryptoOption.icon" :alt="selectedCryptoOption.name" class="crypto-icon">
+              <span>{{ selectedCryptoOption.name }}</span>
+              <span class="dropdown-arrow" :class="{ 'open': isDropdownOpen }"></span>
+            </div>
+            <transition name="dropdown-fade">
+              <div v-if="isDropdownOpen" class="dropdown-options">
+                <div 
+                  v-for="option in cryptoOptions" 
+                  :key="option.id" 
+                  class="dropdown-item" 
+                  @click="selectOption(option)"
+                >
+                  <img :src="option.icon" :alt="option.name" class="crypto-icon">
+                  <span>{{ option.name }}</span>
+                </div>
+              </div>
+            </transition>
+          </div>
         </div>
-        <div class="address-container">
-          <p class="address">{{ cryptoAddress }}</p>
-          <button @click="copyAddress" class="copy-btn">Копировать</button>
+        
+        <div class="crypto-content-wrapper">
+          <div v-if="isUpdatingCrypto" class="qr-update-overlay">
+            <div class="spinner"></div>
+            <p>Генерируем новый адрес...</p>
+          </div>
+
+          <div v-else class="crypto-details">
+             <transition name="toast-fade">
+              <div v-if="copyMessage" class="copy-success-toast">
+                {{ copyMessage }}
+              </div>
+            </transition>
+
+            <div v-if="currentQrCodeUrl" class="qr-code">
+              <img :src="currentQrCodeUrl" alt="QR Code" />
+            </div>
+            
+            <div class="address-container">
+              <p class="address">{{ currentCryptoAddress }}</p>
+              <button @click="copyAddress" class="copy-btn">Копировать</button>
+            </div>
+
+            <p class="instructions" v-html="currentCryptoInstructions"></p>
+          </div>
         </div>
       </div>
       
@@ -341,7 +452,7 @@ watch(cryptoAddress, (newVal) => {
   gap: 8px;
   margin-bottom: 24px;
   justify-content: center;
-  flex-wrap: wrap; /* Додано, щоб вкладки переносилися на новий рядок */
+  flex-wrap: wrap; 
 }
 .tabs button {
   padding: 12px 20px;
@@ -352,8 +463,8 @@ watch(cryptoAddress, (newVal) => {
   cursor: pointer;
   transition: background 0.3s;
   font-size: 1rem;
-  flex-grow: 1; /* Додано, щоб кнопки рівномірно розподіляли простір */
-  min-width: 120px; /* Мінімальна ширина для кнопок */
+  flex-grow: 1; 
+  min-width: 120px;
 }
 .tabs button.active {
   background: #ff4d00;
@@ -365,7 +476,7 @@ watch(cryptoAddress, (newVal) => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 16px; /* Додано внутрішній відступ для мобільних пристроїв */
+  padding: 0 16px; 
 }
 .deposit-form label {
   margin-bottom: 4px;
@@ -379,8 +490,8 @@ watch(cryptoAddress, (newVal) => {
   background: #0b0c10;
   color: #f1f5f9;
   font-size: 1rem;
-  width: 100%; /* Забезпечує, що поле не виходить за межі батьківського контейнера */
-  box-sizing: border-box; /* Важливо для правильного розрахунку ширини */
+  width: 100%;
+  box-sizing: border-box;
 }
 .deposit-form select {
   appearance: none;
@@ -397,16 +508,17 @@ watch(cryptoAddress, (newVal) => {
 .form-row {
   display: flex;
   gap: 16px;
-  flex-wrap: wrap; /* Додано для перенесення на мобільних пристроях */
+  flex-wrap: wrap;
 }
 .form-row > .form-group {
-  flex: 1 1 0; /* Гнучке зростання для рівномірного розподілу */
-  min-width: 120px; /* Мінімальна ширина для полів */
+  flex: 1 1 0;
+  min-width: 120px;
 }
 .form-group {
   display: flex;
   flex-direction: column;
   position: relative;
+  text-align: left; /* Для лейблів */
 }
 input.error, select.error {
   border: 1px solid #d00 !important;
@@ -441,7 +553,7 @@ input.error, select.error {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 0 20px; /* Додано відступ, щоб модальне вікно не торкалось країв */
+  padding: 0 20px;
 }
 .modal-content {
   background: var(--card);
@@ -450,13 +562,6 @@ input.error, select.error {
   max-width: 400px;
   text-align: center;
 }
-@media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-  }
-}
-
-/* Нові стилі для іконки картки */
 .card-input-group {
   position: relative;
 }
@@ -468,49 +573,106 @@ input.error, select.error {
   height: 24px;
 }
 
-/* Нові стилі для крипто-розділу */
+/* --- ОНОВЛЕНІ ТА НОВІ СТИЛІ ДЛЯ КРИПТО-СЕКЦІЇ --- */
 .crypto-section {
   max-width: 480px;
   margin: 0 auto;
   text-align: center;
   padding: 0 16px;
 }
-.crypto-section h3 {
+/* Змінено: Збільшено відступ під випадаючим списком */
+.crypto-section .form-group {
+  margin-bottom: 40px;
+}
+.crypto-content-wrapper { 
+  position: relative;
+  min-height: 350px;
+}
+.qr-update-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 12, 16, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+.spinner {
+  border: 4px solid #f3f3f330;
+  border-top: 4px solid #ff4d00;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
   margin-bottom: 16px;
 }
-.crypto-section p {
-  line-height: 1.5;
-  margin-bottom: 24px;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
+
+.crypto-details {
+  position: relative; /* Важливо для позиціонування toast */
+}
+
+/* Нове сповіщення про копіювання */
+.copy-success-toast {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(16, 20, 28, 0.95);
+  color: #4caf50;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 1.1rem; /* Збільшений шрифт */
+  font-weight: 500;
+  z-index: 30; /* Поверх всього */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px);
+  border: 1px solid #4caf5030;
+}
+.toast-fade-enter-active, .toast-fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.toast-fade-enter-from, .toast-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
 .qr-code {
   background: #fff;
   padding: 16px;
   border-radius: 8px;
   display: inline-block;
-  margin-bottom: 24px;
-  max-width: 100%;
   box-sizing: border-box;
+  margin-bottom: 32px; /* Змінено: Збільшено відступ під QR-кодом */
 }
 .qr-code img {
   display: block;
-  max-width: 100%;
-  height: auto;
 }
 .address-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   background: #1e232d;
-  padding: 12px;
+  padding: 12px 16px;
   border-radius: 8px;
+  margin-bottom: 40px; /* Змінено: Збільшено відступ під адресою */
 }
 .address {
-  font-size: 0.9rem;
+  font-size: 1rem;
   word-break: break-all;
   flex-grow: 1;
   text-align: left;
   margin: 0;
+  color: #e2e8f0;
 }
 .copy-btn {
   background: #ff4d00;
@@ -521,9 +683,99 @@ input.error, select.error {
   cursor: pointer;
   white-space: nowrap;
   font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+.copy-btn:hover {
+  background-color: #e64500;
+}
+.instructions {
+  line-height: 1.6;
+  text-align: left;
+  background-color: rgba(30, 35, 45, 0.25);
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #adb5bd;
+  border-left: 3px solid #ff4d00;
+}
+.instructions strong {
+  color: #ffc107;
 }
 
-/* Виправлені стилі для перемикача та адаптація */
+/* Кастомний випадаючий список */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+.dropdown-selected {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #2a2f3a;
+  background: #0b0c10;
+  color: #f1f5f9;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.dropdown-selected:hover {
+  border-color: #ff4d00;
+}
+.crypto-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+.dropdown-arrow {
+  margin-left: auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #f1f5f9;
+  transition: transform 0.3s ease;
+}
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #1e232d;
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  margin-top: 4px;
+  z-index: 100;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: #f1f5f9;
+  transition: background-color 0.2s;
+}
+.dropdown-item:hover {
+  background-color: #ff4d00;
+}
+.dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #2a2f3a;
+}
+.dropdown-fade-enter-active, .dropdown-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.dropdown-fade-enter-from, .dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Перемикач */
 .payment-toggle-container {
   display: flex;
   align-items: center;
@@ -531,7 +783,6 @@ input.error, select.error {
   gap: 10px;
   margin-bottom: 24px;
 }
-
 .toggle-label-text {
   font-size: 1rem;
   font-weight: bold;
@@ -539,7 +790,6 @@ input.error, select.error {
   user-select: none;
   white-space: nowrap;
 }
-
 .toggle-switch-new {
   position: relative;
   display: inline-block;
@@ -580,22 +830,26 @@ input:checked + .toggle-slider:before {
   transform: translateX(81px);
 }
 
-/* Адаптація для мобільних пристроїв */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
 @media (max-width: 480px) {
   .tabs {
-    flex-direction: column; /* Змінено на column для мобільних пристроїв */
+    flex-direction: column;
   }
   .tabs button {
     font-size: 0.9rem;
   }
   .payment-toggle-container {
-    gap: 5px; /* Зменшення проміжку */
+    gap: 5px;
   }
   .toggle-label-text {
     font-size: 0.8rem;
   }
   .toggle-switch-new {
-    width: 150px; /* Зменшення ширини перемикача на мобілках */
+    width: 150px;
     height: 30px;
     border-radius: 15px;
   }
@@ -608,6 +862,9 @@ input:checked + .toggle-slider:before {
   }
   input:checked + .toggle-slider:before {
     transform: translateX(71px);
+  }
+  .address {
+    font-size: 0.8rem;
   }
 }
 </style>

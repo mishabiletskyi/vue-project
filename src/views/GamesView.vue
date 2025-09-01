@@ -1,94 +1,88 @@
 <script setup>
 import { ref, computed } from 'vue';
-import LeftSidebar from '../components/LeftSidebar.vue';
-import RightSidebar from '../components/RightSidebar.vue';
+import { popularGames, newGames, LiveGames, rouletteGames, allGames } from '@/data/mockData.js';
 import GamesGrid from '../components/GamesGrid.vue';
-import { allGames, popularGames, LiveGames, rouletteGames, newGames } from '@/data/mockData.js';
+import GamesCarousel from '../components/GamesCarousel.vue';
 
-const tabs = [
-  { key: 'all', label: 'Все', games: allGames },
-  { key: 'popular', label: 'Популярные', games: popularGames },
-  { key: 'live', label: 'Live', games: LiveGames },
-  { key: 'roulette', label: 'Рулетка', games: rouletteGames },
-  { key: 'new', label: 'Новинки', games: newGames }
-];
-
-const activeTab = ref(tabs[0].key);
 const searchQuery = ref('');
 
-const filteredGames = computed(() => {
-  const current = tabs.find(tab => tab.key === activeTab.value);
-  if (!current) return [];
-  return current.games.filter(game =>
-    game.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+const searchResults = computed(() => {
+  if (!searchQuery.value || searchQuery.value.length < 2) {
+    return [];
+  }
+  return allGames.filter(game =>
+    (game.title || game.name).toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 </script>
 
 <template>
-  <div class="main-layout container">
-    <LeftSidebar />
-    <div class="main-content">
+  <div class="container">
+    <div class="main-content-full">
       <div class="page-header">
-        <h1>Игры</h1>
-        <div class="tabs">
-          <button
-            v-for="tab in tabs"
-            :key="tab.key"
-            :class="['tab-button', { active: tab.key === activeTab }]"
-            @click="activeTab = tab.key"
-          >
-            {{ tab.label }}
-          </button>
-        </div>
+        <h1>Игровой центр</h1>
         <div class="search-bar">
-          <input type="text" v-model="searchQuery" placeholder="Поиск игр..." />
+          <input type="text" v-model="searchQuery" placeholder="Найти игру..." />
         </div>
       </div>
-      <GamesGrid :games="filteredGames" />
+
+      <div v-if="!searchQuery" class="game-lobby">
+        <GamesCarousel 
+          title="🔥 Популярные" 
+          :games="popularGames" 
+          viewAllLink="/games/popular" 
+        />
+        <GamesCarousel 
+          title="✨ Новинки" 
+          :games="newGames" 
+          viewAllLink="/games/new"
+        />
+        <GamesCarousel 
+          title="🔴 Live Казино" 
+          :games="LiveGames" 
+          viewAllLink="/games/live" 
+        />
+        <GamesCarousel 
+          title="🎲 Рулетка" 
+          :games="rouletteGames" 
+          viewAllLink="/games/roulette" 
+        />
+      </div>
+
+      <div v-else class="search-results">
+        <h2 v-if="searchResults.length > 0">Результаты поиска “{{ searchQuery }}”</h2>
+        <h2 v-else>По запросу “{{ searchQuery }}” ничего не найдено</h2>
+        <GamesGrid :games="searchResults" />
+      </div>
     </div>
-    <RightSidebar />
   </div>
 </template>
 
 <style scoped>
+.main-content-full {
+  width: 100%;
+}
+
 .page-header { margin-bottom: 32px; }
-.page-header h1 { font-size: 2.5rem; margin-bottom: 8px; }
-.tabs { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-.tab-button {
-  padding: 8px 16px;
-  background-color: var(--card);
-  border: 1px solid #2a2f3a;
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-.tab-button.active {
-  background-color: var(--accent);
-  color: #fff;
-}
+.page-header h1 { font-size: 2.5rem; margin-bottom: 8px; color: var(--text, #fff); }
 .search-bar { margin-top: 16px; }
 .search-bar input {
   width: 100%;
   max-width: 400px;
   padding: 12px 16px;
-  background-color: var(--card);
-  border: 1px solid #2a2f3a;
+  background-color: var(--card, #2a2f3a);
+  border: 1px solid #3b414f;
   border-radius: 8px;
-  color: var(--text);
+  color: var(--text, #fff);
   font-size: 1rem;
-  transition: border-color 0.2s;
 }
 .search-bar input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--accent, #5a67d8);
 }
-@media (max-width: 768px) {
-  .page-header h1 { font-size: 2rem; }
-  .search-bar input { max-width: 100%; padding: 14px 16px; }
-}
-@media (max-width: 480px) {
-  .search-bar input { padding: 16px; font-size: 1.1rem; }
+.search-results h2 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
 }
 </style>
+

@@ -42,19 +42,19 @@ import { popularGames } from '@/data/mockData.js';
 </template>
 
 <style scoped>
-@media (max-width: 768px) {
-  .promo {
-    flex-direction: column;
-    text-align: center;
-  }
-  .promo .btn {
-    width: 100%;
-  }
+.main-layout {
+  display: flex;
+  gap: 24px;
 }
-@media (max-width: 480px) {
-  .promo .btn {
-    padding: 12px 16px;
-    font-size: 1rem;
-  }
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+.section {
+  margin-top: 48px;
+}
+.section-head {
+  margin-bottom: 24px;
 }
 </style>
+
