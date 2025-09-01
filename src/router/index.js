@@ -7,6 +7,7 @@ import RegisterView from '../views/RegisterView.vue';
 import PasswordRecoveryView from '../views/PasswordRecoveryView.vue';
 import DepositView from '../views/DepositView.vue';
 import BonusView from '../views/BonusView.vue';
+import BonusInfoView from '../views/BonusInfoView.vue';
 import { allGames,rouletteGames, newGames } from '@/data/mockData.js';
 import AccountView from '../views/AccountView.vue'
 
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/bonuses',
       name: 'bonuses',
       component: BonusView
+    },
+    {
+      path: '/bonus-info',
+      name: 'bonus-info',
+      component: BonusInfoView
     },
     {
       path: '/games',
