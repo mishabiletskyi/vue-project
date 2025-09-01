@@ -33,10 +33,10 @@ function goToDeposit() {
 
       <nav class="nav desktop-nav" aria-label="Основная навигация">
         <ul class="nav-list">
-          <li><a href="#games">Игры</a></li>
-          <li><a href="#bonuses">Бонусы</a></li>
-          <li><a href="#tournaments">Турниры</a></li>
-          <li><a href="#support">Поддержка</a></li>
+         <li><RouterLink to="/games">Игры</RouterLink></li>
+          <li><RouterLink to="/bonuses">Бонусы</RouterLink></li>
+          <li><RouterLink to="/tournaments">Турниры</RouterLink></li>
+          <li><RouterLink to="/support">Поддержка</RouterLink></li>
         </ul>
       </nav>
 
