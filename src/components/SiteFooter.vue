@@ -4,16 +4,16 @@
       <nav aria-label="Навигация подвала">
         <h3 class="footer-title">Разделы</h3>
         <ul class="footer-links">
-          <li><a href="#games">Игры</a></li>
-          <li><a href="#bonuses">Бонусы</a></li>
-          <li><a href="#tournaments">Турниры</a></li>
+          <li><RouterLink to="/games">Игры</RouterLink></li>
+          <li><RouterLink to="/bonuses">Бонусы</RouterLink></li>
+          <li><RouterLink to="/tournaments">Турниры</RouterLink></li>
           <li><a href="#learn-more">О нас</a></li>
         </ul>
       </nav>
       <div>
         <h3 class="footer-title">Поддержка</h3>
         <ul class="footer-links">
-          <li><a href="#">Центр помощи</a></li>
+          <li><RouterLink to="/support">Центр помощи</RouterLink></li>
           <li><RouterLink to="/terms">Правила и условия</RouterLink></li>
           <li><RouterLink to="/privacy">Политика конфиденциальности</RouterLink></li>
         </ul>
