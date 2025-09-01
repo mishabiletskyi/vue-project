@@ -61,33 +61,40 @@ function goToDeposit() {
 <style scoped>
 .main-layout {
   display: flex;
+  gap: 24px;
 }
+
 .main-content {
   flex-grow: 1;
-  padding-left: 24px; /* Для вирівнювання з LeftSidebar */
 }
+
 .bonus-hero-content {
-  margin-bottom: 24px;
-  text-align: center; /* Центрування тексту заголовка */
+  margin-bottom: 32px;
+  text-align: center;
 }
+
 .bonus-hero-content h1 {
   font-size: 2.5rem;
   margin-bottom: 8px;
-  color: white; /* Білий колір для заголовка */
+  color: white;
 }
+
 .bonus-hero-content p {
   color: var(--muted);
+  font-size: 1.1rem;
 }
+
 .bonus-content-grid {
   display: grid;
+  /* 3 колонки для десктопів */
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  justify-items: center;
-  align-items: flex-start; /* Вирівнювання по верхньому краю */
-  width: 100%; /* Забезпечуємо, що сітка займає всю доступну ширину */
-  max-width: 1200px; /* Обмеження ширини для кращого вигляду */
-  margin: 0 auto; /* Центрування сітки */
+  width: 100%;
+  margin: 0 auto;
+  /* Додано відступ знизу, щоб не торкатись футера */
+  margin-bottom: 40px; 
 }
+
 .bonus-card {
   background-color: var(--card);
   border-radius: var(--radius);
@@ -95,84 +102,105 @@ function goToDeposit() {
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  position: relative; /* Для позиціонування текстового оверлея */
+  position: relative;
   width: 100%;
-  max-width: 380px; /* Обмеження ширини картки */
+  /* Трохи зменшив максимальну ширину для кращого вигляду */
+  max-width: 360px; 
+  justify-self: center; /* Центруємо картку в комірці гріда */
 }
+
 .bonus-card-img {
   width: 100%;
   height: auto;
   display: block;
 }
+
 .bonus-text-overlay {
   position: absolute;
-  bottom: 120px; /* Вище кнопки */
+  bottom: 80px; /* Оптимальна висота над кнопкою */
   left: 0;
   width: 100%;
-  padding: 15px; /* Збільшений відступ для кращого вигляду */
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)); /* Градієнт для кращої читабельності */
+  padding: 20px 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: white;
   text-align: center;
-  box-sizing: border-box; /* Враховуємо padding у розмірах */
+  box-sizing: border-box;
 }
+
 .bonus-text-overlay h3 {
-  font-size: 1.2rem; /* Трохи менший шрифт для заголовка */
-  margin-bottom: 5px;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
   text-transform: uppercase;
 }
+
 .bonus-text-overlay p {
-  font-size: 1rem; /* Менший шрифт для опису */
-  line-height: 1.3;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
 }
+
 .bonus-text-overlay .small-text {
   font-size: 0.8rem;
-  margin-top: 5px;
+  margin-top: 8px;
   opacity: 0.8;
 }
+
 .bonus-card-actions {
+  /* Цей блок тепер знаходиться в самому низу картки */
+  margin-top: auto; 
   padding: 16px;
   display: flex;
   justify-content: center;
+  background-color: var(--card); /* Додано фон для перекриття градієнта */
 }
+
 .bonus-action-btn {
   width: 100%;
 }
 
-/* Адаптивність */
-@media (max-width: 1200px) {
-  .main-content {
-    padding-left: 12px;
-  }
+/* --- Адаптивність --- */
+
+/* Планшети (<= 1024px) */
+@media (max-width: 1024px) {
   .bonus-content-grid {
+    /* 2 колонки */
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Мобільні пристрої (<= 768px) */
 @media (max-width: 768px) {
-  .main-content {
-    padding-left: 0;
+  .main-layout {
+    /* Сайдбар і контент стають один під одним */
+    flex-direction: column;
+    padding: 0 16px; /* Додаємо бічні відступи для всього контенту */
   }
+
   .bonus-hero-content h1 {
     font-size: 2rem;
   }
-  .bonus-hero-content p {
-    font-size: 0.9rem;
-  }
+  
   .bonus-content-grid {
+    /* 1 колонка */
     grid-template-columns: 1fr;
   }
-  .bonus-text-overlay {
-    bottom: 50px; /* Регулюємо відступ знизу для менших екранів */
-    padding: 10px;
-  }
-  .bonus-text-overlay h3 {
-    font-size: 1rem;
-  }
-  .bonus-text-overlay p {
-    font-size: 0.8rem;
-  }
+
   .bonus-card {
-    max-width: 100%; /* На малих екранах картки займають 100% ширини */
+    /* Картка займає всю доступну ширину */
+    max-width: 100%;
+  }
+
+  .bonus-text-overlay {
+    bottom: 70px; /* Коригуємо позицію для мобільних */
+    padding: 15px 10px;
+  }
+
+  .bonus-text-overlay h3 {
+    font-size: 1.1rem;
+  }
+
+  .bonus-text-overlay p {
+    font-size: 0.85rem;
   }
 }
 </style>
