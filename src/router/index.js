@@ -8,6 +8,7 @@ import PasswordRecoveryView from '../views/PasswordRecoveryView.vue';
 import DepositView from '../views/DepositView.vue';
 import BonusView from '../views/BonusView.vue';
 import { allGames, rouletteGames, newGames } from '@/data/mockData.js';
+import AccountView from '../views/AccountView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,7 +76,10 @@ const router = createRouter({
       path: '/deposit',
       name: 'deposit',
       component: DepositView
-    }
+    },
+    { path: '/account', name: 'account', component: AccountView, meta: { requiresAuth: true } },
+    { path: '/terms', name: 'terms', component: () => import('../views/TermsView.vue') },
+    { path: '/privacy', name: 'privacy', component: () => import('../views/PrivacyView.vue') }
   ]
 })
 

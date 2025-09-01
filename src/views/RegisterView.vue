@@ -9,11 +9,29 @@ const { register } = useAuth()
 const email = ref('')
 const password = ref('')
 const message = ref('')
+const error = ref(null)
+const isLoading = ref(false)
 
-function onSubmit() {
-  register({ email: email.value, password: password.value })
-  message.value = 'Регистрация успешна!'
-  setTimeout(() => router.push('/account'), 1000)
+async function onSubmit() {
+  isLoading.value = true
+  message.value = ''
+  error.value = null
+
+  try {
+    await register({ email: email.value, password: password.value })
+    
+    message.value = 'Реєстрація успішна! Зараз ви будете перенаправлені...'
+    
+    setTimeout(() => {
+      router.push('/account')
+    }, 2000)
+
+  } catch (err) {
+    error.value = err
+    message.value = err.message
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
@@ -25,13 +43,30 @@ function onSubmit() {
         <h1>Регистрация</h1>
         <form @submit.prevent="onSubmit">
           <label for="email">E-mail</label>
-          <input type="email" id="email" v-model="email" placeholder="Введите e-mail" required />
+          <input 
+            type="email" 
+            id="email" 
+            v-model="email" 
+            placeholder="Введите e-mail" 
+            required 
+            :disabled="isLoading" 
+          />
 
           <label for="password">Пароль</label>
-          <input type="password" id="password" v-model="password" placeholder="Введите пароль" required />
+          <input 
+            type="password" 
+            id="password" 
+            v-model="password" 
+            placeholder="Введите пароль" 
+            required 
+            :disabled="isLoading" 
+          />
 
-          <button type="submit">Зарегистрироваться</button>
-          <p v-if="message" class="success">{{ message }}</p>
+          <button type="submit" :disabled="isLoading">
+            {{ isLoading ? 'Реєстрація...' : 'Зарегистрироваться' }}
+          </button>
+          
+          <p v-if="message" :class="{ 'success': !error, 'error': error }">{{ message }}</p>
         </form>
         <div class="extra">
           <p>Уже есть аккаунт? <router-link to="/login">Login</router-link></p>
@@ -70,15 +105,8 @@ function onSubmit() {
   box-shadow: 0 10px 30px rgba(0,0,0,.35);
   position: relative;
 }
-.login-form h1 {
-  margin: 0 0 24px;
-  font-size: 2rem;
-  text-align: center;
-}
-.login-form label {
-  display: block;
-  margin-bottom: 8px;
-}
+.login-form h1 { margin: 0 0 24px; font-size: 2rem; text-align: center; }
+.login-form label { display: block; margin-bottom: 8px; }
 .login-form input {
   width: 100%;
   padding: 12px;
@@ -88,10 +116,7 @@ function onSubmit() {
   background: #0b0c10;
   color: #f1f5f9;
 }
-.login-form input:focus {
-  outline: none;
-  border-color: #ff4d00;
-}
+.login-form input:focus { outline: none; border-color: #ff4d00; }
 .login-form button {
   width: 100%;
   padding: 14px;
@@ -103,19 +128,10 @@ function onSubmit() {
   cursor: pointer;
   transition: background .3s;
 }
-.login-form button:hover {
-  background: #ff1a1a;
-}
-.login-form .extra {
-  margin-top: 16px;
-  text-align: center;
-}
-.login-form .extra a {
-  color: #ff9a00;
-}
-.login-form .extra a:hover {
-  text-decoration: underline;
-}
+.login-form button:hover { background: #ff1a1a; }
+button:disabled { background: #555; cursor: not-allowed; }
+.login-form .extra { margin-top: 16px; text-align: center; }
+.login-form .extra a { color: #ff9a00; }
 .terms-text {
   width: 640px;
   font-size: 0.8rem;
@@ -124,55 +140,16 @@ function onSubmit() {
   line-height: 1.4;
   text-align: center;
 }
-.terms-text a {
-  color: #ff9a00;
-  text-decoration: underline;
-}
-.bonus-section {
-  width: 50%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #0b0c10;
-}
-.bonus-section img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #f1f5f9;
-  text-decoration: none;
-  transition: color .2s;
-}
-.close-btn:hover {
-  color: #ff4d00;
-}
-.success {
-  color: #ff9a00;
-  margin-top: 8px;
-  text-align: center;
-}
+.terms-text a { color: #ff9a00; text-decoration: underline; }
+.bonus-section { width: 50%; height: 100vh; }
+.bonus-section img { width: 100%; height: 100%; object-fit: cover; }
+.close-btn { position: absolute; top: 16px; right: 20px; font-size: 1.8rem; font-weight: bold; color: #f1f5f9; text-decoration: none; }
+.success { color: #4ade80; margin-top: 16px; text-align: center; }
+.error { color: #f87171; margin-top: 16px; text-align: center; }
 @media (max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-    height: auto;
-  }
-  .login-box, .bonus-section {
-    width: 100%;
-  }
-  .bonus-section {
-    height: 200px;
-  }
-  .login-form, .terms-text {
-    width: 100%;
-    margin: 24px;
-  }
+  .auth-container { flex-direction: column; height: auto; }
+  .login-box, .bonus-section { width: 100%; }
+  .bonus-section { height: 200px; }
+  .login-form, .terms-text { width: 100%; margin: 24px; }
 }
 </style>
