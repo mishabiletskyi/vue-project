@@ -427,7 +427,7 @@ function openChat() {
           <input id="wAmount" type="number" min="1" v-model="wAmount" :class="{ error: wErrors.amount }" required />
           <span class="error-text" v-if="wErrors.amount">{{ wErrors.amount }}</span>
         </div>
-        <p class="balance">Доступно: {{ balance.toFixed(2) }}₴</p>
+        <p class="balance">Доступно: {{ balance.toFixed(2) }}₽</p>
         <button type="submit" class="btn">Вывести</button>
         <p v-if="wMessage" class="success-text">{{ wMessage }}</p>
       </form>
