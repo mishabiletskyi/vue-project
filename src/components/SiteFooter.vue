@@ -7,7 +7,6 @@
           <li><RouterLink to="/games">Игры</RouterLink></li>
           <li><router-link to="/bonus-info">Бонусы</router-link></li>
           <li><RouterLink to="/tournaments">Турниры</RouterLink></li>
-          <li><a href="#learn-more">О нас</a></li>
         </ul>
       </nav>
       <div>
