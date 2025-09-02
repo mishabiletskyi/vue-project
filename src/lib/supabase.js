@@ -1,28 +1,36 @@
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+import { supabase } from '../supabaseClient'; 
 
+/**
+ * Оновлює дані профілю для поточного авторизованого користувача.
+ * @param {object} data - Об'єкт з даними для оновлення (напр., { nameCard: '...', cardNumber: '...' }).
+ */
 export async function saveUser(data) {
-  const url = `${SUPABASE_URL}/rest/v1/users`
   try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation' // або return=minimal, якщо не треба відповідь
-      },
-      body: JSON.stringify(data)
-    })
-
-    if (!res.ok) {
-      console.error('Failed to save user data', await res.text())
+    // 1. Отримуємо ID користувача з localStorage, щоб знати, кого оновлювати
+    const userId = localStorage.getItem('user-id');
+    if (!userId) {
+      throw new Error("ID користувача не знайдено. Неможливо оновити профіль.");
     }
+
+    // 2. Використовуємо клієнт Supabase для оновлення даних, як у вашому прикладі
+    const { error } = await supabase
+      .from('profiles')    // Вказуємо правильну таблицю 'profiles'
+      .update(data)        // Передаємо дані, які потрібно оновити
+      .eq('id', userId);   // Вказуємо, який саме запис оновити
+
+    // 3. Якщо Supabase повернув помилку, обробляємо її
+    if (error) {
+      throw error;
+    }
+
+    console.log('Дані профілю успішно збережено!');
+
   } catch (err) {
-    console.error('Error saving user data', err)
+    console.error('Помилка при збереженні даних:', err.message);
+    // Тут можна додатково обробити помилку, наприклад, показати сповіщення
   }
 }
 
 export default {
   saveUser
-}
+};

@@ -1,12 +1,12 @@
 <script setup>
-import { reactive, ref, onMounted, watch, computed } from 'vue'
+import { reactive, ref, onMounted, watch, computed, nextTick } from 'vue' // <-- 1. Додано nextTick
 import { supabase } from '../../supabaseClient'
 import { Country, State, City } from 'country-state-city'
 
 const form = reactive({
   lastName: '', firstName: '', middleName: '', birthDate: '', taxId: '',
   country: '', region: '', city: '', address: '', postalCode: '',
-  email: '', phone: '', password: ''
+  email: '', phone: '', password: '', avatar_url: null
 })
 
 const message = ref('')
@@ -42,27 +42,46 @@ onMounted(async () => {
   }
 });
 
-watch(() => form.country, (newCountryIso) => {
+watch(() => form.country, (newCountryIso, oldCountryIso) => {
+  // Заповнюємо регіони, тільки якщо країна дійсно змінилася користувачем
+  if (newCountryIso !== oldCountryIso) {
+    form.region = '';
+    form.city = '';
+  }
   regions.value = newCountryIso ? State.getStatesOfCountry(newCountryIso).map(s => ({ name: s.name, isoCode: s.isoCode })) : [];
-  form.region = '';
-  form.city = '';
 });
 
-watch(() => form.region, (newRegionIso) => {
-  cities.value = newRegionIso ? City.getCitiesOfState(form.country, newRegionIso) : [];
-  form.city = '';
+watch(() => form.region, (newRegionIso, oldRegionIso) => {
+  // Заповнюємо міста, тільки якщо регіон дійсно змінився користувачем
+  if (newRegionIso !== oldRegionIso) {
+    form.city = '';
+  }
+  cities.value = (form.country && newRegionIso) ? City.getCitiesOfState(form.country, newRegionIso) : [];
 });
 
+// --- ✅ ОСНОВНЕ ВИПРАВЛЕННЯ ТУТ ---
 async function loadProfile(id) {
   try {
     const { data, error } = await supabase.from('profiles').select('*').eq('id', id).single();
-    if (error) throw error;
-    Object.assign(form, data);
+    if (error || !data) throw error || new Error("Profile not found");
+
+    // Спочатку присвоюємо всі дані, ОКРІМ залежних полів
+    const { country, region, city, ...restOfData } = data;
+    Object.assign(form, restOfData);
     avatar.value = data.avatar_url || '';
-    if (form.country) {
-      regions.value = State.getStatesOfCountry(form.country).map(s => ({ name: s.name, isoCode: s.isoCode }));
-      if (form.region) {
-        cities.value = City.getCitiesOfState(form.country, form.region);
+
+    // Тепер послідовно встановлюємо залежні поля, чекаючи на оновлення DOM
+    if (country) {
+      form.country = country;
+      await nextTick(); // Чекаємо, доки watch для країни відпрацює і заповнить список регіонів
+      
+      if (region) {
+        form.region = region;
+        await nextTick(); // Чекаємо, доки watch для регіону відпрацює і заповнить список міст
+        
+        if (city) {
+          form.city = city;
+        }
       }
     }
   } catch (err) {
@@ -91,7 +110,6 @@ async function save() {
 function startFakeProgress() {
     uploadProgress.value = 0;
     if (progressInterval) clearInterval(progressInterval);
-
     progressInterval = setInterval(() => {
         if (uploadProgress.value < 95) {
             uploadProgress.value += 5;
@@ -121,26 +139,29 @@ async function onAvatarChange(e) {
       throw new Error("Не удалось сгенерировать публичный URL для фото.");
     }
     
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({ avatar_url: data.publicUrl })
-      .eq('id', userId.value);
-    if (updateError) throw updateError;
+    const { error: rpcError } = await supabase.rpc('update_avatar_url', {
+      new_avatar_url: data.publicUrl
+    });
+
+    if (rpcError) throw rpcError;
     
-    // Success
+    // Если всё успешно, обновляем интерфейс И ДАННЫЕ ФОРМЫ
     clearInterval(progressInterval);
     uploadProgress.value = 100;
-    avatar.value = data.publicUrl;
+
+    avatar.value = data.publicUrl; // Эта строка обновляет картинку
+    form.avatar_url = data.publicUrl; // ✅ ДОБАВЬТЕ ЭТУ СТРОКУ! Она обновляет данные в форме.
+
     message.value = 'Фото успешно загружено!';
 
   } catch (err) {
     message.value = `Ошибка загрузки фото: ${err.message}`;
     console.error('Детальная ошибка:', err);
-    clearInterval(progressInterval); // Stop progress on error
+    clearInterval(progressInterval);
   } finally {
     setTimeout(() => {
         isUploading.value = false;
-    }, 2000); // Wait 2 seconds after completion (success or fail)
+    }, 2000);
   }
 }
 </script>
@@ -219,40 +240,35 @@ async function onAvatarChange(e) {
   padding: 24px;
   border-radius: 12px;
   max-width: 800px;
-  margin: 40px auto; /* Added top/bottom margin */
+  margin: 40px auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   color: #f1f5f9;
 }
-
 .avatar-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
-  min-height: 180px; /* Reserve space for progress bar */
+  min-height: 180px;
   justify-content: center;
 }
-
 .avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 16px; /* Increased margin */
+  margin-bottom: 16px;
 }
-
 .avatar-fallback { 
   display: flex; 
   justify-content: center; 
   align-items: center; 
 }
-
 .avatar-fallback span { 
   font-size: 56px; 
   font-weight: bold; 
   color: white; 
 }
-
 .upload-label { 
   cursor: pointer; 
   display: inline-block; 
@@ -264,10 +280,7 @@ async function onAvatarChange(e) {
 .upload-label:hover {
     background-color: #2a2f3a;
 }
-
 .upload-label input { display: none; }
-
-/* Progress Bar Styles */
 .progress-container {
     width: 100%;
     max-width: 300px;
@@ -291,43 +304,36 @@ async function onAvatarChange(e) {
     color: #94a3b8;
     font-size: 14px;
 }
-
-
 h2 {
     margin-top: 24px;
     margin-bottom: 16px;
     border-bottom: 1px solid #2a2f3a;
     padding-bottom: 8px;
 }
-
 .grid { 
   display: grid; 
   gap: 16px; 
   margin-bottom: 24px; 
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
 }
-
 label { 
   display: flex; 
   flex-direction: column; 
   font-size: 14px; 
   gap: 8px; 
 }
-
 input, select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #2a2f3a;
   background: #0b0c10;
   color: #f1f5f9;
-  font-size: 1rem; /* Better readability */
+  font-size: 1rem;
 }
-
 input:focus, select:focus {
     outline: none;
     border-color: #ff4d00;
 }
-
 button {
   width: 100%;
   padding: 12px;
@@ -340,32 +346,23 @@ button {
   font-weight: bold;
   transition: background-color 0.2s;
 }
-
 button:hover {
     background-color: #e64400;
 }
-
 .message { 
   margin-top: 16px; 
   color: #ff9a00; 
   text-align: center; 
   min-height: 20px;
 }
-
-/* --- Responsive Design --- */
-
-/* Tablet and smaller */
 @media (max-width: 768px) {
     .personal-form {
         margin: 20px;
         padding: 16px;
     }
 }
-
-/* Mobile */
 @media (max-width: 480px) {
     .grid {
-        /* Stack all grid items vertically */
         grid-template-columns: 1fr;
     }
     .personal-form {
