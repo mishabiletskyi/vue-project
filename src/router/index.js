@@ -54,7 +54,7 @@ const router = createRouter({
           'live': { title: 'Live Казино', games: LiveGames },
           'roulette': { title: 'Рулетка', games: rouletteGames },
           // Сюди можна додати інші категорії, наприклад 'slots'
-          'slots': { title: 'Слоти', games: allGames }, // Наприклад, слоти показують всі ігри
+          'slots': { title: 'Слоты', games: allGames }, // Наприклад, слоти показують всі ігри
         };
         
         // Повертаємо потрібні дані або дані за замовчуванням, якщо категорію не знайдено

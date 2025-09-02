@@ -22,8 +22,8 @@ const filteredGames = computed(() => {
     <LeftSidebar />
     <div class="main-content">
       <div class="page-header">
-        <h1>Слоти</h1>
-        <p>Шукай свої улюблені ігри серед сотень слотів.</p>
+        <h1>Слоты</h1>
+        <p>Ищи свои любимые игры среди сотен слотов.</p>
         <div class="search-bar">
           <input type="text" v-model="searchQuery" placeholder="Наприклад, Book of Ra...">
         </div>

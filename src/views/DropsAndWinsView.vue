@@ -2,7 +2,6 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import LeftSidebar from '../components/LeftSidebar.vue';
 import RightSidebar from '../components/RightSidebar.vue';
-import ImageSlider from '../components/ImageSlider.vue';
 import GamesGrid from '../components/GamesGrid.vue';
 import { allGames } from '@/data/mockData.js';
 
@@ -32,7 +31,7 @@ onMounted(() => {
 
       <div class="page-header">
         <h1>Drops & Wins</h1>
-        <p>Бери участь у щоденних розіграшах призів.</p>
+        <p>Участвуй в ежедневных розыгрышах призов.</p>
       </div>
 
       <GamesGrid :games="randomGames" />

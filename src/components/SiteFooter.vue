@@ -5,7 +5,7 @@
         <h3 class="footer-title">Разделы</h3>
         <ul class="footer-links">
           <li><RouterLink to="/games">Игры</RouterLink></li>
-          <li><RouterLink to="/bonuses">Бонусы</RouterLink></li>
+          <li><router-link to="/bonus-info">Бонусы</router-link></li>
           <li><RouterLink to="/tournaments">Турниры</RouterLink></li>
           <li><a href="#learn-more">О нас</a></li>
         </ul>
