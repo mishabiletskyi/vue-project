@@ -387,7 +387,7 @@ export const allGames = [
 
 
 // --- Список популярних ігор для головної сторінки ---
-export const popularGames = allGames.slice(0, 12);
+export const popularGames = allGames.slice(0, 15);
 
 
 // --- Список популярних ігор для LiveGames ---
