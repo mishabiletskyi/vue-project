@@ -1,15 +1,27 @@
+// src/views/GamesView.vue
+
 <script setup>
 import { ref, computed } from 'vue';
-import { popularGames, newGames, LiveGames, rouletteGames, allGames } from '@/data/mockData.js';
-import GamesGrid from '../components/GamesGrid.vue';
-import GamesCarousel from '../components/GamesCarousel.vue';
 
+// Імпортуємо ваші реальні дані з mockData.js
+import { popularGames, newGames, LiveGames, rouletteGames, allGames } from '@/data/mockData.js';
+
+// Імпортуємо ваші компоненти з правильних шляхів
+import LeftSidebar from '../components/LeftSidebar.vue';
+import RightSidebar from '../components/RightSidebar.vue';
+import GamesGrid from '../components/GamesGrid.vue';
+import GamesCarousel from '../components/GamesCarousel.vue'; // Наш новий компонент-карусель
+
+// --- Логіка сторінки ---
 const searchQuery = ref('');
 
+// Комп'ютед-властивість для пошуку
 const searchResults = computed(() => {
+  // Починаємо пошук, коли введено 2 або більше символів
   if (!searchQuery.value || searchQuery.value.length < 2) {
     return [];
   }
+  // Фільтруємо масив allGames. Перевіряємо і title, і name, бо у вас різна структура.
   return allGames.filter(game =>
     (game.title || game.name).toLowerCase().includes(searchQuery.value.toLowerCase())
   );
@@ -17,8 +29,9 @@ const searchResults = computed(() => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="main-content-full">
+  <div class="main-layout container">
+    <LeftSidebar />
+    <div class="main-content">
       <div class="page-header">
         <h1>Игровой центр</h1>
         <div class="search-bar">
@@ -54,15 +67,15 @@ const searchResults = computed(() => {
         <h2 v-else>По запросу “{{ searchQuery }}” ничего не найдено</h2>
         <GamesGrid :games="searchResults" />
       </div>
+      
     </div>
+    <RightSidebar />
   </div>
 </template>
 
 <style scoped>
-.main-content-full {
-  width: 100%;
-}
-
+.main-layout { display: flex; gap: 24px; }
+.main-content { flex: 1; min-width: 0; }
 .page-header { margin-bottom: 32px; }
 .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; color: var(--text, #fff); }
 .search-bar { margin-top: 16px; }
@@ -85,4 +98,3 @@ const searchResults = computed(() => {
   margin-bottom: 24px;
 }
 </style>
-

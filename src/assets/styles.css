@@ -234,7 +234,7 @@ a {
 .games-grid {
   list-style: none;
   display: grid;
-  gap: 16px;
+  gap: 48px;
   /* МАГІЯ: сітка сама вирішує, скільки колонок показати */
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }

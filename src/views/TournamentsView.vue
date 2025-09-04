@@ -1,11 +1,11 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router'; // 👈 1. Імпортуємо роутер для перенаправлення
-import { supabase } from '../supabaseClient'; // 👈 2. Імпортуємо клієнт Supabase
+import { useRouter } from 'vue-router';
+import { supabase } from '../supabaseClient';
 import LeftSidebar from '../components/LeftSidebar.vue';
 import RightSidebar from '../components/RightSidebar.vue';
 
-const router = useRouter(); // Ініціалізуємо роутер
+const router = useRouter();
 
 // --- ДАНІ ТА ГЕНЕРАЦІЯ ТУРНІРІВ (без змін) ---
 const createDate = (daysOffset) => {
@@ -63,12 +63,11 @@ const generateTournaments = () => {
 // --- ОСНОВНИЙ СТАН КОМПОНЕНТА (з доповненнями) ---
 
 const tournaments = ref(generateTournaments());
-const searchQuery = ref('');
 const activeFilter = ref('all');
 const isModalVisible = ref(false);
 const modalContent = ref({ type: '', data: null });
 
-// 👇 3. Нові стани для багатоетапного модального вікна
+// 👇 Нові стани для багатоетапного модального вікна
 const modalStep = ref('form'); // 'form', 'loading', 'deposit'
 const userId = ref(null);
 const registrationForm = reactive({
@@ -82,6 +81,16 @@ const registrationForm = reactive({
 const documentFile = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
+
+// 👇 Обчислювана властивість для перевірки, чи авторизований користувач
+const isUserAuthenticated = computed(() => {
+  // У реальному додатку тут може бути більш складна логіка (наприклад, перевірка токена)
+  if (typeof window !== 'undefined') {
+    return !!localStorage.getItem('user-id');
+  }
+  return false;
+});
+
 
 // --- ФУНКЦІЇ ДЛЯ МОДАЛЬНИХ ВІКОН (оновлені та нові) ---
 
@@ -99,26 +108,41 @@ async function loadProfile(id) {
   }
 }
 
-// Функція, що викликається при кліку на "Регистрация"
-const showUpcomingModal = async (tournament) => {
+// 👇 Нова функція: показати модальне вікно для неавторизованих
+const showAuthModal = () => {
+  modalContent.value = { type: 'auth', data: null };
+  isModalVisible.value = true;
+};
+
+// 👇 Нова функція: перенаправлення на сторінку реєстрації
+const redirectToRegister = () => {
+  closeModal();
+  router.push('/register'); // Припускаючи, що у вас є маршрут /register
+};
+
+// 👇 Оновлена функція: тепер вона обробляє і реєстрацію, і вхід в гру
+const showKycModal = async (tournament, type) => {
   errorMessage.value = '';
-  documentFile.value = null; // Скидаємо файл
-  modalStep.value = 'form'; // Починаємо з форми
+  documentFile.value = null; 
+  modalStep.value = 'form'; 
 
   const savedUserId = localStorage.getItem('user-id');
   if (savedUserId) {
     userId.value = savedUserId;
-    await loadProfile(savedUserId); // Завантажуємо дані для форми
+    await loadProfile(savedUserId);
   } else {
-    // Якщо користувач не авторизований, можна показати помилку або редіректнути
-    console.error("User ID not found");
+    // Ця перевірка є запобіжником, основна логіка в обробниках кліків
+    showAuthModal();
     return;
   }
   
   modalContent.value = { 
-    type: 'upcoming', 
+    type: type, // 'upcoming' або 'live'
     data: { 
-      startDate: tournament.startDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) 
+      // Додаємо дату тільки для майбутніх турнірів
+      startDate: type === 'upcoming' 
+        ? tournament.startDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) 
+        : null
     }
   };
   isModalVisible.value = true;
@@ -132,46 +156,42 @@ const handleFileChange = (e) => {
   }
 };
 
-// Головна функція: обробка відправки форми реєстрації
-const handleRegistration = async () => {
+// Головна функція: обробка відправки форми (KYC)
+const handleKycSubmit = async () => {
   if (!userId.value || !documentFile.value) {
     errorMessage.value = 'Пожалуйста, заполните все поля и загрузите документ.';
     return;
   }
 
-  modalStep.value = 'loading'; // Показуємо анімацію завантаження
+  modalStep.value = 'loading';
   isLoading.value = true;
   errorMessage.value = '';
 
   try {
-    // 1. Завантажуємо документ у Storage
     const fileExt = documentFile.value.name.split('.').pop();
     const filePath = `documents/${userId.value}/${Date.now()}.${fileExt}`;
     
     const { error: uploadError } = await supabase.storage.from('photo').upload(filePath, documentFile.value);
     if (uploadError) throw uploadError;
 
-    // 2. Отримуємо публічний URL файлу
     const { data: urlData } = supabase.storage.from('photo').getPublicUrl(filePath);
     if (!urlData.publicUrl) throw new Error("Не удалось получить URL документа.");
 
-    // 3. Оновлюємо профіль користувача в таблиці `profiles`
     const updates = {
       ...registrationForm,
-      document_url: urlData.publicUrl, // Зберігаємо посилання на документ
+      document_url: urlData.publicUrl,
       updated_at: new Date(),
     };
     
     const { error: updateError } = await supabase.from('profiles').update(updates).eq('id', userId.value);
     if (updateError) throw updateError;
     
-    // Успіх! Переходимо до наступного кроку
     modalStep.value = 'deposit';
 
   } catch (err) {
-    console.error('Ошибка регистрации:', err);
+    console.error('Ошибка KYC:', err);
     errorMessage.value = `Произошла ошибка: ${err.message}`;
-    modalStep.value = 'form'; // Повертаємо на форму в разі помилки
+    modalStep.value = 'form';
   } finally {
     isLoading.value = false;
   }
@@ -183,7 +203,6 @@ const redirectToDeposit = () => {
   router.push('/deposit');
 };
 
-
 const showResultsModal = (tournament) => {
   const winners = []; const prizeDistribution = [0.5, 0.25, 0.1, 0.05, 0.05];
   const nicknames = ['MadMax', 'PokerShark', 'LadyLuck', 'AceKing', 'RoyalFlush', 'TheGambler'];
@@ -193,7 +212,27 @@ const showResultsModal = (tournament) => {
   modalContent.value = { type: 'results', data: { name: tournament.name, participants: tournament.participants, winners: winners }};
   isModalVisible.value = true;
 };
+
 const closeModal = () => { isModalVisible.value = false; };
+
+
+// --- ОБРОБНИКИ КЛІКІВ НА КНОПКИ КАРТОК ---
+const handlePlayClick = (tournament) => {
+  if (isUserAuthenticated.value) {
+    showKycModal(tournament, 'live');
+  } else {
+    showAuthModal();
+  }
+};
+
+const handleRegisterClick = (tournament) => {
+  if (isUserAuthenticated.value) {
+    showKycModal(tournament, 'upcoming');
+  } else {
+    showAuthModal();
+  }
+};
+
 
 // --- РЕШТА ЛОГІКИ (без змін) ---
 const getTournamentStatus = (startDate, endDate) => {
@@ -206,7 +245,8 @@ const processedTournaments = computed(() => {
   return tournaments.value.map(t => ({ ...t, status: getTournamentStatus(t.startDate, t.endDate), formattedPrize: formatCurrency(t.prizePool), formattedEntry: formatCurrency(t.entryFee) }));
 });
 const filteredTournaments = computed(() => {
-  return processedTournaments.value.filter(t => (t.name.toLowerCase().includes(searchQuery.value.toLowerCase())) && (activeFilter.value === 'all' || t.status === activeFilter.value));
+    // Для пошуку, прибираємо searchQuery
+  return processedTournaments.value.filter(t => (activeFilter.value === 'all' || t.status === activeFilter.value));
 });
 const participantCount = ref(1000);
 let intervalId;
@@ -249,15 +289,15 @@ onUnmounted(() => { clearInterval(intervalId); });
             <div class="info-row"><span>Вход</span><span>{{ t.formattedEntry }}</span></div>
           </div>
           <div class="card-footer">
-            <a v-if="t.status === 'live'" href="/deposit" class="cta-link"><button class="cta-button primary">Играть</button></a>
-            <button v-if="t.status === 'upcoming'" @click="showUpcomingModal(t)" class="cta-button secondary">Регистрация</button>
+            <button v-if="t.status === 'live'" @click="handlePlayClick(t)" class="cta-button primary">Играть</button>
+            <button v-if="t.status === 'upcoming'" @click="handleRegisterClick(t)" class="cta-button secondary">Регистрация</button>
             <button v-if="t.status === 'finished'" @click="showResultsModal(t)" class="cta-button disabled">Результаты</button>
           </div>
         </div>
       </div>
       <div v-if="filteredTournaments.length === 0" class="no-results">
         <h3>Турниры не найдены</h3>
-        <p>Попробуйте изменить фильтры или поисковый запрос.</p>
+        <p>Попробуйте изменить фильтры.</p>
       </div>
     </div>
     <RightSidebar />
@@ -266,16 +306,24 @@ onUnmounted(() => { clearInterval(intervalId); });
       <div class="modal-content">
         <button class="modal-close-btn" @click="closeModal">&times;</button>
         
-        <div v-if="modalContent.type === 'upcoming' && modalStep === 'form'">
-          <h2>Регистрация на турнир</h2>
-          <p class="modal-text">Турнир начнется: <span class="modal-highlight-text-inline">{{ modalContent.data.startDate }}</span></p>
+        <div v-if="modalContent.type === 'auth'" class="modal-state-centered">
+            <h2>Требуется авторизация</h2>
+            <p class="modal-text">Пожалуйста, авторизуйтесь или зарегистрируйте личный аккаунт, чтобы продолжить.</p>
+            <button @click="redirectToRegister" class="cta-button primary submit-btn">Регистрация</button>
+        </div>
+
+        <div v-if="(modalContent.type === 'upcoming' || modalContent.type === 'live') && modalStep === 'form'">
+          <h2>Подтверждение данных для участия</h2>
+          <p v-if="modalContent.type === 'upcoming'" class="modal-text">
+            Турнир начнется: <span class="modal-highlight-text-inline">{{ modalContent.data.startDate }}</span>
+          </p>
 
           <div class="instructions">
             <h4>Подтверждение личности (KYC)</h4>
             <p>Для участия в турнирах с денежными призами нам необходимо верифицировать вашу личность. Это требование законодательства для предотвращения мошенничества. Ваши данные надежно защищены.</p>
           </div>
           
-          <form @submit.prevent="handleRegistration" class="registration-form">
+          <form @submit.prevent="handleKycSubmit" class="registration-form">
             <div class="form-grid">
               <div class="form-group">
                 <label for="firstName">Имя</label>
@@ -303,25 +351,25 @@ onUnmounted(() => { clearInterval(intervalId); });
             <div class="form-group">
               <label for="document">Документ (паспорт или ID-карта)</label>
               <label class="file-upload-label">
-                 {{ documentFile ? documentFile.name : 'Выберите файл' }}
-                 <input type="file" id="document" @change="handleFileChange" accept="image/png, image/jpeg, application/pdf" required>
+                  {{ documentFile ? documentFile.name : 'Выберите файл' }}
+                  <input type="file" id="document" @change="handleFileChange" accept="image/png, image/jpeg, application/pdf" required>
               </label>
             </div>
-             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-            <button type="submit" class="cta-button primary submit-btn">Зарегистрироваться</button>
+              <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+            <button type="submit" class="cta-button primary submit-btn">Подтвердить и продолжить</button>
           </form>
         </div>
 
-        <div v-if="modalContent.type === 'upcoming' && modalStep === 'loading'" class="modal-state-centered">
+        <div v-if="(modalContent.type === 'upcoming' || modalContent.type === 'live') && modalStep === 'loading'" class="modal-state-centered">
           <div class="loader"></div>
           <h2>Сохраняем данные...</h2>
           <p class="modal-text">Пожалуйста, подождите, мы верифицируем и сохраняем вашу информацию.</p>
         </div>
 
-        <div v-if="modalContent.type === 'upcoming' && modalStep === 'deposit'" class="modal-state-centered">
-          <h2>✅ Регистрация почти завершена!</h2>
-          <p class="modal-text">Чтобы завершить регистрацию и занять место в турнире, необходимо пополнить баланс на сумму входа.</p>
-          <p class="modal-text">Пополните баланс и вернитесь на страницу турниров.</p>
+        <div v-if="(modalContent.type === 'upcoming' || modalContent.type === 'live') && modalStep === 'deposit'" class="modal-state-centered">
+          <h2>✅ Данные подтверждены!</h2>
+          <p class="modal-text">Остался последний шаг. Чтобы занять место в турнире, необходимо внести бай-ин (входную плату).</p>
+          <p class="modal-text">Пополните баланс на нужную сумму, и вы будете автоматически зарегистрированы.</p>
           <button @click="redirectToDeposit" class="cta-button primary submit-btn">Пополнить баланс</button>
         </div>
         
@@ -344,7 +392,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 </template>
 
 <style scoped>
-/* --- Усі ваші стилі залишаються тут --- */
+/* --- Усі ваші стилі залишаються тут без змін --- */
 .page-header { text-align: center; margin-bottom: 24px; }
 .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; color: #fff; }
 .page-header p { font-size: 1rem; color: var(--text-secondary); white-space: nowrap; }
@@ -393,7 +441,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 .modal-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer; line-height: 1; }
 .modal-content h2 { font-size: 1.8rem; margin-top: 0; margin-bottom: 16px; text-align: center; }
-.modal-text { font-size: 1.1rem; color: var(--text-secondary); text-align: center; margin-bottom: 8px; }
+.modal-text { font-size: 1.1rem; color: var(--text-secondary); text-align: center; margin-bottom: 8px; line-height: 1.6; }
 .modal-highlight-text { font-size: 1.5rem; color: var(--accent); font-weight: 700; text-align: center; margin: 16px 0; padding: 12px; background-color: rgba(0, 191, 255, 0.05); border-radius: 8px; }
 .results-title { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 4px; font-weight: 500; }
 .results-participants { font-size: 1rem; text-align: center; margin-bottom: 24px; }
@@ -404,7 +452,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 .results-table tr:last-child td { border-bottom: none; }
 
 
-/* --- 👇 НОВІ СТИЛІ ДЛЯ ФОРМИ І СТАНІВ МОДАЛЬНОГО ВІКНА 👇 --- */
+/* --- СТИЛІ ДЛЯ ФОРМИ І СТАНІВ МОДАЛЬНОГО ВІКНА --- */
 .modal-highlight-text-inline {
   color: var(--accent);
   font-weight: 600;

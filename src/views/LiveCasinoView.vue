@@ -55,7 +55,7 @@ import { LiveGames } from '@/data/mockData.js';
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 48px;
 }
 @media (max-width: 1024px) {
   .hero {
@@ -78,6 +78,7 @@ import { LiveGames } from '@/data/mockData.js';
   }
   .games-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
   }
 }
 @media (max-width: 480px) {

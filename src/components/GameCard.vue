@@ -1,23 +1,38 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+// Імпортуємо посередника
+import { eventBus } from '../eventBus.js'; // Переконайтесь, що шлях правильний
 
-const router = useRouter()
+const router = useRouter();
 
 defineProps({
   game: {
     type: Object,
     required: true,
   },
-})
+});
 
-function openDeposit() {
-  router.push('/deposit')
+const isUserAuthenticated = computed(() => {
+  if (typeof window !== 'undefined') {
+    return !!localStorage.getItem('user-id');
+  }
+  return false;
+});
+
+function handlePlayClick() {
+  if (isUserAuthenticated.value) {
+    router.push('/deposit');
+  } else {
+    // Просто надсилаємо подію в eventBus. App.vue її зловить.
+    eventBus.emit('require-auth');
+  }
 }
 </script>
 
 <template>
   <li class="game-card">
-    <a href="#" class="game-link" @click.prevent="openDeposit">
+    <a href="#" class="game-link" @click.prevent="handlePlayClick">
       <div class="thumb" aria-hidden="true">
         <img :src="game.image" :alt="game.title || game.name" />
         <div class="overlay">
@@ -33,16 +48,10 @@ function openDeposit() {
 </template>
 
 <style scoped>
-/* ЭТО ИСПРАВЛЕНИЕ УБИРАЕТ ТОЧКУ (маркер списка) */
 .game-card {
   list-style-type: none;
-  
-  /* ГЛАВНОЕ ИСПРАВЛЕНИЕ:
-    Задаем фиксированную ширину карточке. 
-    Теперь она будет одинакового размера и в сетке, и в карусели.
-    `flex-shrink: 0` нужен, чтобы карточка не сжималась в карусели.
-  */
-  width: 180px; 
+  /* Стандартна ширина для десктопів */
+  width: 180px;
   flex-shrink: 0;
 }
 
@@ -69,7 +78,7 @@ function openDeposit() {
   width: 100%;
   height: auto;
   display: block;
-  aspect-ratio: 1 / 1; /* Делаем изображение квадратным */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
@@ -92,7 +101,6 @@ function openDeposit() {
 }
 
 .play-btn {
-  /* Стили для кнопки "ИГРАТЬ" */
   background: var(--accent);
   color: white;
   border: none;
@@ -119,6 +127,19 @@ function openDeposit() {
   font-size: 0.8rem;
   color: var(--muted);
   margin: 4px 0 0;
+}
+
+/* 👇 ОСЬ ВИРІШЕННЯ ПРОБЛЕМИ 👇 */
+/* Медіа-запит для маленьких екранів (телефони) */
+@media (max-width: 480px) {
+  .game-card {
+    /*
+      Розраховуємо ширину так, щоб дві картки завжди вміщалися в ряд.
+      Логіка: (100% ширини екрана - 16px відступу) / 2 картки.
+      Це дорівнює 50% - 8px.
+    */
+    width: calc(90% - 8px);
+  }
 }
 </style>
 

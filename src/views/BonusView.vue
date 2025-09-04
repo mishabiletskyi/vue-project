@@ -1,12 +1,49 @@
 <script setup>
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import LeftSidebar from '../components/LeftSidebar.vue';
 
 const router = useRouter();
 
-// Функція для переходу на сторінку поповнення
-function goToDeposit() {
-  router.push('/deposit');
+// --- Стан для модального вікна ---
+const isModalVisible = ref(false);
+
+// --- Логіка авторизації ---
+const isUserAuthenticated = computed(() => {
+  // Проста перевірка, чи є user-id. У реальному додатку може бути складнішою.
+  if (typeof window !== 'undefined') {
+    return !!localStorage.getItem('user-id');
+  }
+  return false;
+});
+
+// --- Функції обробники ---
+
+// Показує модальне вікно для неавторизованих
+function showAuthModal() {
+  isModalVisible.value = true;
+}
+
+// Закриває модальне вікно
+function closeModal() {
+  isModalVisible.value = false;
+}
+
+// Перенаправляє на сторінку реєстрації
+function redirectToRegister() {
+  closeModal();
+  router.push('/register'); // Переконайтесь, що у вас є маршрут /register
+}
+
+// Головний обробник кліку по кнопці
+function handleGetBonusClick() {
+  if (isUserAuthenticated.value) {
+    // Якщо користувач авторизований, переходимо на сторінку поповнення
+    router.push('/deposit');
+  } else {
+    // Якщо ні - показуємо модальне вікно
+    showAuthModal();
+  }
 }
 </script>
 
@@ -28,7 +65,7 @@ function goToDeposit() {
             <p class="small-text">вейджер х10</p>
           </div>
           <div class="bonus-card-actions">
-            <button @click="goToDeposit" class="btn bonus-action-btn">Получить бонус с кодом</button>
+            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус с кодом</button>
           </div>
         </div>
         <div class="bonus-card">
@@ -39,7 +76,7 @@ function goToDeposit() {
             <p class="small-text">вейджер х5</p>
           </div>
           <div class="bonus-card-actions">
-            <button @click="goToDeposit" class="btn bonus-action-btn">Получить бонус</button>
+            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
           </div>
         </div>
         <div class="bonus-card">
@@ -50,8 +87,19 @@ function goToDeposit() {
             <p class="small-text">вейджер х1</p>
           </div>
           <div class="bonus-card-actions">
-            <button @click="goToDeposit" class="btn bonus-action-btn">Получить бонус</button>
+            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="isModalVisible" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <button class="modal-close-btn" @click="closeModal">&times;</button>
+        <div class="modal-state-centered">
+          <h2>Требуется авторизация</h2>
+          <p class="modal-text">Пожалуйста, авторизуйтесь или зарегистрируйте личный аккаунт, чтобы получить бонус.</p>
+          <button @click="redirectToRegister" class="cta-button">Регистрация</button>
         </div>
       </div>
     </div>
@@ -86,12 +134,10 @@ function goToDeposit() {
 
 .bonus-content-grid {
   display: grid;
-  /* 3 колонки для десктопів */
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   width: 100%;
   margin: 0 auto;
-  /* Додано відступ знизу, щоб не торкатись футера */
   margin-bottom: 40px; 
 }
 
@@ -104,9 +150,8 @@ function goToDeposit() {
   flex-direction: column;
   position: relative;
   width: 100%;
-  /* Трохи зменшив максимальну ширину для кращого вигляду */
   max-width: 360px; 
-  justify-self: center; /* Центруємо картку в комірці гріда */
+  justify-self: center;
 }
 
 .bonus-card-img {
@@ -117,7 +162,7 @@ function goToDeposit() {
 
 .bonus-text-overlay {
   position: absolute;
-  bottom: 80px; /* Оптимальна висота над кнопкою */
+  bottom: 80px; 
   left: 0;
   width: 100%;
   padding: 20px 15px;
@@ -146,34 +191,41 @@ function goToDeposit() {
 }
 
 .bonus-card-actions {
-  /* Цей блок тепер знаходиться в самому низу картки */
   margin-top: auto; 
   padding: 16px;
   display: flex;
   justify-content: center;
-  background-color: var(--card); /* Додано фон для перекриття градієнта */
+  background-color: var(--card);
 }
 
 .bonus-action-btn {
   width: 100%;
+  /* Використовуємо змінні, якщо вони визначені глобально, або можна задати стилі напряму */
+  background-color: var(--accent, #007bff);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--radius, 8px);
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.2s;
+}
+.bonus-action-btn:hover {
+    background-color: var(--accent-hover, #0056b3);
 }
 
 /* --- Адаптивність --- */
-
-/* Планшети (<= 1024px) */
 @media (max-width: 1024px) {
   .bonus-content-grid {
-    /* 2 колонки */
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Мобільні пристрої (<= 768px) */
 @media (max-width: 768px) {
   .main-layout {
-    /* Сайдбар і контент стають один під одним */
     flex-direction: column;
-    padding: 0 16px; /* Додаємо бічні відступи для всього контенту */
+    padding: 0 16px; 
   }
 
   .bonus-hero-content h1 {
@@ -181,17 +233,15 @@ function goToDeposit() {
   }
   
   .bonus-content-grid {
-    /* 1 колонка */
     grid-template-columns: 1fr;
   }
 
   .bonus-card {
-    /* Картка займає всю доступну ширину */
     max-width: 100%;
   }
 
   .bonus-text-overlay {
-    bottom: 70px; /* Коригуємо позицію для мобільних */
+    bottom: 70px;
     padding: 15px 10px;
   }
 
@@ -203,4 +253,91 @@ function goToDeposit() {
     font-size: 0.85rem;
   }
 }
+
+
+/* --- 👇 НОВІ СТИЛІ ДЛЯ МОДАЛЬНОГО ВІКНА 👇 --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--card, #1a1a1a);
+  padding: 24px 32px;
+  border-radius: var(--radius, 12px);
+  border: 1px solid #2a2f3a;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--muted, #888);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-state-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.modal-state-centered h2 {
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.modal-text {
+  font-size: 1.1rem;
+  color: var(--muted, #aaa);
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.cta-button {
+  width: 100%;
+  max-width: 250px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  background-color: var(--accent, #007bff);
+  color: #fff;
+}
+.cta-button:hover {
+  background-color: var(--accent-hover, #0056b3);
+}
+
 </style>

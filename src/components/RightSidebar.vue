@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 // Імпортуємо дані з центрального файлу
 import { playerNamesArray, gameData } from '@/data/mockData.js';
+// 👇 1. Імпортуємо нашого глобального посередника
+import { eventBus } from '@/eventBus.js'; // Переконайтесь, що шлях правильний
 
 let currentNameIndex = 0;
 
@@ -10,6 +12,28 @@ const winners = ref([]);
 const maxWinnersInList = ref(10);
 let mainUpdateInterval = null;
 const router = useRouter();
+
+// 👇 2. Додаємо ту саму перевірку авторизації
+const isUserAuthenticated = computed(() => {
+  if (typeof window !== 'undefined') {
+    // Використовуйте 'user-id' або 'authUser', залежно від того, що ви зберігаєте
+    return !!localStorage.getItem('user-id') || !!localStorage.getItem('authUser');
+  }
+  return false;
+});
+
+// 👇 3. Створюємо новий обробник кліку для карток переможців
+function handleWinnerClick() {
+  if (isUserAuthenticated.value) {
+    router.push('/deposit');
+  } else {
+    // Якщо користувач не увійшов, надсилаємо сигнал в App.vue
+    eventBus.emit('require-auth');
+  }
+}
+
+
+// --- ІСНУЮЧА ЛОГІКА КОМПОНЕНТА (без змін) ---
 
 // --- Адаптація під розмір екрана ---
 function checkScreenSize() {
@@ -84,7 +108,8 @@ onUnmounted(() => {
       <div class="title">Топ победителей сегодня</div>
       <TransitionGroup name="winner-list" tag="ul" class="winners-list" :style="{ height: listHeightPx }">
         <li class="winner-item" v-for="winner in winners" :key="winner.id">
-          <a href="#" class="winner-link" @click.prevent="router.push('/deposit')">
+          <!-- 👇 Замінюємо прямий редірект на виклик нашої нової функції -->
+          <a href="#" class="winner-link" @click.prevent="handleWinnerClick">
             <div class="winner-thumb">
               <img :src="winner.image" :alt="winner.gameName" />
             </div>
@@ -104,6 +129,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/* Усі ваші стилі залишаються без змін */
 .right-sidebar {
   background-color: var(--bg-dark, #12151c);
   padding: 16px;
