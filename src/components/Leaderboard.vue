@@ -1,8 +1,33 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { leaderboardData } from '../data/mockData.js'; // Імпортуємо дані
+// Імпортуємо оригінальні дані, як і було у вашому файлі.
+// Тепер колонка "Очки" буде мати правильні, оригінальні значення.
+import { leaderboardData } from '../data/mockData.js';
 
-const players = ref(leaderboardData);
+// Дані про виграші з вашого .txt файлу
+const winningsData = [
+    500000, 300000, 200000, 120000, 100000, 80000, 60000, 50000, 40000, 30000,
+    12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000,
+    9000, 9000, 9000, 9000, 9000, 9000, 9000, 9000, 9000, 9000,
+    7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800,
+    3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800,
+    3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800,
+    3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800,
+    3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800, 3800
+];
+
+// Поєднуємо оригінальні дані гравців з даними про виграші,
+// НЕ ЗМІНЮЮЧИ оригінальні `score` (очки).
+const combinedData = leaderboardData.map((player, index) => {
+  return {
+    ...player, // Копіюємо всі оригінальні дані гравця (place, player, score)
+    winnings: winningsData[index] || 0 // Додаємо нове поле з виграшем
+  };
+});
+
+const players = ref(combinedData);
 const currentPage = ref(1);
 const itemsPerPage = 10;
 
@@ -40,8 +65,11 @@ function generateRandomId() {
       <table class="leaderboard">
         <thead>
           <tr>
-            <th class="place-column"></th> <th>Место</th>
-            <th>ID Игрока</th> <th>Очки</th>
+            <th class="place-column"></th>
+            <th>Место</th>
+            <th>ID Игрока</th>
+            <th>Очки</th>
+            <th class="winnings-column">Выигрыш</th>
           </tr>
         </thead>
         <tbody>
@@ -67,6 +95,7 @@ function generateRandomId() {
             </td>
             <td>ID Игрока: ***{{ player.player.split('***')[1] }} {{ generateRandomId() }}</td>
             <td>{{ new Intl.NumberFormat('ru-RU').format(player.score) }}</td>
+            <td class="winnings-column">{{ new Intl.NumberFormat('ru-RU').format(player.winnings) }} руб.</td>
           </tr>
         </tbody>
       </table>
@@ -86,39 +115,32 @@ function generateRandomId() {
 
 <style scoped>
 .leaderboard-heading {
-  display: flex; /* Розміщує іконку та текст в один рядок */
+  display: flex;
   align-items: center;
-  gap: 8px; /* Відстань між іконкою та текстом */
+  gap: 8px;
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 24px;
 }
 .heading-icon {
-  width: 54px; /* Розмір іконки kub0 */
+  width: 54px;
   height: 54px;
-  vertical-align: middle; /* Вирівнює іконку по центру тексту */
+  vertical-align: middle;
 }
-
-/* Колір для перших трьох місць */
 .gold-place {
   color: #f65c21;
   font-weight: 700;
 }
-
-/* Стилі для іконок кубків у таблиці */
 .place-icon-cell {
-  width: 100px; /* Фіксована ширина для колонки з іконками */
-  padding-right: 0; /* Прибираємо зайвий відступ */
-  text-align: center; /* Центруємо іконки в колонці */
+  width: 100px;
+  padding-right: 0;
+  text-align: center;
 }
 .place-icon {
-  width: 50px; /* Розмір кубків kub1 та kub2 */
+  width: 50px;
   height: 50px;
-  display: inline-block; /* Щоб можна було застосовувати margin */
-  /* background-color: transparent; */ /* Додайте це, якщо іконки мають фон, але не повинні */
+  display: inline-block;
 }
-
-/* Стилі для таблиці */
 .table-wrap {
   overflow-x: auto;
 }
@@ -131,10 +153,9 @@ function generateRandomId() {
   padding: 12px 16px;
   border-bottom: 1px solid #1c202a;
 }
-/* Заголовок для іконки кубка */
 .leaderboard th.place-column {
-  width: 40px; /* Ширина колонки для іконки */
-  padding-left: 16px; /* Відступ зліва для вирівнювання */
+  width: 40px;
+  padding-left: 16px;
 }
 .leaderboard th {
   background: #151821;
@@ -142,8 +163,6 @@ function generateRandomId() {
 .leaderboard tbody tr:hover {
   background: #1a1e26;
 }
-
-/* Стилі для пагінації */
 .pagination {
   display: flex;
   justify-content: center;
@@ -163,5 +182,10 @@ function generateRandomId() {
 .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* 👇 НОВИЙ СТИЛЬ ТУТ: для вирівнювання колонки по правому краю */
+.winnings-column {
+  text-align: right;
 }
 </style>

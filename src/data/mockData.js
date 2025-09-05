@@ -638,15 +638,15 @@ export const Table = [
   { id: 266, name: "Texas hold 'em", image: '/imgtable/1.png' },
   { id: 267, name: "Blackjack", image: '/imgtable/2.png' },
   { id: 268, name: "5-Card Draw", image: '/imgtable/3.png' },
-
-
+  { id: 269, name: "Baccarat", image: '/imgtable/4.png' },
+  { id: 270, name: "Omaha Poker", image: '/imgtable/5.png' },
+  { id: 271, name: "Texas hold 'em", image: '/imgtable/6.png' },
+  { id: 272, name: "Blackjack", image: '/imgtable/7.png' },
+  { id: 273, name: "5-Card Draw", image: '/imgtable/8.png' },
+  { id: 274, name: "Baccarat", image: '/imgtable/9.png' },
+  { id: 274, name: "Omaha Poker", image: '/imgtable/10.png' },
   { id: 276, name: 'Video Poker', image: '/imgtable/VideoPoker.jpeg' },
   { id: 277, name: 'Multihand Blackjack VIP', image: '/imgtable/MultihandBlackjackVIP.jpg' },
-  { id: 271, name: "Texas hold 'em", image: '/imgtable/6.png' },
-  { id: 271, name: "Blackjack", image: '/imgtable/7.png' },
-  { id: 268, name: "5-Card Draw", image: '/imgtable/8.png' },
-
-  
   { id: 278, name: 'Virtual Burning Roulette', image: '/imgtable/VirtualBurningRoulette.jpg' },
   { id: 279, name: '3 Card Poker', image: '/imgtable/3CardPoker.png' },
   { id: 280, name: '3D Roulette 2066', image: '/imgtable/3DRoulette2066.png' },
