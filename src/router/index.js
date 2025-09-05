@@ -14,9 +14,10 @@ import DepositView from "../views/DepositView.vue";
 import BonusView from "../views/BonusView.vue";
 import BonusInfoView from "../views/BonusInfoView.vue";
 import AccountView from "../views/AccountView.vue";
+import TableView from "../views/TableView.vue"; // <--- ЦЕЙ ІМПОРТ ПОТРІБНО ДОДАТИ
 
 // --- Імпортуємо ВСІ потрібні дані для ігор ---
-import { allGames, popularGames, newGames, LiveGames, rouletteGames } from "@/data/mockData.js";
+import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } from "@/data/mockData.js"; 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,6 +56,7 @@ const router = createRouter({
           'roulette': { title: 'Рулетка', games: rouletteGames },
           // Сюди можна додати інші категорії, наприклад 'slots'
           'slots': { title: 'Слоты', games: allGames }, // Наприклад, слоти показують всі ігри
+          'table': { title: 'Столы', games: Table },
         };
         
         // Повертаємо потрібні дані або дані за замовчуванням, якщо категорію не знайдено
@@ -67,6 +69,7 @@ const router = createRouter({
       name: "drops-wins",
       component: DropsAndWinsView,
     },
+
     {
       path: "/bonuses",
       name: "bonuses",
@@ -123,7 +126,6 @@ const router = createRouter({
       name: "privacy",
       component: () => import("../views/PrivacyView.vue"),
     },
-    
     // --- Видалені старі маршрути ---
     // Ми видалили окремі /slots, /new, /roulette, бо тепер їх обробляє динамічний маршрут /games/:category
   ],

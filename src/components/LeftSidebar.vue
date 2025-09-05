@@ -10,6 +10,7 @@ const navItems = [
   // Цей маршрут залишився без змін, бо це окрема сторінка
   { id: 'drops-wins', text: 'Drops & Wins', path: '/drops-wins' }, 
   { id: 'roulette', text: 'Рулетка', path: '/games/roulette' },
+  { id: 'table', text: 'Столы', path: '/games/table' },
 ];
 </script>
 
