@@ -162,6 +162,7 @@ const faqs = [
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 }
 .contact-card:hover {
   transform: translateY(-5px);

@@ -1,15 +1,11 @@
 <script setup>
-// Ми оновили шляхи (path), щоб вони відповідали новій структурі /games/:category
-// Тепер всі посилання на категорії ігор починаються з /games/
 const navItems = [
   { id: 'popular', text: 'Популярные', path: '/games/popular' },
   { id: 'new', text: 'Новинки', path: '/games/new' },
   { id: 'slots', text: 'Слоты', path: '/games/slots' },
-  // Для 'Live Казино' ми використовуємо ключ 'live', як визначили в роутері
   { id: 'live', text: 'Live Казино', path: '/games/live' }, 
-  // Цей маршрут залишився без змін, бо це окрема сторінка
   { id: 'drops-wins', text: 'Drops & Wins', path: '/drops-wins' }, 
-  { id: 'roulette', text: 'Рулетка', path: '/games/roulette' },
+  { id: 'roulette', text: 'Рулетка', path: '/games/table' },
   { id: 'table', text: 'Столы', path: '/games/table' },
 ];
 </script>
@@ -19,9 +15,7 @@ const navItems = [
     <nav class="nav-vertical" aria-label="Игровая навигация">
       <ul class="nav-list">
         <li v-for="item in navItems" :key="item.id">
-          <!-- RouterLink тепер буде використовувати правильні шляхи -->
           <RouterLink :to="item.path">
-            <i class="icon"></i> <!-- Сюди можна додати іконки, якщо вони є -->
             <span class="text">{{ item.text }}</span>
           </RouterLink>
         </li>
@@ -31,10 +25,7 @@ const navItems = [
 </template>
 
 <style scoped>
-/* Ваші стилі тут залишаються без змін */
-.nav-vertical {
-  /* ... ваші стилі ... */
-}
+/* Стили для десктопа (вертикальный сайдбар) */
 .nav-list {
   list-style: none;
   padding: 0;
@@ -48,19 +39,46 @@ const navItems = [
   text-decoration: none;
   border-radius: 8px;
   transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap; /* Важно для десктопа, чтобы текст не переносился */
 }
 .nav-list a:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--text);
 }
-.nav-list a .text {
-  margin-left: 12px; /* Відступ для іконки */
-}
-
-/* Vue Router автоматично додає цей клас до активного посилання */
 .router-link-exact-active {
   background: var(--accent);
-  color: white; /* або #111, залежно від вашого дизайну */
+  color: white;
   font-weight: 700;
+}
+
+/* ▼▼▼ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ▼▼▼ */
+@media (max-width: 768px) {
+  .left-sidebar {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid #2a2f3a;
+    /* ▼▼▼ ИЗМЕНЕНИЕ №1: Добавляем центрирование для дочерних элементов ▼▼▼ */
+    text-align: center;
+  }
+
+  .left-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-list {
+    /* ▼▼▼ ИЗМЕНЕНИЕ №2: Делаем список встроенным, чтобы он подчинялся text-align ▼▼▼ */
+    display: inline-flex; 
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 8px;
+  }
+
+  .nav-list li {
+    flex-shrink: 0;
+  }
+  .nav-list a {
+    padding: 8px 16px;
+  }
 }
 </style>

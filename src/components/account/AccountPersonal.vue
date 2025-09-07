@@ -1,10 +1,12 @@
 <script setup>
-import { reactive, ref, onMounted, watch, computed, nextTick } from 'vue' // <-- 1. Додано nextTick
+import { reactive, ref, onMounted, watch, computed, nextTick } from 'vue'
 import { supabase } from '../../supabaseClient'
 import { Country, State, City } from 'country-state-city'
 
 const form = reactive({
-  lastName: '', firstName: '', middleName: '', birthDate: '', taxId: '',
+  lastName: '', firstName: '', middleName: '',
+  nickname: '', // Додано поле нікнейму в форму
+  birthDate: '', taxId: '',
   country: '', region: '', city: '', address: '', postalCode: '',
   email: '', phone: '', password: '', avatar_url: null
 })
@@ -39,6 +41,12 @@ onMounted(async () => {
     await loadProfile(savedUserId);
   } else {
     message.value = "Профиль не найден. Пожалуйста, зарегистрируйтесь.";
+  }
+
+  // Отримуємо нікнейм з localStorage і заповнюємо поле, якщо воно ще порожнє
+  const savedNickname = localStorage.getItem('user_nickname');
+  if (savedNickname && !form.nickname) {
+    form.nickname = savedNickname;
   }
 });
 
@@ -195,6 +203,7 @@ async function onAvatarChange(e) {
         <label>Фамилия<input v-model="form.lastName" /></label>
         <label>Имя<input v-model="form.firstName" /></label>
         <label>Отчество<input v-model="form.middleName" /></label>
+        <label>Никнейм<input v-model="form.nickname" /></label>
         <label>Дата рождения<input v-model="form.birthDate" type="date" /></label>
         <label>ИНН<input v-model="form.taxId" /></label>
     </div>

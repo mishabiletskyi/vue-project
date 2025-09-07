@@ -413,6 +413,8 @@ a {
   .nav-vertical {
     /* Робимо горизонтальний скрол на планшетах */
     padding: 8px;
+    display: flex;
+    justify-content: center;
   }
   .nav-vertical .nav-list {
     flex-direction: row;
