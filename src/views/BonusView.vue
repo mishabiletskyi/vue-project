@@ -62,7 +62,7 @@ function handleGetBonusClick() {
           <div class="bonus-text-overlay">
             <h3>СУПЕР ПРЕДЛОЖЕНИЕ</h3>
             <p>сделай депозит от 20000 рублей и получи бонус + 150% к депозиту 150 ФС и промод на 10% от суммы пополнения твоих друзей!</p>
-            <p class="small-text">вейджер х10</p>
+            <p class="small-text">вейджер х1</p>
           </div>
           <div class="bonus-card-actions">
             <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус с кодом</button>
@@ -73,7 +73,7 @@ function handleGetBonusClick() {
           <div class="bonus-text-overlay">
             <h3>СУПЕР БОНУС</h3>
             <p>сделай депозит от 10000 рублей и получи бонус 100% к депозиту и 100 ФС</p>
-            <p class="small-text">вейджер х5</p>
+            <p class="small-text">вейджер х3</p>
           </div>
           <div class="bonus-card-actions">
             <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
@@ -84,7 +84,7 @@ function handleGetBonusClick() {
           <div class="bonus-text-overlay">
             <h3>ПОЛУЧИ БОНУС</h3>
             <p>сделай депозит от 5000 рублей и получи 50% к депозиту 50 ФС</p>
-            <p class="small-text">вейджер х1</p>
+            <p class="small-text">вейджер х5</p>
           </div>
           <div class="bonus-card-actions">
             <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
