@@ -5,7 +5,7 @@ const navItems = [
   { id: 'slots', text: 'Слоты', path: '/games/slots' },
   { id: 'live', text: 'Live Казино', path: '/games/live' }, 
   { id: 'drops-wins', text: 'Drops & Wins', path: '/drops-wins' }, 
-  { id: 'roulette', text: 'Рулетка', path: '/games/table' },
+  { id: 'roulette', text: 'Рулетка', path: '/games/roulette' },
   { id: 'table', text: 'Столы', path: '/games/table' },
 ];
 </script>

