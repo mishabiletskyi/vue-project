@@ -48,7 +48,7 @@ const cryptoOptions = [
     id: "btc",
     name: "Bitcoin (BTC)",
     network: "Bitcoin",
-    address: "3MimHZpAZocCsZjbKFage3YuHJZW91SWNw",
+    address: "18YJjaFWkD2gHvM1BgFxXeDTtf4nr8Unod",
     instructions:
       "Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.",
   },
@@ -56,7 +56,7 @@ const cryptoOptions = [
     id: "eth",
     name: "Ethereum (ETH)",
     network: "ERC20",
-    address: "0x86a845e52f2bdc7712104912bc78b30e79250d0e",
+    address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c",
     instructions:
       "Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**",
   },
@@ -64,7 +64,7 @@ const cryptoOptions = [
     id: "usdt",
     name: "Tether (USDT TRC20)",
     network: "TRC20",
-    address: "TJwDXGVwEtqjR1pH1X4fUJa6RZJmc7r88z",
+    address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw",
     instructions:
       "Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.",
   },
@@ -72,7 +72,7 @@ const cryptoOptions = [
     id: "bnb",
     name: "BNB (BNB)",
     network: "BEP20",
-    address: "0x86a845e52f2bdc7712104912bc78b30e79250d0e",
+    address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c",
     instructions:
       "Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.",
   },
@@ -80,17 +80,17 @@ const cryptoOptions = [
     id: "sol",
     name: "Solana (SOL)",
     network: "Solana",
-    address: "BrZUXCjHhqE4WFe7Ez8CUhe7U1XpqyA5HKVtGQvRxceL",
+    address: "6Uus6AyvPAskkqw54TwkHaBx84VtYK59DKuLXcxd1S6h",
     instructions:
       "Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.",
   },
-  // ==== ЗМІНА ТУТ ====
+  
   {
     id: "xrp",
     name: "Ripple (XRP)",
     network: "Ripple",
-    address: "rs2dgzYeqYqsk8bvkQR5YPyqsXYcA24MP2",
-    memo: "672654",
+    address: "rJn2zAPdFA193sixJwuFixRkYDUtx3apQh",
+    memo: "501439071",
     instructions:
       "Отправляйте только XRP. Вы должны правильно заполнить адрес депозита и идентификатор [Мемо/Тег] ",
   },
@@ -98,7 +98,7 @@ const cryptoOptions = [
     id: "doge",
     name: "Dogecoin (DOGE)",
     network: "Dogecoin",
-    address: "DD7oAuWgZByP1JBrw5xqbVH3yre8cdoNcK",
+    address: "D7MrtzsAUrnrA8yA12TXoACL23sQrMj4eQ",
     instructions:
       "Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.",
   },
@@ -106,14 +106,14 @@ const cryptoOptions = [
     id: "ada",
     name: "Cardano (ADA)",
     network: "Cardano",
-    address: "DdzFFzCqrhsrRKmf2yfR8XPUafxfiyWhJmdqdCfxAUTVmuhpeWQKSMaYkgNfBZToak4rPviFZeyaFnwrSMWWwd6Q48moBQcYF3J63gmY",
+    address: "addr1vytm0h77de6xkrlvw0q33zatp3ss2u73sja7pzn326exd5gg0jxtk",
     instructions: 'Отправляйте только ADA в сети Cardano.',
   },
   {
     id: "trx",
     name: "TRON (TRX)",
     network: "TRC20",
-    address: "TJwDXGVwEtqjR1pH1X4fUJa6RZJmc7r88z",
+    address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw",
     instructions:
       "Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.",
   },
@@ -121,8 +121,8 @@ const cryptoOptions = [
     id: "ton",
     name: "Toncoin (TON)",
     network: "TON",
-    address: "EQBX63RAdgShn34EAFMV73Cut7Z15lUZd1hnVva68SEl7sxi",
-    memo: "943734",
+    address: "UQAVpt0tWfoUPJSH3P9_5xGVsurA_A15NM2QQ8nSa-3OMdah",
+    
     instructions:
       "Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON. Вы должны правильно заполнить адрес депозита и идентификатор [Мемо/Тег]",
   },
