@@ -3,6 +3,12 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useAuth from '../composables/useAuth.js'
 
+// --- ВАЖЛИВО! Вставте сюди ваш URL до бакету 'img' ---
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
+
+// --- Константа для зображення ---
+const loginCardImage = `${SUPABASE_URL}/lodgincard.png`;
+
 const router = useRouter()
 const { login } = useAuth()
 
@@ -43,7 +49,7 @@ function onSubmit() {
       </div>
     </div>
     <div class="bonus-section">
-      <img src="/img/lodgincard.png" alt="lodgincard" />
+      <img :src="loginCardImage" alt="lodgincard" />
     </div>
   </div>
 </template>

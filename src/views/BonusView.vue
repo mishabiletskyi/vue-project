@@ -3,7 +3,35 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import LeftSidebar from '../components/LeftSidebar.vue';
 
+// --- ВАЖЛИВО! Вставте сюди ваш URL до сховища Supabase ---
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/imgnew';
+
 const router = useRouter();
+
+// --- Дані для бонусних карток ---
+const bonusCards = ref([
+  {
+    img: 'bon1.png',
+    title: 'СУПЕР ПРЕДЛОЖЕНИЕ',
+    description: 'сделай депозит от 20000 рублей и получи бонус + 150% к депозиту 150 ФС и промод на 10% от суммы пополнения твоих друзей!',
+    wager: 'вейджер х1',
+    buttonText: 'Получить бонус с кодом'
+  },
+  {
+    img: 'bon2.png',
+    title: 'СУПЕР БОНУС',
+    description: 'сделай депозит от 10000 рублей и получи бонус 100% к депозиту и 100 ФС',
+    wager: 'вейджер х3',
+    buttonText: 'Получить бонус'
+  },
+  {
+    img: 'bon3.png',
+    title: 'ПОЛУЧИ БОНУС',
+    description: 'сделай депозит от 5000 рублей и получи 50% к депозиту 50 ФС',
+    wager: 'вейджер х5',
+    buttonText: 'Получить бонус'
+  }
+]);
 
 // --- Стан для модального вікна ---
 const isModalVisible = ref(false);
@@ -57,37 +85,15 @@ function handleGetBonusClick() {
       </div>
 
       <div class="bonus-content-grid">
-        <div class="bonus-card">
-          <img src="/imgnew/bon1.png" alt="Бонус 1" class="bonus-card-img" />
+        <div v-for="card in bonusCards" :key="card.title" class="bonus-card">
+          <img :src="`${SUPABASE_URL}/${card.img}`" :alt="card.title" class="bonus-card-img" />
           <div class="bonus-text-overlay">
-            <h3>СУПЕР ПРЕДЛОЖЕНИЕ</h3>
-            <p>сделай депозит от 20000 рублей и получи бонус + 150% к депозиту 150 ФС и промод на 10% от суммы пополнения твоих друзей!</p>
-            <p class="small-text">вейджер х1</p>
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.description }}</p>
+            <p class="small-text">{{ card.wager }}</p>
           </div>
           <div class="bonus-card-actions">
-            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус с кодом</button>
-          </div>
-        </div>
-        <div class="bonus-card">
-          <img src="/imgnew/bon2.png" alt="Бонус 2" class="bonus-card-img" />
-          <div class="bonus-text-overlay">
-            <h3>СУПЕР БОНУС</h3>
-            <p>сделай депозит от 10000 рублей и получи бонус 100% к депозиту и 100 ФС</p>
-            <p class="small-text">вейджер х3</p>
-          </div>
-          <div class="bonus-card-actions">
-            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
-          </div>
-        </div>
-        <div class="bonus-card">
-          <img src="/imgnew/bon3.png" alt="Бонус 3" class="bonus-card-img" />
-          <div class="bonus-text-overlay">
-            <h3>ПОЛУЧИ БОНУС</h3>
-            <p>сделай депозит от 5000 рублей и получи 50% к депозиту 50 ФС</p>
-            <p class="small-text">вейджер х5</p>
-          </div>
-          <div class="bonus-card-actions">
-            <button @click="handleGetBonusClick" class="btn bonus-action-btn">Получить бонус</button>
+            <button @click="handleGetBonusClick" class="btn bonus-action-btn">{{ card.buttonText }}</button>
           </div>
         </div>
       </div>

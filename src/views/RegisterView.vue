@@ -3,6 +3,17 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useAuth from '../composables/useAuth.js'
 
+
+// --- ЗМІНИ ТУТ ---
+// 1. Додаємо базовий URL до вашого сховища
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
+
+// 2. Створюємо константи для зображень
+const registrationCardImage = `${SUPABASE_URL}/lodgincard.png`;
+// ЗАМІНІТЬ 'bonus-background.png' НА НАЗВУ ФАЙЛУ ВАШОГО ЗОБРАЖЕННЯ ДЛЯ МОДАЛЬНОГО ВІКНА
+const bonusModalImage = `${SUPABASE_URL}/bonus-background.png`;
+// --- КІНЕЦЬ ЗМІН ---
+
 const router = useRouter()
 const { register } = useAuth()
 
@@ -142,7 +153,7 @@ function skipBonus() {
       </div>
       </div>
     <div class="bonus-section">
-      <img src="/img/lodgincard.png" alt="lodgincard" />
+      <img :src="registrationCardImage" alt="lodgincard" />
     </div>
 
     <Transition name="modal-fade">
