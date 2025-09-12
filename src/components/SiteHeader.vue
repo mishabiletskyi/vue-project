@@ -48,8 +48,8 @@ function goTo(path) {
 <template>
   <header class="site-header">
     <div class="container header-inner">
-       <router-link to="/" class="logo" aria-label="GG Casino — на главную">
-        <span aria-hidden="true">GG</span><span class="accent" aria-hidden="true">•</span>Casino
+       <router-link to="/" class="logo" aria-label="C-Bet Casino — на главную">
+        <span aria-hidden="true">CrBet</span><span class="accent" aria-hidden="true">•</span>Casino
       </router-link>
 
       <nav class="nav desktop-nav" style="position: relative; left: 100px;" aria-label="Основная навигация">

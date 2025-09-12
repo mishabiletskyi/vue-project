@@ -2,6 +2,14 @@
 import { ref, computed } from 'vue';
 import { leaderboardData } from '../data/mockData.js';
 
+// --- ВАЖЛИВО! Вставте сюди ваш URL до бакету 'imgnew' ---
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/imgnew';
+
+// --- Константи для зображень ---
+const headingIcon = `${SUPABASE_URL}/kub0.png`;
+const goldCupIcon = `${SUPABASE_URL}/kub1.png`;
+const grayCupIcon = `${SUPABASE_URL}/kub2.png`;
+
 // --- РУССКИЕ НИКНЕЙМЫ ---
 const nicknames = [
   "ТемныйСтранник", "СтальнойКулак", "ВечныйОхотник", "Призрак_777", "Громовержец", "ЛедянойШторм", "БешеныйХомяк",
@@ -57,7 +65,7 @@ function goToPage(page) {
 <template>
   <div class="leaderboard-widget">
     <h3 class="leaderboard-heading">
-      <img src="/imgnew/kub0.png" alt="Иконка кубка" class="heading-icon">
+      <img :src="headingIcon" alt="Иконка кубка" class="heading-icon">
       Таблица лидеров
     </h3>
 
@@ -77,13 +85,13 @@ function goToPage(page) {
             <td class="place-icon-cell" data-label="">
               <img
                 v-if="player.place <= 3"
-                src="/imgnew/kub1.png"
+                :src="goldCupIcon"
                 alt="Кубок"
                 class="place-icon gold"
               />
               <img
                 v-else
-                src="/imgnew/kub2.png"
+                :src="grayCupIcon"
                 alt="Кубок"
                 class="place-icon gray"
               />

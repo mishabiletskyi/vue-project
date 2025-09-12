@@ -2,6 +2,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+// --- ВАЖЛИВО! Вставте сюди ваш URL до бакету 'img' ---
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
+
+// --- Константа для зображення ---
+const recoveryImage = `${SUPABASE_URL}/passrec.png`;
+
+
 const router = useRouter()
 const email = ref('')
 const message = ref('')
@@ -29,7 +36,7 @@ function onSubmit() {
       </div>
     </div>
     <div class="image-section">
-      <img src="/img/passrec.png" alt="passrec" />
+      <img :src="recoveryImage" alt="passrec" />
     </div>
   </div>
 </template>

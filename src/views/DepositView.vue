@@ -339,7 +339,10 @@ function submitWithdraw() {
 
 function openChat() {
   showMessage.value = false;
-  if (window.Intercom) window.Intercom("show");
+  // Перевіряємо, чи завантажився API від Tawk.to, щоб уникнути помилок
+  if (window.Tawk_API && window.Tawk_API.maximize) {
+    window.Tawk_API.maximize();
+  }
 }
 </script>
 
