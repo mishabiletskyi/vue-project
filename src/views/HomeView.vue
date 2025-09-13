@@ -20,7 +20,7 @@ import { popularGames } from '@/data/mockData.js';
           </div>
           <div class="promo-copy">
             <h2>Бонусы для новых игроков</h2>
-            <p>150% на первый депозит + 150 FS.</p>
+            <p>200% на первый депозит + 200 FS.</p>
           </div>
           <router-link to="/bonuses" class="btn btn-lg">Забрать бонус</router-link>
         </div>

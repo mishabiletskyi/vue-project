@@ -20,8 +20,8 @@
       <div>
         <h3 class="footer-title">Контакты</h3>
         <ul class="footer-links">
-            <li><a href="mailto:support@example.com" class="contact-link">support@example.com</a></li>
-            <li><p class="copyright">© 2025 GG • Casino</p></li>
+            <li><a href="mailto:support@example.com" class="contact-link">cristo.support@example.com</a></li>
+            <li><p class="copyright">© 2025 Cristo-bet • Casino</p></li>
         </ul>
       </div>
     </div>
