@@ -27,6 +27,9 @@
     </div>
   </footer>
 </template>
+<!-- 
+import LogRocket from 'logrocket';
+LogRocket.init('gthbbr/cbcas'); -->
 
 <style scoped>
 .site-footer {

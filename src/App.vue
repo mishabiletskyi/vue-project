@@ -163,6 +163,7 @@ import SiteFooter from './components/SiteFooter.vue';
 // Імпортуємо нашого посередника
 import { eventBus } from './eventBus.js';
 
+
 const router = useRouter();
 
 // --- Існуюча логіка ---
