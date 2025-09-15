@@ -159,7 +159,7 @@ function skipBonus() {
     <Transition name="modal-fade">
       <div v-if="isBonusModalVisible" class="bonus-modal-overlay">
         <div class="bonus-modal-content">
-          <div class="bonus-image"></div>
+          <!-- <div class="bonus-image"></div> -->
           <div class="bonus-text">
             <h2 class="bonus-title">РЕГИСТРАЦИЯ УСПЕШНА!</h2>
             <p class="bonus-subtitle">Ваш эксклюзивный приветственный пакет активирован:</p>
@@ -235,7 +235,7 @@ button:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
 
 /* --- СТИЛИ ДЛЯ БОНУСНОГО БАНЕРА --- */
 .bonus-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-.bonus-modal-content { display: flex; width: 90%; max-width: 900px; height: 550px; background-color: #1a1e28; border-radius: 16px; overflow: hidden; border: 2px solid #ff9a00; box-shadow: 0 0 40px rgba(255, 154, 0, 0.5); }
+.bonus-modal-content { display: flex; width: 90%; max-width: 900px; height: 550px; background-color: #1a1e28; border-radius: 16px; overflow: hidden; border: 2px solid #ff9a00; box-shadow: 0 0 40px rgba(255, 154, 0, 0.5); justify-content: center; }
 .bonus-image { width: 45%; background-image: url('https://images.unsplash.com/photo-1615807713086-bfc497584513?q=80&w=1887&auto=format&fit=crop'); background-size: cover; background-position: center; }
 .bonus-text { width: 55%; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 .bonus-title, .bonus-subtitle, .bonus-offer, .cta-button, .skip-button { opacity: 0; animation: slide-up 0.6s ease-out forwards; }
@@ -284,7 +284,7 @@ button:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
     margin: 24px;
     max-width: 100%;
   }
-  .bonus-modal-content { flex-direction: column; width: 95%; max-width: 500px; height: auto; max-height: 90vh; }
+  .bonus-modal-content { flex-direction: column; width: 80%; max-width: 500px; height: auto; max-height: 90vh; }
   .bonus-image { display: none; }
   .bonus-text { width: 100%; padding: 32px; }
   .bonus-title { font-size: 2rem; }

@@ -385,7 +385,6 @@ function openChat() {
           <label for="cardNumber">Номер карты</label>
           <input
             id="cardNumber"
-            type="number"
             v-model="cardNumber"
             @input="onCardInput"
             :class="{ error: errors.cardNumber }"
@@ -408,7 +407,6 @@ function openChat() {
             <label for="expiry">Срок действия</label>
             <input
               id="expiry"
-              type="text"
               v-model="expiry"
               @input="onExpiryInput"
               placeholder="MM/YY"
@@ -425,7 +423,6 @@ function openChat() {
             <label for="cvv">CVV</label>
             <input
               id="cvv"
-              type="number"
               v-model="cvv"
               @input="onCvvInput"
               maxlength="3"
@@ -440,7 +437,6 @@ function openChat() {
           <label for="name">Имя держателя</label>
           <input
             id="name"
-            type="text"
             v-model="name"
             :class="{ error: errors.name }"
             required
