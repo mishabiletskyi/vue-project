@@ -65,7 +65,7 @@ async function onSubmit() {
     isBonusModalVisible.value = true
   } catch (err) {
     error.value = err
-    message.value = err.message || 'Произошла неизвестная ошибка.'
+    message.value = err.message || 'Произошла неизвестная ошибка. '
   } finally {
     isLoading.value = false
   }
