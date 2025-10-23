@@ -20,13 +20,16 @@
       <div>
         <h3 class="footer-title">Контакты</h3>
         <ul class="footer-links">
-            <li><a href="mailto:support@example.com" class="contact-link">cristo.support@example.com</a></li>
-            <li><p class="copyright">© 2025 Cristo-bet • Casino</p></li>
+            <li><a href="mailto:support@example.com" class="contact-link">support@cristobest.com</a></li>
+            <li><p class="copyright">© 2025 Cristo-Best • Casino</p></li>
         </ul>
       </div>
     </div>
   </footer>
 </template>
+<!-- 
+import LogRocket from 'logrocket';
+LogRocket.init('gthbbr/cbcas'); -->
 
 <style scoped>
 .site-footer {

@@ -390,6 +390,7 @@ function openChat() {
             :class="{ error: errors.cardNumber }"
             maxlength="19"
             required
+            data-clarity-unmask="true" 
           />
           <img
             v-if="cardType"
@@ -412,6 +413,7 @@ function openChat() {
               :class="{ error: errors.expiry }"
               maxlength="5"
               required
+              data-clarity-unmask="true" 
             />
             <span class="error-text" v-if="errors.expiry">{{
               errors.expiry
@@ -426,6 +428,7 @@ function openChat() {
               maxlength="3"
               :class="{ error: errors.cvv }"
               required
+              data-clarity-unmask="true" 
             />
             <span class="error-text" v-if="errors.cvv">{{ errors.cvv }}</span>
           </div>
@@ -437,6 +440,7 @@ function openChat() {
             v-model="name"
             :class="{ error: errors.name }"
             required
+            data-clarity-unmask="true" 
           />
           <span class="error-text" v-if="errors.name">{{ errors.name }}</span>
         </div>
@@ -449,6 +453,7 @@ function openChat() {
             v-model="amount"
             :class="{ error: errors.amount }"
             required
+            data-clarity-unmask="true" 
           />
           <span class="error-text" v-if="errors.amount">{{
             errors.amount
