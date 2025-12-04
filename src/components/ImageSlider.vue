@@ -3,17 +3,17 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 // Список шляхів до зображень (з папки public)
 const slides = ref([
-  '/img/card1.png',
-  '/img/card2.png',
-  '/img/card3.png',
-  '/img/card4.png',
-  '/img/card5.png',
-  '/img/card6.png',
-  '/img/card10.png',
-  '/img/card11.png',
-  '/img/card12.png',
-  '/img/card13.png',
-  '/img/card14.png',
+  '/img/card1.webp',
+  '/img/card2.webp',
+  '/img/card3.webp',
+  '/img/card4.webp',
+  '/img/card5.webp',
+  '/img/card6.webp',
+  '/img/card10.webp',
+  '/img/card11.webp',
+  '/img/card12.webp',
+  '/img/card13.webp',
+  '/img/card14.webp',
 ]);
 
 const currentSlide = ref(0);
@@ -126,17 +126,17 @@ const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object
 
 // Список назв файлів для слайдів
 const slides = ref([
-  'card1.png',
-  'card2.png',
-  'card3.png',
-  'card4.png',
-  'card5.png',
-  'card6.png',
-  'card10.png',
-  'card11.png',
-  'card12.png',
-  'card13.png',
-  'card14.png',
+  'card1.webp',
+  'card2.webp',
+  'card3.webp',
+  'card4.webp',
+  'card5.webp',
+  'card6.webp',
+  'card10.webp',
+  'card11.webp',
+  'card12.webp',
+  'card13.webp',
+  'card14.webp',
 ]);
 
 const currentSlide = ref(0);

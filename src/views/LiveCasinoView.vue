@@ -30,7 +30,7 @@ import { LiveGames } from '@/data/mockData.js';
 /* Стилі залишаються без змін */
 .hero {
   height: 45vh;
-  background-image: linear-gradient(rgba(11, 12, 16, 0.8), rgba(11, 12, 16, 0.8)), url('/img/card10.png');
+  background-image: linear-gradient(rgba(11, 12, 16, 0.8), rgba(11, 12, 16, 0.8)), url('/img/card10.webp');
   background-size: cover;
   background-position: center;
   display: flex;

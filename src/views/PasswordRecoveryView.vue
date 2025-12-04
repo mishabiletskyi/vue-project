@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
 
 // --- Константа для зображення ---
-const recoveryImage = `${SUPABASE_URL}/passrec.png`;
+const recoveryImage = `${SUPABASE_URL}/passrec.webp`;
 
 
 const router = useRouter()

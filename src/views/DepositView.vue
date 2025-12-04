@@ -619,6 +619,9 @@ function openChat() {
       </form>
     </div>
 
+
+    
+
     <div v-else>
       <AccountTransactions />
     </div>

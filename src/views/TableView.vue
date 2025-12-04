@@ -8,7 +8,7 @@ import { Table } from '@/data/mockData.js';
 // --- ЗМІНИ ТУТ ---
 // 1. Додаємо URL до зображення
 const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
-const heroBackgroundImage = `${SUPABASE_URL}/card10.png`;
+const heroBackgroundImage = `${SUPABASE_URL}/card10.webp`;
 // --- КІНЕЦЬ ЗМІН ---
 </script>
 

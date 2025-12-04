@@ -7,7 +7,7 @@ import useAuth from '../composables/useAuth.js'
 const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
 
 // --- Константа для зображення ---
-const loginCardImage = `${SUPABASE_URL}/lodgincard.png`;
+const loginCardImage = `${SUPABASE_URL}/lodgincard.webp`;
 
 const router = useRouter()
 const { login } = useAuth()

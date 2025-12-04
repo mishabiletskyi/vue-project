@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 // Імпортуємо посередника
-import { eventBus } from '../eventBus.js'; // Переконайтесь, що шлях правильний
+import { eventBus } from "../eventBus.js"; // Переконайтесь, що шлях правильний
 
 const router = useRouter();
 
@@ -14,18 +14,18 @@ defineProps({
 });
 
 const isUserAuthenticated = computed(() => {
-  if (typeof window !== 'undefined') {
-    return !!localStorage.getItem('user-id');
+  if (typeof window !== "undefined") {
+    return !!localStorage.getItem("user-id");
   }
   return false;
 });
 
 function handlePlayClick() {
   if (isUserAuthenticated.value) {
-    router.push('/deposit');
+    router.push("/deposit");
   } else {
     // Просто надсилаємо подію в eventBus. App.vue її зловить.
-    eventBus.emit('require-auth');
+    eventBus.emit("require-auth");
   }
 }
 </script>
@@ -34,7 +34,12 @@ function handlePlayClick() {
   <li class="game-card">
     <a href="#" class="game-link" @click.prevent="handlePlayClick">
       <div class="thumb" aria-hidden="true">
-        <img :src="game.image" :alt="game.title || game.name" />
+        <img
+          :src="game.image"
+          :alt="game.title || game.name"
+          loading="lazy"
+          decoding="async"
+        />
         <div class="overlay">
           <button class="play-btn">ИГРАТЬ</button>
         </div>
@@ -142,4 +147,3 @@ function handlePlayClick() {
   }
 }
 </style>
-
