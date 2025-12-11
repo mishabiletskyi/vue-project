@@ -23,16 +23,16 @@ defineProps({
 <style scoped>
 .games-grid {
   display: grid;
-  gap: 48px;
+  gap: 6px;
   padding: 0;
-  margin: 0;
+  margin: 0px -15px 0px 0px;
   list-style: none;
 
   /* --- Ось і вся магія адаптації --- */
 
   /* Mobile First: 2 колонки за замовчуванням */
   /* Картки будуть гнучкими і завжди заповнюватимуть простір */
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Маленькі планшети та великі телефони: 3 колонки */
