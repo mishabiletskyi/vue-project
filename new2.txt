@@ -1,0 +1,1618 @@
+"id": "book-of-ra",
+      "launchId": 8835,
+      "name": "Book of Ra
+"id": "gr-book-of-ra-deluxe",
+      "launchId": 8836,
+      "name": "Book of Ra
+"id": "columbus-deluxe",
+      "launchId": 8858,
+      "name": "Columbus deluxe",
+"id": "book-of-ra-magic",
+      "launchId": 8841,
+      "name": "Book of Ra
+"id": "piggy-prizes-wish-of-riches",
+      "launchId": 12563,
+      "name": "Piggy Prizes Wish
+"id": "dolphin-s-pearl",
+      "launchId": 8881,
+      "name": "Dolphin's Pearl
+"id": "plenty-on-twenty",
+      "launchId": 8917,
+      "name": "Plenty on Twenty
+"id": "charming-lady-s-boom",
+      "launchId": 8853,
+      "name": "Charming Lady’s Boom
+"id": "book-of-ra-deluxe-6",
+      "launchId": 8839,
+      "name": "Book of Ra
+"id": "dolphin-s-pearl-deluxe-10",
+      "launchId": 8883,
+      "name": "Dolphin's Pearl
+"id": "cash-connection-charming-lady",
+      "launchId": 8848,
+      "name": "Cash Connection -
+"id": "piggy-prizes-wand-of-riches",
+      "launchId": 8916,
+      "name": "Piggy Prizes Wand
+"id": "diamond-link-mighty-elephant-win-ways",
+      "launchId": 14021,
+      "name": "Diamond Link:
+"id": "enchanted-pegasus-boom",
+      "launchId": 23365,
+      "name": "Enchanted Pegasus™ BOOM
+"id": "cach-connection-swiss-magic",
+      "launchId": 23134,
+      "name": "Cach Connection™ -
+"id": "piggy-prizes-jingle-jackpots",
+      "launchId": 22978,
+      "name": "Piggy Prizes™ -
+"id": "lock-breakers-golden-nuts",
+      "launchId": 22918,
+      "name": "Lock Breakers -
+"id": "cash-connection-solid-sevens",
+      "launchId": 22751,
+      "name": "Cash Connection™ -
+"id": "lose-star-link-sizzling-wins",
+      "launchId": 22692,
+      "name": "Lose Star Link™
+"id": "caichen-triple-blossom",
+      "launchId": 22549,
+      "name": "Caichen Triple Blossom
+"id": "a-mummy-full-of-wilds",
+      "launchId": 22489,
+      "name": "A Mummy Full
+"id": "starlight-jackpots-captain-catch",
+      "launchId": 22937,
+      "name": "Starlight Jackpots Captain
+"id": "creepy-candy",
+      "launchId": 22408,
+      "name": "Creepy Candy",
+"id": "silver-lux-sevens-hold-em-respin",
+      "launchId": 22294,
+      "name": "Silver Lux -
+"id": "multi-coins",
+      "launchId": 21651,
+      "name": "Multi Coins",
+"id": "firecracker-frenzy-empress-wealth",
+      "launchId": 20777,
+      "name": "Firecracker Frenzy -
+"id": "cash-connection-golden-sizzling-hot-",
+      "launchId": 20497,
+      "name": "Cash Connection™ -
+"id": "joker-s-bonanza",
+      "launchId": 20105,
+      "name": "Joker's Bonanza
+"id": "silver-lux-extra-dice",
+      "launchId": 19899,
+      "name": "Silver Lux -
+"id": "piggy-prizes-coins-o-plenty-",
+      "launchId": 19626,
+      "name": "Piggy Prizes™ -
+"id": "lock-breakers-goblin-bros",
+      "launchId": 19501,
+      "name": "Lock Breakers -
+"id": "trinity-treasures-wukong",
+      "launchId": 18982,
+      "name": "Trinity Treasures™ Wukong
+"id": "ultra-blitz-chilli-el-toro",
+      "launchId": 19287,
+      "name": "Ultra Blitz™ -
+"id": "starlight-jackpots-odds-of-the-gods-2",
+      "launchId": 19221,
+      "name": "Starlight Jackpots™ -
+"id": "diamond-link-mighty-cleopatra",
+      "launchId": 19162,
+      "name": "Diamond Link™ -
+"id": "cash-cascade-100-charming-7-s",
+      "launchId": 18992,
+      "name": "Cash Cascade -
+"id": "sushi-fruits-",
+      "launchId": 18679,
+      "name": "Sushi Fruits™",
+"id": "3-fortune-wishes",
+      "launchId": 18114,
+      "name": "3 Fortune Wishes
+"id": "gang-wars",
+      "launchId": 18204,
+      "name": "Gang Wars",
+"id": "lucky-lady-s-roulette",
+      "launchId": 17742,
+      "name": "Lucky Lady’s™ Roulette
+"id": "diamond-mystery-100-charming-7-s",
+      "launchId": 17506,
+      "name": "Diamond Mystery™ -
+"id": "howdy-cupid-",
+      "launchId": 17442,
+      "name": "Howdy, Cupid
+"id": "piggy-prizes-wand-of-riches-2",
+      "launchId": 17264,
+      "name": "Piggy Prizes:
+"id": "dessert-kingdom",
+      "launchId": 17160,
+      "name": "Dessert Kingdom",
+"id": "diamond-link-mighty-viking",
+      "launchId": 16753,
+      "name": "Diamond Link:
+"id": "super-triple-fortune",
+      "launchId": 16665,
+      "name": "Super Triple Fortune
+"id": "little-cluckers",
+      "launchId": 16489,
+      "name": "Little Cluckers",
+"id": "party-parrots",
+      "launchId": 16164,
+      "name": "Party Parrots",
+"id": "diamond-mystery-fruitful-frenzy-cash-accumulator",
+      "launchId": 16001,
+      "name": "Diamond Mystery™ -
+"id": "lamp-of-wonders",
+      "launchId": 15898,
+      "name": "Lamp of Wonders
+"id": "silver-lux-triple-bonus-gems",
+      "launchId": 15762,
+      "name": "Silver Lux -
+"id": "fruit-king-super-cash",
+      "launchId": 15633,
+      "name": "Fruit King Super
+"id": "lucky-sword",
+      "launchId": 15393,
+      "name": "Lucky Sword",
+"id": "diamond-mystery-40-charming-7-s",
+      "launchId": 14687,
+      "name": "Diamond Mystery -
+"id": "lucky-lady-s-charm-win-ways",
+      "launchId": 14574,
+      "name": "Lucky Lady’s Charm
+"id": "diamond-link-mighty-santa-boarded-up",
+      "launchId": 14504,
+      "name": "Diamond Link -
+"id": "xmas-bells",
+      "launchId": 14412,
+      "name": "Xmas Bells",
+"id": "tiger-jewel",
+      "launchId": 14259,
+      "name": "Tiger & Jewel
+"id": "diamond-mystery-fortune-streaks",
+      "launchId": 14109,
+      "name": "Diamond Mystery Fortune
+"id": "royal-flush-trophy-spins",
+      "launchId": 14019,
+      "name": "Royal Flush Trophy
+"id": "rise-of-tut-magic-buy-bonus",
+      "launchId": 13562,
+      "name": "Rise of Tut
+"id": "golden-roar-boom",
+      "launchId": 13510,
+      "name": "Golden Roar BOOM
+"id": "barkin-clusters",
+      "launchId": 12638,
+      "name": "Barkin’ Clusters",
+"id": "diamond-mystery-100-wild-fire",
+      "launchId": 12588,
+      "name": "Diamond Mystery -
+"id": "lone-star-linktm-eagle-wins",
+      "launchId": 12562,
+      "name": "Lone Star LinkTM
+"id": "love-and-rage-olympus",
+      "launchId": 12561,
+      "name": "Love and Rage
+"id": "cash-cascade-imperial-crown",
+      "launchId": 12560,
+      "name": "Cash Cascade -
+"id": "pinata-blast-tapper",
+      "launchId": 14022,
+      "name": "Pinata Blast -
+"id": "hit-me-baby",
+      "launchId": 13955,
+      "name": "Hit Me Baby
+"id": "diamond-mystery-mega-blaze",
+      "launchId": 13963,
+      "name": "Diamond Mystery Mega
+"id": "calacas-cash",
+      "launchId": 13957,
+      "name": "Calacas Cash",
+"id": "cash-connection-golden-voodoo-magic",
+      "launchId": 13960,
+      "name": "Cash Connection Golden
+"id": "lucky-lady-s-charm-deluxe-10-win-ways-ante-bet-buy-bonus",
+      "launchId": 8910,
+      "name": "Lucky Lady’s Charm
+"id": "lone-star-link-grizzly-wins",
+      "launchId": 12340,
+      "name": "Lone Star Link™
+"id": "shrimp-on-the-barbie",
+      "launchId": 12197,
+      "name": "Shrimp on the
+"id": "candy-splasher-",
+      "launchId": 12145,
+      "name": "Candy Splasher",
+"id": "mustang-dreaming-buy-bonus",
+      "launchId": 10926,
+      "name": "Mustang Dreaming Buy
+"id": "magnificent-merlin",
+      "launchId": 9228,
+      "name": "Magnificent Merlin",
+"id": "biker-s-bounty",
+      "launchId": 8970,
+      "name": "Biker’s Bounty",
+"id": "wild-ranger",
+      "launchId": 8949,
+      "name": "Wild Ranger",
+"id": "cash-connection-sizzling-hot",
+      "launchId": 8851,
+      "name": "Cash Connection -
+"id": "mustang-dreaming",
+      "launchId": 10925,
+      "name": "Mustang Dreaming",
+"id": "xtra-hot",
+      "launchId": 8951,
+      "name": "Xtra Hot",
+"id": "sharky-s-choices-win-ways",
+      "launchId": 8932,
+      "name": "Sharky’s Choices Win
+"id": "sevens-staxx",
+      "launchId": 8931,
+      "name": "Sevens Staxx",
+"id": "seven-seas-jackpots",
+      "launchId": 8930,
+      "name": "Seven Seas Jackpots
+"id": "smashing-sevens-win-ways",
+      "launchId": 8937,
+      "name": "Smashing Sevens:
+"id": "sizzling-hot-deluxe",
+      "launchId": 8936,
+      "name": "Sizzling Hot Deluxe
+"id": "sizzling-hot-6-extra-gold",
+      "launchId": 8935,
+      "name": "Sizzling Hot 6
+"id": "silver-lux-coin-run",
+      "launchId": 8934,
+      "name": "Silver Lux Coin
+"id": "starlight-jackpots-athena-goddess-of-war",
+      "launchId": 8940,
+      "name": "Starlight Jackpots Athena
+"id": "star-supreme",
+      "launchId": 8942,
+      "name": "Star Supreme",
+"id": "smuggler-s-gold",
+      "launchId": 8939,
+      "name": "Smuggler's Gold
+"id": "smoking-hot-7-s",
+      "launchId": 8938,
+      "name": "Smoking Hot 7
+"id": "top-o-the-money-pots-of-wealth",
+      "launchId": 8944,
+      "name": "Top o
+"id": "stellar-joker",
+      "launchId": 8943,
+      "name": "Stellar Joker",
+"id": "stars-inferno",
+      "launchId": 8941,
+      "name": "Stars Inferno",
+"id": "silver-lux-big-win-spinner",
+      "launchId": 8933,
+      "name": "Silver Lux Big
+"id": "welcome-fortune",
+      "launchId": 8948,
+      "name": "Welcome Fortune",
+"id": "ultra-hot-deluxe",
+      "launchId": 8947,
+      "name": "Ultra Hot deluxe
+"id": "twin-spinner-sizzling-hot-deluxe",
+      "launchId": 8946,
+      "name": "Twin Spinner Sizzling
+"id": "wish-upon-a-star",
+      "launchId": 8950,
+      "name": "Wish Upon a
+"id": "lucky-spin-jackpots",
+      "launchId": 8912,
+      "name": "Lucky Spin Jackpots
+"id": "mega-joker",
+      "launchId": 8915,
+      "name": "Mega Joker",
+"id": "manic-potions",
+      "launchId": 8913,
+      "name": "Manic Potions",
+"id": "power-prizes-eternal-mandarin-ducks",
+      "launchId": 8918,
+      "name": "POWER PRIZES -
+"id": "power-prizes-royal-crane",
+      "launchId": 8920,
+      "name": "POWER PRIZES -
+"id": "power-prizes-noble-peacock",
+      "launchId": 8919,
+      "name": "POWER PRIZES -
+"id": "red-hot-burning",
+      "launchId": 8924,
+      "name": "Red Hot Burning
+"id": "red-hot-20",
+      "launchId": 8923,
+      "name": "Red Hot 20
+"id": "power-stars",
+      "launchId": 8921,
+      "name": "Power Stars",
+"id": "roaring-forties",
+      "launchId": 8928,
+      "name": "Roaring Forties",
+"id": "rising-joker",
+      "launchId": 8927,
+      "name": "Rising Joker",
+"id": "reel-king",
+      "launchId": 8925,
+      "name": "Reel King",
+"id": "santa-s-riches",
+      "launchId": 8929,
+      "name": "Santa's Riches
+"id": "jewels-and-gems",
+      "launchId": 8898,
+      "name": "Jewels and Gems
+"id": "imperial-crown",
+      "launchId": 8897,
+      "name": "Imperial Crown",
+"id": "fuzanglong-fire-wilds",
+      "launchId": 8895,
+      "name": "Fuzanglong - Fire
+"id": "just-jewels-deluxe",
+      "launchId": 8901,
+      "name": "Just Jewels Deluxe
+"id": "joker-party-6",
+      "launchId": 8900,
+      "name": "Joker Party 6
+"id": "joker-action-6",
+      "launchId": 8899,
+      "name": "Joker Action 6
+"id": "lord-of-the-ocean-magic",
+      "launchId": 8906,
+      "name": "Lord of the
+"id": "lord-of-the-ocean-10-win-ways",
+      "launchId": 8905,
+      "name": "Lord of the
+"id": "lone-star-jackpots",
+      "launchId": 8903,
+      "name": "Lone Star Jackpots
+"id": "lightning-lion",
+      "launchId": 8902,
+      "name": "Lightning Lion",
+"id": "lucky-lady-s-charm-deluxe-6",
+      "launchId": 8911,
+      "name": "Lucky Lady's
+"id": "luck-of-the-dead",
+      "launchId": 8907,
+      "name": "Luck of the
+"id": "lord-of-the-ocean",
+      "launchId": 8904,
+      "name": "Lord of the
+"id": "lucky-lady-s-charm-deluxe-10",
+      "launchId": 8909,
+      "name": "Lucky Lady's
+"id": "dolphin-s-pearl-deluxe",
+      "launchId": 8957,
+      "name": "Dolphin’s Pearl Deluxe
+"id": "diamond-tales-the-ugly-duckling",
+      "launchId": 8880,
+      "name": "Diamond Tales:
+"id": "dragon-blitz",
+      "launchId": 8884,
+      "name": "Dragon Blitz",
+"id": "extreme-riches",
+      "launchId": 8888,
+      "name": "Extreme Riches",
+"id": "empire-of-dead",
+      "launchId": 8887,
+      "name": "Empire of Dead
+"id": "dragon-warrior",
+      "launchId": 8885,
+      "name": "Dragon Warrior",
+"id": "feelin-fruity-win-ways",
+      "launchId": 8892,
+      "name": "Feelin Fruity:
+"id": "feelin-fruity-10",
+      "launchId": 8891,
+      "name": "Feelin' Fruity
+"id": "faust",
+      "launchId": 8890,
+      "name": "Faust",
+      "supportDemo": true
+"id": "eye-of-the-queen",
+      "launchId": 8889,
+      "name": "Eye of the
+"id": "forever-hot",
+      "launchId": 8894,
+      "name": "Forever Hot",
+"id": "flame-queen",
+      "launchId": 8893,
+      "name": "Flame Queen",
+"id": "diamond-link-almighty-kraken",
+      "launchId": 8862,
+      "name": "Diamond Link:
+"id": "diamond-link-almighty-wolf",
+      "launchId": 8863,
+      "name": "Diamond Link Almighty
+"id": "diamond-link-cops-n-robbers",
+      "launchId": 8864,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-emperor",
+      "launchId": 8868,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-elephant",
+      "launchId": 8867,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-dwarves-inc-",
+      "launchId": 8866,
+      "name": "Diamond Link Mighty
+"id": "diamond-link-mighty-buffalo",
+      "launchId": 8865,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-stampede",
+      "launchId": 8872,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-sevens",
+      "launchId": 8870,
+      "name": "Diamond Link:
+"id": "diamond-link-mighty-sevens-win-ways",
+      "launchId": 8871,
+      "name": "Diamond Link Mighty
+"id": "diamond-link-mighty-santa",
+      "launchId": 8869,
+      "name": "Diamond Link:
+"id": "diamond-tales-the-emperor-s-new-clothes",
+      "launchId": 8877,
+      "name": "Diamond Tales:
+"id": "diamond-mystery-40-imperial-crown-deluxe",
+      "launchId": 8875,
+      "name": "Diamond Mystery 40
+"id": "diamond-mystery-100-imperial-crown-deluxe",
+      "launchId": 8874,
+      "name": "Diamond Mystery 100
+"id": "diamond-mystery-fruitilicious-deluxe",
+      "launchId": 8876,
+      "name": "Diamond Mystery Fruitilicious
+"id": "diamond-link-oasis-riches",
+      "launchId": 8873,
+      "name": "Diamond Link:
+"id": "cops-n-robbers-vegas-nights",
+      "launchId": 8860,
+      "name": "Cops 'n'
+"id": "cops-n-robbers-drop-shot-deluxe",
+      "launchId": 8859,
+      "name": "Cops ‘n’ Robbers
+"id": "coin-frenzy",
+      "launchId": 8857,
+      "name": "Coin Frenzy",
+"id": "clash-of-legends-battle-lines",
+      "launchId": 8856,
+      "name": "Clash of Legends
+"id": "chili-bomba",
+      "launchId": 8855,
+      "name": "Chili Bomba",
+"id": "cherry-surprise-buy-bonus",
+      "launchId": 8854,
+      "name": "Cherry Surprise Buy
+"id": "cash-connection-dolphin-s-pearl",
+      "launchId": 8849,
+      "name": "Cash Connection -
+"id": "cash-connection-golden-book-of-ra",
+      "launchId": 8850,
+      "name": "Cash Connection -
+"id": "cash-connection-book-of-ra",
+      "launchId": 8845,
+      "name": "Cash Connection -
+"id": "burning-wild",
+      "launchId": 8844,
+      "name": "Burning Wild",
+"id": "book-of-ra-temple-of-gold",
+      "launchId": 8843,
+      "name": "Book of Ra
+"id": "book-of-ra-mystic-fortunes",
+      "launchId": 8842,
+      "name": "Book of Ra
+"id": "book-of-ra-deluxe-win-ways-ante-bet-buy-bonus",
+      "launchId": 8953,
+      "name": "Book of Ra
+"id": "book-of-ra-deluxe-10",
+      "launchId": 8837,
+      "name": "Book of Ra
+"id": "book-of-ra-deluxe-10-win-ways-buy-bonus",
+      "launchId": 8838,
+      "name": "Book of Ra
+"id": "apollo-god-of-the-sun",
+      "launchId": 8831,
+      "name": "Apollo God Of
+"id": "always-hot-deluxe",
+      "launchId": 8830,
+      "name": "Always Hot Deluxe
+"id": "a-christmas-full-of-wilds",
+      "launchId": 8829,
+      "name": "A Christmas Full
+"id": "9-line-fortune",
+      "launchId": 8828,
+      "name": "9 Line Fortune
+"id": "50-red-hot-7-clover-link",
+      "launchId": 8826,
+      "name": "50 Red Hot
+"id": "50-red-hot-burning-clover-link",
+      "launchId": 8827,
+      "name": "50 Red Hot
+"id": "50-fortune-fruits",
+      "launchId": 8825,
+      "name": "50 Fortune Fruits
+"id": "50-extreme-hot",
+      "launchId": 8824,
+      "name": "50 Extreme Hot
+"id": "20-imperial-crown-deluxe",
+      "launchId": 8818,
+      "name": "20 Imperial Crown
+"id": "25-red-hot-burning-clover-link",
+      "launchId": 8820,
+      "name": "25 Red Hot
+"id": "40-ferocious-fruits",
+      "launchId": 8821,
+      "name": "40 Ferocious Fruits
+"id": "40-imperial-crown",
+      "launchId": 8822,
+      "name": "40 Imperial Crown
+"id": "40-wild-fire-6",
+      "launchId": 8823,
+      "name": "40 Wild Fire
+"id": "twin-spinner-book-of-ra-deluxe",
+      "launchId": 8945,
+      "name": "Twin Spinner Book
+"id": "the-jungle-house-win-ways",
+      "launchId": 11757,
+      "name": "The Jungle House
+"id": "mega-blaze",
+      "launchId": 8914,
+      "name": "Mega Blaze",
+"id": "rise-of-tut-magic",
+      "launchId": 8926,
+      "name": "Rise of Tut
+"id": "dynamite-fortunes",
+      "launchId": 13877,
+      "name": "Dynamite Fortunes",
+"id": "lucky-lady-s-charm-deluxe",
+      "launchId": 13876,
+      "name": "Lucky Lady’s Charm
+"id": "book-of-ra-deluxe-buy-bonus",
+      "launchId": 13956,
+      "name": "Book of
+"id": "golden-safari",
+      "launchId": 13966,
+      "name": "Golden Safari",
+"id": "silver-lux-coin-stacks",
+      "launchId": 13965,
+      "name": "Silver Lux Coin
+"id": "electric-flamingo",
+      "launchId": 13964,
+      "name": "Electric Flamingo",
+"id": "diamond-mystery-81-boosting-jokers",
+      "launchId": 13961,
+      "name": "Diamond Mystery 81
+"id": "25-red-hot-7-clover-link",
+      "launchId": 13967,
+      "name": "25 Red
+"id": "cash-connection-voodoo-magic",
+      "launchId": 13958,
+      "name": "Cash Connection Voodoo
+"id": "the-great-gambini-s-night-magic",
+      "launchId": 13959,
+      "name": "The Great Gambini
+"id": "pots-of-treasure-win-ways-ante-bet-buy-bonus",
+      "launchId": 13962,
+      "name": "Pots Of Treasure
+"id": "9-hearts-",
+      "launchId": 22087,
+      "name": "9 Hearts",
+"id": "hell-hot-100",
+      "launchId": 4378,
+      "name": "Hell Hot 100
+"id": "lucky-streak-3",
+      "launchId": 4384,
+      "name": "Lucky Streak 3
+"id": "ultra-fresh",
+      "launchId": 4404,
+      "name": "Ultra Fresh",
+"id": "joker-stoker",
+      "launchId": 4370,
+      "name": "Joker Stoker",
+"id": "best-xmas",
+      "launchId": 23480,
+      "name": "Best Xmas",
+"id": "burning-coins-40",
+      "launchId": 23366,
+      "name": "Burning Coins 40
+"id": "burning-hell",
+      "launchId": 23178,
+      "name": "Burning Hell",
+"id": "fortune-stars",
+      "launchId": 23027,
+      "name": "Fortune Stars",
+"id": "royal-x-mass-2-dice",
+      "launchId": 22974,
+      "name": "Royal X-mass
+"id": "book-of-ganesha",
+      "launchId": 22929,
+      "name": "Book of Ganesha
+"id": "mr-bells-40",
+      "launchId": 22825,
+      "name": "Mr Bells 40
+"id": "3-witch-pots",
+      "launchId": 22518,
+      "name": "3 Witch Pots
+"id": "sloteus-gold",
+      "launchId": 21785,
+      "name": "Sloteus Gold",
+"id": "fortune-chests",
+      "launchId": 21708,
+      "name": "Fortune Chests",
+"id": "thunder-crown",
+      "launchId": 20622,
+      "name": "Thunder Crown",
+"id": "prestige-crown",
+      "launchId": 20038,
+      "name": "Prestige Crown",
+"id": "sticky-lips",
+      "launchId": 19905,
+      "name": "Sticky Lips",
+"id": "amazons-riches",
+      "launchId": 19669,
+      "name": "Amazons Riches",
+"id": "burning-coins-20",
+      "launchId": 19013,
+      "name": "Burning Coins 20
+"id": "starshine-crystal",
+      "launchId": 18141,
+      "name": "Starshine Crystals",
+"id": "fortune-capybara",
+      "launchId": 18088,
+      "name": "Fortune Capybara",
+"id": "janissaries",
+      "launchId": 17732,
+      "name": "Janissaries",
+      "supportDemo": true
+"id": "hit-slot-2025",
+      "launchId": 17583,
+      "name": "2025 Hit Slot
+"id": "clover-flames",
+      "launchId": 17263,
+      "name": "Clover Flames",
+"id": "crystal-skull-dice",
+      "launchId": 16698,
+      "name": "Crystal Skull Dice
+"id": "en-power-balls",
+      "launchId": 15901,
+      "name": "Power Balls",
+"id": "en-fortune-snake",
+      "launchId": 15773,
+      "name": "Fortune Snake",
+"id": "mr-jingle-bells",
+      "launchId": 14699,
+      "name": "Mr. Jingle
+"id": "jolly-santa",
+      "launchId": 14691,
+      "name": "Jolly Santa",
+"id": "xmas-burst",
+      "launchId": 14681,
+      "name": "Xmas Burst",
+"id": "lucky-streak-1000",
+      "launchId": 14561,
+      "name": "Lucky Streak 1000
+"id": "golden-brew",
+      "launchId": 19936,
+      "name": "Golden Brew",
+"id": "chance-machine-40-dice",
+      "launchId": 14479,
+      "name": "Chance Machine 40
+"id": "big-brown",
+      "launchId": 14416,
+      "name": "Big Brown",
+"id": "vikings-way",
+      "launchId": 13730,
+      "name": "Vikings Way",
+"id": "panda-strike",
+      "launchId": 13551,
+      "name": "Panda Strike",
+"id": "age-of-glory",
+      "launchId": 12603,
+      "name": "Age of Glory
+"id": "81-burning-ways-",
+      "launchId": 12186,
+      "name": "81 Burning Ways
+"id": "crown-coins",
+      "launchId": 9183,
+      "name": "Crown Coins",
+"id": "cows-ufos",
+      "launchId": 11888,
+      "name": "Cows & Ufos
+"id": "football-mayhem",
+      "launchId": 9124,
+      "name": "Football Mayhem",
+"id": "dazzling-crown",
+      "launchId": 8164,
+      "name": "Dazzling Crown",
+"id": "jolly-queen",
+      "launchId": 8040,
+      "name": "Jolly Queen",
+"id": "raging-wings",
+      "launchId": 12082,
+      "name": "Raging Wings",
+"id": "hell-hot-40",
+      "launchId": 4380,
+      "name": "Hell Hot 40
+"id": "festa-junina",
+      "launchId": 12083,
+      "name": "Festa Junina",
+"id": "temple-of-ra",
+      "launchId": 8572,
+      "name": "Temple of Ra
+"id": "chance-machine-20",
+      "launchId": 4362,
+      "name": "Chance Machine 20
+"id": "moon-tiger",
+      "launchId": 8013,
+      "name": "Moon Tiger",
+"id": "joker-ra-sunrise",
+      "launchId": 7973,
+      "name": "Joker Ra:
+"id": "all-ways-luck",
+      "launchId": 7878,
+      "name": "All Ways Luck
+"id": "wild-streak",
+      "launchId": 4302,
+      "name": "Wild Streak",
+"id": "2024-hit-slot",
+      "launchId": 6959,
+      "name": "2024 Hit Slot
+"id": "jade-coins",
+      "launchId": 5877,
+      "name": "Jade Coins",
+"id": "book-of-lady",
+      "launchId": 4314,
+      "name": "Book of Lady
+"id": "the-vampires-2",
+      "launchId": 4299,
+      "name": "The Vampires 2
+"id": "cyber-wolf",
+      "launchId": 4317,
+      "name": "Cyber Wolf",
+"id": "voodoo",
+      "launchId": 4333,
+      "name": "Voodoo",
+      "supportDemo": true
+"id": "minotaur",
+      "launchId": 4397,
+      "name": "Minotaur",
+      "supportDemo": true
+"id": "book-of-santa",
+      "launchId": 4354,
+      "name": "Book Of Santa
+"id": "joker-ra",
+      "launchId": 4288,
+      "name": "Joker Ra",
+"id": "blue-slot",
+      "launchId": 4296,
+      "name": "Blue Slot",
+"id": "book-of-vlad",
+      "launchId": 4320,
+      "name": "Book of Vlad
+"id": "2021-hit-slot",
+      "launchId": 4372,
+      "name": "2021 Hit Slot
+"id": "in-jazz",
+      "launchId": 4381,
+      "name": "In Jazz
+"id": "hell-hot-20",
+      "launchId": 4376,
+      "name": "Hell Hot 20
+"id": "royal-xmass-2",
+      "launchId": 4273,
+      "name": "Royal Xmass 2
+"id": "2022-hit-slot",
+      "launchId": 4315,
+      "name": "2022 Hit Slot
+"id": "lumber-jack",
+      "launchId": 4306,
+      "name": "Lumber Jack",
+"id": "green-slot",
+      "launchId": 4284,
+      "name": "Green Slot",
+"id": "royal-xmass",
+      "launchId": 4310,
+      "name": "Royal Xmass",
+"id": "lord-of-the-seas",
+      "launchId": 4281,
+      "name": "Lord of the
+"id": "oriental-dragon",
+      "launchId": 6951,
+      "name": "Oriental Dragon",
+"id": "mongol-treasures",
+      "launchId": 4401,
+      "name": "Mongol Treasures",
+"id": "7-bonus-up",
+      "launchId": 4332,
+      "name": "7 Bonus Up
+"id": "undines-deep",
+      "launchId": 4399,
+      "name": "Undine's Deep
+"id": "cash-tank",
+      "launchId": 4355,
+      "name": "Cash Tank",
+"id": "dia-de-los-muertos",
+      "launchId": 4338,
+      "name": "Dia De Los
+"id": "aristocats",
+      "launchId": 7371,
+      "name": "Aristocats",
+      "supportDemo": true
+"id": "santas-puzzle",
+      "launchId": 4270,
+      "name": "Santa’s Puzzle",
+"id": "hot-puzzle",
+      "launchId": 4269,
+      "name": "Hot Puzzle",
+"id": "royal-xmass-dice",
+      "launchId": 4268,
+      "name": "Royal Xmass (Dice
+"id": "silk-road",
+      "launchId": 4283,
+      "name": "Silk Road",
+"id": "multistar-fruits",
+      "launchId": 4285,
+      "name": "Multistar Fruits",
+"id": "fruletta-dice",
+      "launchId": 4290,
+      "name": "Fruletta Dice",
+"id": "lucky-cloverland-dice",
+      "launchId": 4289,
+      "name": "Lucky Cloverland (Dice
+"id": "hell-hot-100-dice",
+      "launchId": 4292,
+      "name": "Hell Hot 100
+"id": "cash-streak",
+      "launchId": 4293,
+      "name": "Cash Streak",
+"id": "hell-hot-40-dice",
+      "launchId": 4291,
+      "name": "Hell Hot 40
+"id": "2023-hit-slot",
+      "launchId": 4294,
+      "name": "2023 Hit Slot
+"id": "hell-hot-20-dice",
+      "launchId": 4286,
+      "name": "Hell Hot 20
+"id": "rainbow-ray",
+      "launchId": 7445,
+      "name": "Rainbow Ray",
+"id": "riches-of-caliph",
+      "launchId": 4295,
+      "name": "Riches of Caliph
+"id": "lucky-streak-x",
+      "launchId": 4276,
+      "name": "Lucky Streak X
+"id": "rabbits-rabbits-rabbits",
+      "launchId": 4297,
+      "name": "Rabbits Rabbits Rabbits
+"id": "late-night-win",
+      "launchId": 4280,
+      "name": "Late Night Win
+"id": "2023-hit-slot-dice",
+      "launchId": 4267,
+      "name": "2023 Hit Slot
+"id": "santas-gift",
+      "launchId": 4298,
+      "name": "Santa’s Gift",
+"id": "crystal-skull",
+      "launchId": 4300,
+      "name": "Crystal Skull",
+"id": "minotaur-dice",
+      "launchId": 4301,
+      "name": "Minotaur (Dice)",
+"id": "football-2022",
+      "launchId": 4305,
+      "name": "Football:2022",
+"id": "rooster-fury-dice",
+      "launchId": 4304,
+      "name": "Rooster Fury (Dice
+"id": "mongol-treasures-2",
+      "launchId": 4307,
+      "name": "Mongol Treasures 2
+"id": "the-emirate-2",
+      "launchId": 4308,
+      "name": "The Emirate 2
+"id": "dynamite-miner",
+      "launchId": 4309,
+      "name": "Dynamite Miner",
+"id": "samarkands-gold",
+      "launchId": 4321,
+      "name": "Samarkand's Gold
+"id": "ninja",
+      "launchId": 4287,
+      "name": "Ninja",
+      "supportDemo": true
+"id": "glory-of-egypt",
+      "launchId": 4319,
+      "name": "Glory of Egypt
+"id": "lucky-cloverland",
+      "launchId": 4316,
+      "name": "Lucky Cloverland",
+"id": "king-of-ghosts",
+      "launchId": 4313,
+      "name": "King of Ghosts
+"id": "fisher-king",
+      "launchId": 4318,
+      "name": "Fisher King",
+"id": "water-tiger",
+      "launchId": 4311,
+      "name": "Water Tiger",
+"id": "valentines-heart",
+      "launchId": 6958,
+      "name": "Valentine's Heart
+"id": "wild-love",
+      "launchId": 4312,
+      "name": "Wild Love",
+"id": "3-thunders",
+      "launchId": 4377,
+      "name": "3 Thunders",
+"id": "solar-eclipse",
+      "launchId": 4375,
+      "name": "Solar Eclipse",
+"id": "magnum-opus",
+      "launchId": 4360,
+      "name": "Magnum Opus",
+"id": "book-of-oil",
+      "launchId": 4402,
+      "name": "Book of Oil
+"id": "fruletta",
+      "launchId": 4373,
+      "name": "Fruletta",
+      "supportDemo": true
+"id": "rooster-fury",
+      "launchId": 4379,
+      "name": "Rooster Fury",
+"id": "goddess-of-war",
+      "launchId": 4334,
+      "name": "Goddess of War
+"id": "temple-cats",
+      "launchId": 4411,
+      "name": "Temple Cats",
+"id": "chimney-sweep",
+      "launchId": 4396,
+      "name": "Chimney Sweep",
+"id": "the-king",
+      "launchId": 4326,
+      "name": "The King",
+"id": "the-vampires",
+      "launchId": 4409,
+      "name": "The Vampires",
+"id": "the-emirate",
+      "launchId": 4322,
+      "name": "The Emirate",
+"id": "fresh-fruits",
+      "launchId": 4323,
+      "name": "Fresh Fruits",
+"id": "ancient-troy-dice",
+      "launchId": 4336,
+      "name": "Ancient Troy (Dice
+"id": "slotomoji",
+      "launchId": 4352,
+      "name": "Slotomoji",
+      "supportDemo": true
+"id": "jetsetter",
+      "launchId": 4348,
+      "name": "Jetsetter",
+      "supportDemo": true
+"id": "tribe",
+      "launchId": 4331,
+      "name": "Tribe",
+      "supportDemo": true
+"id": "taboo",
+      "launchId": 4330,
+      "name": "Taboo",
+      "supportDemo": true
+"id": "little-panda",
+      "launchId": 4412,
+      "name": "Little Panda",
+"id": "lucky-lands",
+      "launchId": 4329,
+      "name": "Lucky Lands",
+"id": "legendary-sumo",
+      "launchId": 4369,
+      "name": "Legendary Sumo",
+"id": "diamond-vapor",
+      "launchId": 4328,
+      "name": "Diamond Vapor",
+"id": "chunjie",
+      "launchId": 4351,
+      "name": "Chunjie",
+      "supportDemo": true
+"id": "satoshis-secret",
+      "launchId": 4327,
+      "name": "Satoshi's Secret
+"id": "wild-fruits",
+      "launchId": 4406,
+      "name": "Wild Fruits",
+"id": "sparkling-fresh",
+      "launchId": 4325,
+      "name": "Sparkling Fresh",
+"id": "more-fresh-fruits",
+      "launchId": 4324,
+      "name": "More Fresh Fruits
+"id": "macaroons",
+      "launchId": 4347,
+      "name": "Macarons",
+      "supportDemo": true
+"id": "geisha",
+      "launchId": 4343,
+      "name": "Geisha",
+      "supportDemo": true
+"id": "safari",
+      "launchId": 4387,
+      "name": "Safari",
+      "supportDemo": true
+"id": "around-the-world",
+      "launchId": 4371,
+      "name": "Around the World
+"id": "cupid",
+      "launchId": 4367,
+      "name": "Cupid",
+      "supportDemo": true
+"id": "golden-ox",
+      "launchId": 4366,
+      "name": "Golden Ox",
+"id": "chance-machine-5",
+      "launchId": 4365,
+      "name": "Chance Machine 5
+"id": "diamond-chance",
+      "launchId": 4364,
+      "name": "Diamond Chance",
+"id": "chance-machine-40",
+      "launchId": 4363,
+      "name": "Chance Machine 40
+"id": "almighty-sparta-dice",
+      "launchId": 4408,
+      "name": "Almighty Sparta (Dice
+"id": "red-cap",
+      "launchId": 4359,
+      "name": "Red Cap
+"id": "buffalo-50",
+      "launchId": 4361,
+      "name": "Buffalo 50",
+"id": "asgardians-dice",
+      "launchId": 4358,
+      "name": "Asgardians (Dice)",
+"id": "little-panda-dice",
+      "launchId": 4395,
+      "name": "Little Panda (Dice
+"id": "the-rise-of-ai",
+      "launchId": 4391,
+      "name": "The Rise of
+"id": "asgardians",
+      "launchId": 4390,
+      "name": "Asgardians",
+      "supportDemo": true
+"id": "windy-city",
+      "launchId": 4407,
+      "name": "Windy City",
+"id": "troll-haven",
+      "launchId": 4357,
+      "name": "Troll Haven",
+"id": "lucky-streak-27",
+      "launchId": 12107,
+      "name": "Lucky Streak 27
+"id": "2020-hit-slot",
+      "launchId": 4356,
+      "name": "2020 Hit Slot
+"id": "aus-dem-tal",
+      "launchId": 4389,
+      "name": "Aus Dem Tal
+"id": "ancient-troy",
+      "launchId": 4350,
+      "name": "Ancient Troy",
+"id": "sugar-glider-dice",
+      "launchId": 4386,
+      "name": "Sugar Glider (Dice
+"id": "almighty-sparta",
+      "launchId": 4410,
+      "name": "Almighty Sparta",
+"id": "voodoo-dice",
+      "launchId": 4349,
+      "name": "Voodoo (Dice)",
+"id": "sushi",
+      "launchId": 4346,
+      "name": "Sushi",
+      "supportDemo": true
+"id": "gladiators",
+      "launchId": 4344,
+      "name": "Gladiators",
+      "supportDemo": true
+"id": "retromania",
+      "launchId": 4342,
+      "name": "Retromania",
+      "supportDemo": true
+"id": "urartu",
+      "launchId": 4341,
+      "name": "Urartu",
+      "supportDemo": true
+"id": "luxury-life",
+      "launchId": 4383,
+      "name": "Luxury Life",
+"id": "lucky-streak-2",
+      "launchId": 4382,
+      "name": "Lucky Streak 2
+"id": "sugar-glider",
+      "launchId": 4340,
+      "name": "Sugar Glider",
+"id": "lucky-streak-1",
+      "launchId": 4339,
+      "name": "Lucky Streak 1
+"id": "chance-machine-100",
+      "launchId": 4392,
+      "name": "Chance Machine 100
+"id": "2027-iss",
+      "launchId": 4405,
+      "name": "2027 ISS",
+"id": "2016-gladiators",
+      "launchId": 4394,
+      "name": "2016 Gladiators",
+"id": "argonauts",
+      "launchId": 4279,
+      "name": "Argonauts",
+      "supportDemo": true
+"id": "akbar-and-birbal",
+      "launchId": 4374,
+      "name": "Akbar&Birbal",
+"id": "chance-machine-5-dice",
+      "launchId": 4272,
+      "name": "Chance Machine 5
+"id": "cyber-wolf-dice",
+      "launchId": 4271,
+      "name": "Cyber Wolf (Dice
+"id": "dia-de-los-muertos-2",
+      "launchId": 4274,
+      "name": "Dia de Los
+"id": "end-gem-blast",
+      "launchId": 4368,
+      "name": "Gem Blast",
+"id": "gems-and-stones",
+      "launchId": 4400,
+      "name": "Gems & Stones
+"id": "fresh-crush",
+      "launchId": 4278,
+      "name": "Fresh Crush",
+"id": "end-football",
+      "launchId": 4345,
+      "name": "Football",
+      "supportDemo
+"id": "joker-ra-dice",
+      "launchId": 4277,
+      "name": "Joker Ra (Dice
+"id": "100-zombies",
+      "launchId": 4403,
+      "name": "100 Zombies",
+"id": "mystery-of-eldorado",
+      "launchId": 4353,
+      "name": "Mystery of Eldorado
+"id": "100-zombies-dice",
+      "launchId": 4303,
+      "name": "100 Zombies (Dice
+"id": "football-superstar",
+      "launchId": 4335,
+      "name": "Football Superstar",
+"id": "twerk",
+      "launchId": 4388,
+      "name": "Twerk",
+      "supportDemo": true
+"id": "lucky-streak-2-dice",
+      "launchId": 4385,
+      "name": "Lucky Streak 2
+"id": "giant-wild-goose-pagoda",
+      "launchId": 4282,
+      "name": "Giant Wild Goose
+"id": "lucky-streak-3-dice",
+      "launchId": 4393,
+      "name": "Lucky Streak 3
+"id": "lucky-streak-1-dice",
+      "launchId": 4337,
+      "name": "Lucky Streak 1
+"id": "book-of-conquistador",
+      "launchId": 9171,
+      "name": "Book of Conquistador
+"id": "luck-of-tiger-bonus-combo",
+      "launchId": 16620,
+      "name": "Luck of Tiger
+"id": "royal-fruits-5-hold-n-link",
+      "launchId": 14915,
+      "name": "Royal Fruits 5
+"id": "buffalo-cash-pool",
+      "launchId": 16618,
+      "name": "Buffalo: Cash
+"id": "big-catch-bonanza-bonus-buy",
+      "launchId": 16626,
+      "name": "Big Catch Bonanza
+"id": "bandits-bounty-cash-pool",
+      "launchId": 16614,
+      "name": "Bandits Bounty:
+"id": "ranch-life",
+      "launchId": 16604,
+      "name": "Ranch Life",
+"id": "elephant-s-gold-bonus-combo",
+      "launchId": 16605,
+      "name": "Elephant's Gold
+"id": "rich-piggies-bonus-combo",
+      "launchId": 16600,
+      "name": "Rich Piggies:
+"id": "carnival-cat-bonus-combo",
+      "launchId": 16601,
+      "name": "Carnival Cat:
+"id": "pompei-gold-rapid-link-bonus-buy",
+      "launchId": 16633,
+      "name": "Pompei Gold:
+"id": "rich-piggies-2-bonus-combo",
+      "launchId": 16637,
+      "name": "Rich Piggies 2
+"id": "elephant-s-gold-buy-bonus-combo",
+      "launchId": 16642,
+      "name": "Elephant's Gold
+"id": "luck-of-panda-bonus-combo",
+      "launchId": 16639,
+      "name": "Luck of Panda
+"id": "almighty-joker-20-classic-eries",
+      "launchId": 23378,
+      "name": "Almighty Joker 20
+"id": "almighty-joker-40-classic-eries",
+      "launchId": 23379,
+      "name": "Almighty Joker 40
+"id": "clover-reels-40-classic-series",
+      "launchId": 23036,
+      "name": "Clover Reels 40
+"id": "clover-reels-20-classic-series",
+      "launchId": 23035,
+      "name": "Clover Reels 20
+"id": "rolin-hot-10-classic-eries",
+      "launchId": 22962,
+      "name": "Rolin’ Hot 10
+"id": "rolin-hot-20-classic-eries",
+      "launchId": 22963,
+      "name": "Rolin’ Hot 20
+"id": "clover-potter-power-coins",
+      "launchId": 22822,
+      "name": "Clover Potter:
+"id": "genie-s-chest-hold-n-link",
+      "launchId": 22684,
+      "name": "Genie's Chest
+"id": "3-chests-bonus-combo",
+      "launchId": 22437,
+      "name": "3 Chests:
+"id": "dream-diamonds-hold-n-link",
+      "launchId": 22273,
+      "name": "Dream Diamonds:
+"id": "7777-bonus-combo",
+      "launchId": 21766,
+      "name": "7777: Bonus
+"id": "piggy-s-vault-power-coins",
+      "launchId": 21616,
+      "name": "Piggy's Vault
+"id": "coastal-express-cash-blast",
+      "launchId": 20943,
+      "name": "Coastal Express:
+"id": "the-big-race-hold-n-link",
+      "launchId": 20603,
+      "name": "The Big Race
+"id": "diamond-chest-hold-n-link",
+      "launchId": 20468,
+      "name": "Diamond Chest:
+"id": "888-bonus-combo",
+      "launchId": 20330,
+      "name": "888: Bonus
+"id": "almighty-joker-big-bang",
+      "launchId": 20047,
+      "name": "Almighty Joker:
+"id": "red-planet-rapid-link",
+      "launchId": 19908,
+      "name": "Red Planet:
+"id": "texas-rush",
+      "launchId": 19672,
+      "name": "Texas Rush",
+"id": "amazing-diamonds-hold-n-link",
+      "launchId": 19570,
+      "name": "Amazing Diamonds:
+"id": "the-big-lap-rapid-link",
+      "launchId": 19333,
+      "name": "The Big Lap
+"id": "big-catch-1000-nudge-bonus-buy",
+      "launchId": 19260,
+      "name": "Big Catch 1000
+"id": "egypt-fortunes-bingo-bounty",
+      "launchId": 19157,
+      "name": "Egypt Fortunes:
+"id": "jack-rider-and-the-lost-relics",
+      "launchId": 18732,
+      "name": "Jack Rider and
+"id": "almighty-diamonds-hold-n-link",
+      "launchId": 18206,
+      "name": "Almighty Diamonds:
+"id": "mr-crystalman-hold-n-link-",
+      "launchId": 18085,
+      "name": "Mr. Crystalman
+"id": "wild-buffalo-fortune-wheel-bonus-buy",
+      "launchId": 17434,
+      "name": "Wild Buffalo:
+"id": "russian-warship",
+      "launchId": 19316,
+      "name": "Russian Warship",
+"id": "triple-fortune",
+      "launchId": 17161,
+      "name": "Triple Fortune",
+"id": "wild-buffalo-megaways",
+      "launchId": 16704,
+      "name": "Wild Buffalo Megaways
+"id": "happy-buddha-bonus-combo",
+      "launchId": 16649,
+      "name": "Happy Buddha:
+"id": "greek-fortunes",
+      "launchId": 16652,
+      "name": "Greek Fortunes",
+"id": "big-catch-bonanza-christmas-catch",
+      "launchId": 16646,
+      "name": "Big Catch Bonanza
+"id": "mardi-gras-queen",
+      "launchId": 16631,
+      "name": "Mardi Gras Queen
+"id": "wild-buffalo-rapid-link",
+      "launchId": 16594,
+      "name": "Wild Buffalo:
+"id": "black-bullion-cash-pool",
+      "launchId": 16644,
+      "name": "Black Bullion:
+"id": "san-chong-baozha-red-bonus-combo",
+      "launchId": 16647,
+      "name": "San Chong BaoZha
+"id": "big-banker-bonanza",
+      "launchId": 16609,
+      "name": "Big Banker Bonanza
+"id": "pop-lollipop",
+      "launchId": 16608,
+      "name": "Pop! Lollipop
+"id": "big-catch-bonanza-perfect-haul",
+      "launchId": 16640,
+      "name": "Big Catch Bonanza
+"id": "cash-vault-hold-n-link",
+      "launchId": 16567,
+      "name": "Cash Vault Hold
+"id": "caribbean-escape-rapid-link",
+      "launchId": 16643,
+      "name": "Caribbean Escape:
+"id": "san-chong-baozha-blue-bonus-combo",
+      "launchId": 16623,
+      "name": "San Chong BaoZha
+"id": "phoenix-queen-hold-n-link",
+      "launchId": 16641,
+      "name": "Phoenix Queen:
+"id": "mighty-stars",
+      "launchId": 16628,
+      "name": "Mighty Stars",
+"id": "royal-fruits-40",
+      "launchId": 16580,
+      "name": "Royal Fruits 40
+"id": "fortune-skulls-bonus-buy",
+      "launchId": 16635,
+      "name": "Fortune Skulls Bonus
+"id": "grand-koala-hold-n-link",
+      "launchId": 16589,
+      "name": "Grand Koala:
+"id": "mriya",
+      "launchId": 14913,
+      "name": "Mriya",
+      "supportDemo": true
+"id": "wild-buffalo-fortune-wheel",
+      "launchId": 16571,
+      "name": "Wild Buffalo Fortune
+"id": "bunny-s-bounty-hold-n-link",
+      "launchId": 16638,
+      "name": "Bunny's Bounty
+"id": "african-king-hold-n-link",
+      "launchId": 16558,
+      "name": "African King Hold
+"id": "book-of-nile-magic",
+      "launchId": 16577,
+      "name": "Book of Nile
+"id": "clover-shot",
+      "launchId": 16607,
+      "name": "Clover Shot",
+"id": "wolf-reels-rapid-link",
+      "launchId": 16627,
+      "name": "Wolf Reels:
+"id": "wild-buffalo-hold-n-link",
+      "launchId": 16564,
+      "name": "Wild Buffalo Hold
+"id": "hot-as-devil-hold-n-link",
+      "launchId": 16615,
+      "name": "Hot as Devil
+"id": "wild-buffalo-hold-n-link-bonus-buy",
+      "launchId": 16634,
+      "name": "Wild Buffalo Hold
+"id": "mighty-horses-cash-connect",
+      "launchId": 16568,
+      "name": "Mighty Horses:
+"id": "fruit-cash-hold-n-link",
+      "launchId": 16588,
+      "name": "Fruit Cash Hold
+"id": "money-hive-hold-n-link",
+      "launchId": 16565,
+      "name": "Money Hive Hold
+"id": "big-catch-bonanza",
+      "launchId": 16596,
+      "name": "Big Catch Bonanza
+"id": "pompeii-gold-rapid-link",
+      "launchId": 16586,
+      "name": "Pompeii Gold:
+"id": "book-of-nile-lost-chapter",
+      "launchId": 16576,
+      "name": "Book Of Nile
+"id": "volcano-fruits",
+      "launchId": 16570,
+      "name": "Volcano Fruits",
+"id": "cash-kingdom",
+      "launchId": 16560,
+      "name": "Cash Kingdom",
+"id": "royal-fruits-9-hold-n-link",
+      "launchId": 16632,
+      "name": "Royal Fruits 9
+"id": "wild-buffalo-megaways-hold-n-link",
+      "launchId": 16648,
+      "name": "Wild Buffalo Megaways
+"id": "tumblin-dublin",
+      "launchId": 16584,
+      "name": "Tumblin' Dublin
+"id": "tiki-island-hold-n-link",
+      "launchId": 16613,
+      "name": "Tiki Island:
+"id": "three-piglets",
+      "launchId": 16610,
+      "name": "Three Piglets",
+"id": "fortune-skulls",
+      "launchId": 16548,
+      "name": "Fortune Skulls",
+"id": "the-one-armed-pirate",
+      "launchId": 16572,
+      "name": "The One Armed
+"id": "book-of-nile-hold-n-link",
+      "launchId": 16578,
+      "name": "Book of Nile
+"id": "golden-tree",
+      "launchId": 16590,
+      "name": "Golden Tree",
+"id": "the-big-game-hold-n-link",
+      "launchId": 16551,
+      "name": "The Big Game
+"id": "squid-slot",
+      "launchId": 16583,
+      "name": "Squid Slot",
+"id": "captain-lobster",
+      "launchId": 16611,
+      "name": "Captain Lobster",
+"id": "merry-cash-splash-hold-n-link",
+      "launchId": 16624,
+      "name": "Merry Cash Splash
+"id": "savanna-squad",
+      "launchId": 16559,
+      "name": "Savanna Squad",
+"id": "dolphin-queen-hold-n-link",
+      "launchId": 16555,
+      "name": "Dolphin Queen Hold
+"id": "b-u-c-k-s",
+      "launchId": 16581,
+      "name": "B
+"id": "money-hive-50-hold-n-link",
+      "launchId": 16630,
+      "name": "Money Hive 50
+"id": "rubber-duck-hold-n-link",
+      "launchId": 16616,
+      "name": "Rubber Duck:
+"id": "golden-dragon-hold-n-link",
+      "launchId": 16598,
+      "name": "Golden Dragon:
+"id": "candy-heroes",
+      "launchId": 16602,
+      "name": "Candy Heroes",
+"id": "reel-rider-rapid-link",
+      "launchId": 16592,
+      "name": "Reel Rider:
+"id": "power-of-zorro",
+      "launchId": 16587,
+      "name": "Power of Zorro
+"id": "ng-osiris-gold",
+      "launchId": 16585,
+      "name": "Osiris Gold",
+"id": "mystery-dragons",
+      "launchId": 16582,
+      "name": "Mystery Dragons",
+"id": "dancing-lanterns-2",
+      "launchId": 16566,
+      "name": "Dancing Lanterns 2
+"id": "royal-fruits-20",
+      "launchId": 16579,
+      "name": "Royal Fruits 20
+"id": "pelican-s-bay-rapid-link",
+      "launchId": 16597,
+      "name": "Pelican's Bay
+"id": "mighty-crash",
+      "launchId": 16573,
+      "name": "Mighty Crash",
+"id": "cai-shen-s-palace-hold-n-link",
+      "launchId": 16603,
+      "name": "Cai Shen
+"id": "fishing-kingdom-remastered",
+      "launchId": 16619,
+      "name": "Fishing Kingdom Remastered
+"id": "luxor-relics",
+      "launchId": 16549,
+      "name": "Luxor Relics",
+"id": "katana-klash-hold-n-link",
+      "launchId": 16606,
+      "name": "Katana Klash:
+"id": "just-gems-hold-n-link",
+      "launchId": 16552,
+      "name": "Just Gems:
+"id": "dancing-lanterns",
+      "launchId": 16569,
+      "name": "Dancing Lanterns",
+"id": "hot-cash-hold-n-link",
+      "launchId": 16557,
+      "name": "Hot Cash:
+"id": "lucky-fishing",
+      "launchId": 16622,
+      "name": "Lucky Fishing",
+"id": "halloween-harvest-rapid-link",
+      "launchId": 16645,
+      "name": "Halloween Harvest:
+"id": "cactus-riches-cash-pool",
+      "launchId": 16599,
+      "name": "Cactus Riches:
+"id": "gorilla-rapid-link",
+      "launchId": 16595,
+      "name": "Gorilla: Rapid
+"id": "fu-yin-yang",
+      "launchId": 16591,
+      "name": "Fu Yin Yang
+"id": "heat-hit",
+      "launchId": 16563,
+      "name": "Heat Hit
+"id": "frog-princess",
+      "launchId": 16574,
+      "name": "Frog Princess",
+"id": "explorer-s-gold-cash-blast",
+      "launchId": 16554,
+      "name": "Explorer's Gold
+"id": "desert-riches-hold-n-link",
+      "launchId": 16621,
+      "name": "Desert Riches:
+"id": "frontier-gold-cash-pool",
+      "launchId": 16629,
+      "name": "Frontier Gold:
+"id": "charming-gold-hold-n-link",
+      "launchId": 16556,
+      "name": "Charming Gold Hold
+"id": "book-of-nile-revenge",
+      "launchId": 16575,
+      "name": "Book of Nile
+"id": "8-pool-stars",
+      "launchId": 16547,
+      "name": "8 Pool Stars
+"id": "power-of-robin-hood",
+      "launchId": 16625,
+      "name": "Power of Robin
+"id": "shining-princess-rapid-link",
+      "launchId": 16593,
+      "name": "Shining Princess:
+"id": "frontier-falcon-hold-n-link",
+      "launchId": 16636,
+      "name": "Frontier Falcon:
+"id": "galaxy-glitter",
+      "launchId": 16612,
+      "name": "Galaxy Glitter",
+"id": "red-hot-9",
+      "launchId": 16617,
+      "name": "Red
+"id": "jack-raider-and-the-lost-relics",
+      "launchId": 22049,
+      "name": "Jack Raider and

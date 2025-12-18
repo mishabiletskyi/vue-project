@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 // Імпортуємо посередника
@@ -145,5 +145,63 @@ function handlePlayClick() {
     */
     width: calc(90% - 8px);
   }
+}
+</style> -->
+
+
+
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const props = defineProps({
+  game: {
+    type: Object,
+    required: true,
+  },
+});
+
+function handlePlayClick() {
+  // Просто перекидаємо на сторінку гри. Логіка таймера і реєстрації буде там.
+  router.push({ name: 'play-game', params: { id: props.game.id } });
+}
+</script>
+
+<template>
+  <li class="game-card">
+    <a href="#" class="game-link" @click.prevent="handlePlayClick">
+      <div class="thumb">
+        <img
+          :src="game.image"
+          :alt="game.title"
+          loading="lazy"
+        />
+        <div class="overlay">
+          <button class="play-btn">ИГРАТЬ</button>
+        </div>
+      </div>
+      <div class="meta">
+        <h3 class="title">{{ game.title }}</h3>
+        <p v-if="game.provider" class="provider">{{ game.provider }}</p>
+      </div>
+    </a>
+  </li>
+</template>
+
+<style scoped>
+/* Твій існуючий CSS залишаємо без змін */
+.game-card { width: 180px; flex-shrink: 0; list-style: none; }
+.game-link { display: block; text-decoration: none; color: inherit; border-radius: 8px; overflow: hidden; background: var(--card); position: relative; }
+.thumb img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+.overlay { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
+.game-link:hover .overlay { opacity: 1; }
+.play-btn { background: var(--accent, #ffbd13); border: none; padding: 8px 16px; border-radius: 50px; cursor: pointer; font-weight: bold; color: black; }
+.meta { padding: 10px; }
+.title { font-size: 0.9rem; margin: 0; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.provider { font-size: 0.75rem; color: #888; margin: 0; }
+
+@media (max-width: 480px) {
+  .game-card { width: calc(50% - 8px); }
 }
 </style>

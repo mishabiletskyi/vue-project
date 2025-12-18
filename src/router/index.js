@@ -15,6 +15,7 @@ import BonusView from "../views/BonusView.vue";
 import BonusInfoView from "../views/BonusInfoView.vue";
 import AccountView from "../views/AccountView.vue";
 import TableView from "../views/TableView.vue"; // <--- ЦЕЙ ІМПОРТ ПОТРІБНО ДОДАТИ
+import PlayGameView from "../views/PlayGameView.vue"; // Сторінка для гри
 
 // --- Імпортуємо ВСІ потрібні дані для ігор ---
 import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } from "@/data/mockData.js"; 
@@ -126,8 +127,11 @@ const router = createRouter({
       name: "privacy",
       component: () => import("../views/PrivacyView.vue"),
     },
-    // --- Видалені старі маршрути ---
-    // Ми видалили окремі /slots, /new, /roulette, бо тепер їх обробляє динамічний маршрут /games/:category
+    {
+      path: "/play/:id",
+      name: "play-game",
+      component: PlayGameView,
+    },
   ],
 });
 
