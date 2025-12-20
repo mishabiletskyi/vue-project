@@ -137,7 +137,7 @@ defineProps({
   .games-grid {
     grid-template-columns: repeat(auto-fill, 175px);
     justify-content: center;
-    gap: 35px;
+    /* gap: 35px; */
   }
 }
 
