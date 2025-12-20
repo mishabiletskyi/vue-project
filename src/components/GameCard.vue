@@ -212,7 +212,7 @@ function handlePlayClick() {
 .provider { font-size: 0.75rem; color: #888; margin: 0; }
 
 @media (max-width: 480px) {
-  .game-card { width: calc(85% - 3px);
-        margin: 5px; }
+  .game-card { width: calc(100% - 3px);
+        margin: 0px 0px 0px -4px; }
 }
 </style>
