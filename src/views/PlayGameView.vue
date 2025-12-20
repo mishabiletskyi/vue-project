@@ -494,7 +494,7 @@ function scrollPageDown() {
   });
 }
 
-// --- ФУНКЦІЯ МОВИ (Остання робоча версія) ---
+// --- ФУНКЦІЯ МОВИ ---
 function enforceLanguage(url, langCode = 'ru') {
   if (!url) return '';
   
@@ -664,6 +664,9 @@ onUnmounted(() => {
 
     <div class="game-wrapper" ref="gameContainer">
       
+      <div class="mobile-scroll-handle" @click="scrollPageDown">
+         <span>Нажмите, чтобы прокрутить вниз ⇩</span>
+      </div>
       <div v-if="isLoading || !activeGameUrl" class="loader-overlay">
         <div class="spinner"></div>
         <p>{{ connectionStatus || 'Загрузка...' }}</p>
@@ -697,10 +700,7 @@ onUnmounted(() => {
         </div>
       </div>
       
-      <div class="mobile-scroll-handle" @click="scrollPageDown">
-         <span>Прокрутить вниз ⇩</span>
-      </div>
-      </div>
+    </div>
 
     <div class="similar-games-section">
       <GamesCarousel 
@@ -741,7 +741,7 @@ onUnmounted(() => {
 .timer-badge { display: flex; align-items: center; gap: 6px; font-family: 'Roboto Mono', monospace; font-size: 1.1rem; background: #252525; padding: 6px 12px; border-radius: 4px; border: 1px solid #ffbd13; color: #ffbd13; }
 .timer-badge.warning { color: #ff4d4d; border-color: #ff4d4d; animation: pulse 1s infinite; }
 
-/* Стандартний wrapper без хаків */
+/* Стандартний wrapper */
 .game-wrapper { 
   flex: 1; 
   position: relative; 
@@ -749,7 +749,6 @@ onUnmounted(() => {
   max-width: 1400px; 
   margin: 0 auto; 
   background: #000; 
-  /* overflow: hidden; Можна прибрати, якщо заважає */
 }
 
 /* Стандартний iframe */
@@ -777,17 +776,17 @@ onUnmounted(() => {
 /* Ручка прихована на десктопі */
 .mobile-scroll-handle { display: none; }
 
-/* === МОБІЛЬНІ СТИЛІ (ПРОСТІ) === */
+/* === МОБІЛЬНІ СТИЛІ === */
 @media (max-width: 768px) {
   .desktop-text { display: none; }
   .top-bar { padding: 8px 12px; }
   .timer-badge { font-size: 0.85rem; padding: 4px 8px; }
   .full-version-btn { padding: 6px 10px; font-size: 0.8rem; }
   
-  /* Зміщуємо кнопку фулскріну трохи вище, щоб не перекривала ручку */
+  /* Зміщуємо кнопку фулскріну трохи вище */
   .fullscreen-fab { bottom: 60px; }
 
-  /* Налаштування ручки */
+  /* Налаштування ручки (ТЕПЕР ЗВЕРХУ) */
   .mobile-scroll-handle {
     display: flex;
     justify-content: center;
@@ -796,12 +795,13 @@ onUnmounted(() => {
     height: 44px; /* Зручний розмір для пальця */
     background-color: #1a1a1a;
     border-top: 1px solid #333;
+    border-bottom: 1px solid #333; /* Додали лінію знизу, щоб відділити від гри */
     color: #888;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
-    /* Щоб була знизу гри */
+    letter-spacing: 0.5px;
     position: relative; 
     z-index: 10;
   }
