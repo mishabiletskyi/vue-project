@@ -423,7 +423,6 @@ onUnmounted(() => {
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-// Перевір шлях
 import { allGames, popularGames } from '@/data/mockData.js'; 
 import GamesCarousel from '@/components/GamesCarousel.vue';
 
@@ -773,37 +772,35 @@ onUnmounted(() => {
 .home-btn { background: transparent; border: none; color: #666; cursor: pointer; }
 .similar-games-section { padding: 40px 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
-/* Ручка прихована на десктопі */
+/* Ручка прихована на десктопі (великі монітори > 1200px) */
 .mobile-scroll-handle { display: none; }
 
-/* === МОБІЛЬНІ СТИЛІ === */
-@media (max-width: 768px) {
+/* === МОБІЛЬНІ СТИЛІ (ПРОСТІ) === */
+/* Змінив max-width на 1200px, щоб зачепити планшети */
+@media (max-width: 1200px) {
   .desktop-text { display: none; }
   .top-bar { padding: 8px 12px; }
   .timer-badge { font-size: 0.85rem; padding: 4px 8px; }
   .full-version-btn { padding: 6px 10px; font-size: 0.8rem; }
   
-  /* Зміщуємо кнопку фулскріну трохи вище */
   .fullscreen-fab { bottom: 60px; }
 
-  /* Налаштування ручки (ТЕПЕР ЗВЕРХУ) */
+  /* Налаштування ручки */
   .mobile-scroll-handle {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 44px; /* Зручний розмір для пальця */
+    height: 44px;
     background-color: #1a1a1a;
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333; /* Додали лінію знизу, щоб відділити від гри */
+    border-bottom: 1px solid #333; /* Відділяємо від гри */
     color: #888;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
-    letter-spacing: 0.5px;
     position: relative; 
-    z-index: 10;
+    z-index: 20; /* Піднімаємо вище */
   }
   
   .mobile-scroll-handle:active {
