@@ -489,7 +489,7 @@ function toggleFullscreen() {
 function enforceLanguage(url, langCode = 'ru') {
   if (!url) return '';
   
-  // 1. Груба заміна в рядку (щоб прибрати залишки української)
+  // 1. Груба заміна в рядку
   if (langCode === 'ru') {
     url = url.replace('uk-UA', 'ru-RU')
              .replace('lang=uk', 'lang=ru')
@@ -510,14 +510,12 @@ function enforceLanguage(url, langCode = 'ru') {
     urlObj.searchParams.delete('language');
     urlObj.searchParams.delete('locale');
 
-    // 3. Додавання нових параметрів (стандартних)
+    // 3. Додавання нових параметрів
     urlObj.searchParams.set('language', langCode);
     urlObj.searchParams.set('lang', langCode);
     urlObj.searchParams.set('locale', langCode === 'ru' ? 'ru-RU' : 'en-US');
     
-    // 4. ВАЖЛИВО: Додаємо параметри також у HASH (#)
-    // Endorphina та деякі інші SPA-ігри читають конфіг саме звідси
-    // Беремо існуючий хеш (без #), робимо з нього параметри, додаємо свої
+    // 4. Додавання параметрів у HASH
     let hashString = urlObj.hash.startsWith('#') ? urlObj.hash.substring(1) : urlObj.hash;
     const hashParams = new URLSearchParams(hashString);
     
@@ -531,7 +529,6 @@ function enforceLanguage(url, langCode = 'ru') {
     }
     return urlObj.toString();
   } catch (e) {
-    // Фолбек, якщо парсер зламався
     const separator = url.includes('?') ? '&' : '?';
     return `${url}${separator}lang=${langCode}&language=${langCode}#lang=${langCode}`;
   }
@@ -542,10 +539,9 @@ async function fetchDynamicSession(launchId) {
   try {
     connectionStatus.value = 'Получение сессии...';
     
-    // Твій Worker URL
     const myWorkerUrl = 'https://patient-pond-7547.mikhailobiletskyi3.workers.dev/'; 
     
-    // Запитуємо російську мову ('ru')
+    // Запитуємо російську мову
     const response = await fetch(`${myWorkerUrl}?id=${launchId}&lang=ru`);
     
     const responseText = await response.text();
@@ -556,7 +552,7 @@ async function fetchDynamicSession(launchId) {
     } catch (e) {
       console.error("Помилка: Проксі повернув не JSON.");
       console.log("Вміст відповіді:", responseText);
-      throw new Error("Invalid JSON response (HTML Error Page)");
+      throw new Error("Invalid JSON response");
     }
 
     if (!response.ok) {
@@ -572,7 +568,6 @@ async function fetchDynamicSession(launchId) {
     else if (casinoData.game_url) finalUrl = casinoData.game_url;
 
     if (finalUrl) {
-      // Застосовуємо функцію для зміни мови
       activeGameUrl.value = enforceLanguage(finalUrl, 'ru');
     } else {
       console.error("URL не знайдено в об'єкті:", casinoData);
@@ -626,7 +621,6 @@ async function loadGame() {
   }, 1000);
 }
 
-// --- Lifecycle & Watchers ---
 onMounted(() => {
   loadGame();
 });
@@ -713,7 +707,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Твій стандартний CSS */
 .play-page {
   min-height: 100vh;
   background-color: #0f0f0f;
@@ -729,6 +722,10 @@ onUnmounted(() => {
   border-bottom: 1px solid #333;
   color: white;
   z-index: 10;
+  
+  /* Зміцнюємо верхню панель, щоб вона була липкою */
+  position: sticky;
+  top: 0;
 }
 .left-controls, .right-controls {
   display: flex;
@@ -891,10 +888,25 @@ onUnmounted(() => {
   margin: 0 auto;
   width: 100%;
 }
-@media (max-width: 600px) {
+
+/* === ВИПРАВЛЕННЯ ДЛЯ МОБІЛЬНИХ === */
+@media (max-width: 768px) {
   .desktop-text { display: none; }
   .top-bar { padding: 10px; }
   .timer-badge { font-size: 0.9rem; padding: 4px 8px; }
   .full-version-btn { padding: 6px 10px; font-size: 0.8rem; }
+  
+  /* Робимо гру вужчою, щоб з боків можна було скролити */
+  .game-wrapper {
+    width: calc(100% - 24px); /* 12px зліва і справа для пальця */
+    margin: 12px auto;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  /* Зменшуємо висоту, щоб було видно контент знизу (заохочує скрол) */
+  .game-iframe {
+    min-height: 55vh; 
+  }
 }
 </style>

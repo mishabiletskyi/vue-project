@@ -410,4 +410,21 @@ main {
 .cta-button:hover {
   background-color: var(--accent-hover, #0056b3);
 }
+
+
+/* Коли меню відкрите, застосовуємо ефекти до main та footer */
+body.mobile-menu-open main,
+body.mobile-menu-open footer, /* Якщо у SiteFooter є тег footer */
+body.mobile-menu-open .site-footer { /* Або якщо там клас .site-footer */
+  filter: blur(5px) brightness(0.7); /* Розмиття + затемнення */
+  pointer-events: none; /* Забороняємо кліки по контенту */
+  user-select: none; /* Забороняємо виділення тексту */
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Переконаємось, що Хедер залишається чітким */
+body.mobile-menu-open .site-header {
+  filter: none;
+  pointer-events: auto;
+}
 </style>

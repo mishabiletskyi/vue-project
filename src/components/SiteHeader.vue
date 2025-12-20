@@ -335,9 +335,15 @@ watch(isMobileMenuOpen, (isOpen) => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${scrollbarWidth}px`;
+    
+    // Додаємо клас до body, щоб ми могли стилізувати App.vue
+    document.body.classList.add('mobile-menu-open'); 
   } else {
     document.body.style.overflow = '';
     document.body.style.paddingRight = '';
+    
+    // Прибираємо клас
+    document.body.classList.remove('mobile-menu-open');
   }
 })
 // --- ▲▲▲ ---
