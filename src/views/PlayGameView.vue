@@ -423,7 +423,6 @@ onUnmounted(() => {
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-// Перевір правильність шляху до даних
 import { allGames, popularGames } from '@/data/mockData.js'; 
 import GamesCarousel from '@/components/GamesCarousel.vue';
 
@@ -485,11 +484,18 @@ function toggleFullscreen() {
   }
 }
 
+// Функція для скролу вниз при кліку на "ручку"
+function scrollPageDown() {
+  window.scrollBy({
+    top: window.innerHeight * 0.5, // Прокрутити на пів екрану вниз
+    behavior: 'smooth'
+  });
+}
+
 // --- НОВА ФУНКЦІЯ: Розумна зміна мови (URL + Hash) ---
 function enforceLanguage(url, langCode = 'ru') {
   if (!url) return '';
   
-  // 1. Груба заміна в рядку
   if (langCode === 'ru') {
     url = url.replace('uk-UA', 'ru-RU')
              .replace('lang=uk', 'lang=ru')
@@ -505,17 +511,14 @@ function enforceLanguage(url, langCode = 'ru') {
   try {
     const urlObj = new URL(url, base);
     
-    // 2. Очищення старих параметрів
     urlObj.searchParams.delete('lang');
     urlObj.searchParams.delete('language');
     urlObj.searchParams.delete('locale');
 
-    // 3. Додавання нових параметрів
     urlObj.searchParams.set('language', langCode);
     urlObj.searchParams.set('lang', langCode);
     urlObj.searchParams.set('locale', langCode === 'ru' ? 'ru-RU' : 'en-US');
     
-    // 4. Додавання параметрів у HASH
     let hashString = urlObj.hash.startsWith('#') ? urlObj.hash.substring(1) : urlObj.hash;
     const hashParams = new URLSearchParams(hashString);
     
@@ -534,14 +537,12 @@ function enforceLanguage(url, langCode = 'ru') {
   }
 }
 
-// --- Функція отримання сесії через проксі ---
 async function fetchDynamicSession(launchId) {
   try {
     connectionStatus.value = 'Получение сессии...';
     
     const myWorkerUrl = 'https://patient-pond-7547.mikhailobiletskyi3.workers.dev/'; 
     
-    // Запитуємо російську мову
     const response = await fetch(`${myWorkerUrl}?id=${launchId}&lang=ru`);
     
     const responseText = await response.text();
@@ -551,7 +552,6 @@ async function fetchDynamicSession(launchId) {
       casinoData = JSON.parse(responseText);
     } catch (e) {
       console.error("Помилка: Проксі повернув не JSON.");
-      console.log("Вміст відповіді:", responseText);
       throw new Error("Invalid JSON response");
     }
 
@@ -570,7 +570,6 @@ async function fetchDynamicSession(launchId) {
     if (finalUrl) {
       activeGameUrl.value = enforceLanguage(finalUrl, 'ru');
     } else {
-      console.error("URL не знайдено в об'єкті:", casinoData);
       throw new Error("No URL in response");
     }
 
@@ -580,7 +579,6 @@ async function fetchDynamicSession(launchId) {
   }
 }
 
-// --- ГОЛОВНА ЛОГІКА ЗАВАНТАЖЕННЯ ГРИ ---
 async function loadGame() {
   if (timerInterval) clearInterval(timerInterval);
   timeLeft.value = totalTime;
@@ -661,7 +659,6 @@ onUnmounted(() => {
     </div>
 
     <div class="game-wrapper" ref="gameContainer">
-      
       <div v-if="isLoading || !activeGameUrl" class="loader-overlay">
         <div class="spinner"></div>
         <p>{{ connectionStatus || 'Загрузка...' }}</p>
@@ -684,11 +681,9 @@ onUnmounted(() => {
           <div class="modal-icon">⌛</div>
           <h2>Пробный период завершен</h2>
           <p>Время ознакомительной сессии истекло.</p>
-          
           <button class="action-btn" @click="handleFullVersionAction">
             {{ isUserAuthenticated ? 'Пополнить баланс' : 'Регистрация' }}
           </button>
-          
           <button class="home-btn" @click="router.push('/')">
             Вернуться в лобби
           </button>
@@ -696,6 +691,9 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <div class="mobile-scroll-handle" @click="scrollPageDown">
+       <span>Прокрутить вниз ⇩</span>
+    </div>
     <div class="similar-games-section">
       <GamesCarousel 
         title="Похожие игры" 
@@ -707,6 +705,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/* Стилі для десктопу (без змін) */
 .play-page {
   min-height: 100vh;
   background-color: #0f0f0f;
@@ -722,191 +721,84 @@ onUnmounted(() => {
   border-bottom: 1px solid #333;
   color: white;
   z-index: 10;
-  
-  /* Зміцнюємо верхню панель, щоб вона була липкою */
   position: sticky;
   top: 0;
 }
-.left-controls, .right-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.game-title {
-  font-size: 1.1rem;
-  margin: 0;
-  color: #ccc;
-  display: none;
-}
-@media (min-width: 768px) {
-  .game-title { display: block; }
-}
-.control-btn {
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  font-weight: 600;
-  padding: 8px 16px;
-  transition: all 0.2s;
-}
+.left-controls, .right-controls { display: flex; align-items: center; gap: 15px; }
+.game-title { font-size: 1.1rem; margin: 0; color: #ccc; display: none; }
+@media (min-width: 768px) { .game-title { display: block; } }
+.control-btn { border: none; cursor: pointer; border-radius: 6px; font-weight: 600; padding: 8px 16px; transition: all 0.2s; }
 .back-btn { background: #333; color: #fff; }
-.back-btn:hover { background: #444; }
-.full-version-btn {
-  background: linear-gradient(90deg, #5a67d8, #4c51bf);
-  color: white;
-  box-shadow: 0 0 10px rgba(90, 103, 216, 0.4);
-}
-.full-version-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(90, 103, 216, 0.6);
-}
-.timer-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1.1rem;
-  background: #252525;
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #ffbd13;
-  color: #ffbd13;
-}
-.timer-badge.warning {
-  color: #ff4d4d;
-  border-color: #ff4d4d;
-  animation: pulse 1s infinite;
-}
-.game-wrapper {
-  flex: 1;
-  position: relative;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  background: #000;
-  overflow: hidden;
-}
-.game-iframe {
-  width: 100%;
-  height: 100%;
-  min-height: 80vh; 
-  border: none;
-  display: block;
-}
-.loader-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: #000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 5;
-  color: #888;
-}
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #333;
-  border-top: 5px solid #ffbd13;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
-}
+.full-version-btn { background: linear-gradient(90deg, #5a67d8, #4c51bf); color: white; box-shadow: 0 0 10px rgba(90, 103, 216, 0.4); }
+.timer-badge { display: flex; align-items: center; gap: 6px; font-family: 'Roboto Mono', monospace; font-size: 1.1rem; background: #252525; padding: 6px 12px; border-radius: 4px; border: 1px solid #ffbd13; color: #ffbd13; }
+.timer-badge.warning { color: #ff4d4d; border-color: #ff4d4d; animation: pulse 1s infinite; }
+.game-wrapper { flex: 1; position: relative; width: 100%; max-width: 1400px; margin: 0 auto; background: #000; overflow: hidden; }
+.game-iframe { width: 100%; height: 100%; min-height: 80vh; border: none; display: block; }
+.loader-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; color: #888; }
+.spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #ffbd13; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.fullscreen-fab {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  z-index: 20;
-}
-.fullscreen-fab:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-.limit-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  animation: fadeIn 0.3s;
-}
-.limit-modal {
-  background: #1e1e1e;
-  padding: 40px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 400px;
-  border: 1px solid #333;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
+.fullscreen-fab { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 20; }
+.limit-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; animation: fadeIn 0.3s; }
+.limit-modal { background: #1e1e1e; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 .modal-icon { font-size: 3rem; margin-bottom: 10px; }
 .limit-modal h2 { color: #fff; margin-bottom: 10px; }
 .limit-modal p { color: #aaa; margin-bottom: 25px; line-height: 1.5; }
-.action-btn {
-  display: block;
-  width: 100%;
-  padding: 16px;
-  background: var(--accent, #ffbd13);
-  color: #000;
-  font-weight: 800;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-  transition: 0.2s;
-}
-.action-btn:hover { filter: brightness(1.1); }
-.home-btn {
-  background: transparent;
-  border: none;
-  color: #666;
-  cursor: pointer;
-}
-.home-btn:hover { color: #fff; text-decoration: underline; }
-.similar-games-section {
-  padding: 40px 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
-}
+.action-btn { display: block; width: 100%; padding: 16px; background: var(--accent, #ffbd13); color: #000; font-weight: 800; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; margin-bottom: 15px; transition: 0.2s; }
+.home-btn { background: transparent; border: none; color: #666; cursor: pointer; }
+.similar-games-section { padding: 40px 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+/* Блок ручки за замовчуванням прихований */
+.mobile-scroll-handle { display: none; }
 
 /* === ВИПРАВЛЕННЯ ДЛЯ МОБІЛЬНИХ === */
 @media (max-width: 768px) {
   .desktop-text { display: none; }
-  .top-bar { padding: 10px; }
-  .timer-badge { font-size: 0.9rem; padding: 4px 8px; }
+  .top-bar { padding: 8px 12px; }
+  .timer-badge { font-size: 0.85rem; padding: 4px 8px; }
   .full-version-btn { padding: 6px 10px; font-size: 0.8rem; }
   
-  /* Робимо гру вужчою, щоб з боків можна було скролити */
+  /* 1. Повертаємо гру на всю ширину */
   .game-wrapper {
-    width: calc(100% - 24px); /* 12px зліва і справа для пальця */
-    margin: 12px auto;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100%; 
+    margin: 0;
+    border-radius: 0;
   }
   
-  /* Зменшуємо висоту, щоб було видно контент знизу (заохочує скрол) */
+  /* 2. Обмежуємо висоту гри, щоб на екрані помістилася "ручка" */
   .game-iframe {
-    min-height: 55vh; 
+    /* 100vh (екран) 
+      - 50px (хедер) 
+      - 40px (ручка знизу) 
+      = Приблизно 70-75vh, щоб все влізло без скролу
+    */
+    height: 70vh; 
+    min-height: auto; /* Скидаємо старий min-height */
+  }
+
+  /* 3. Показуємо ручку для скролу */
+  .mobile-scroll-handle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    background-color: #222; /* Трохи світліше за фон */
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    
+    /* Щоб не перекривалася нічим */
+    position: relative;
+    z-index: 15;
+  }
+  
+  .mobile-scroll-handle:active {
+    background-color: #333;
+    color: #fff;
   }
 }
 </style>
