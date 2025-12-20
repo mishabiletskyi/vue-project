@@ -423,6 +423,7 @@ onUnmounted(() => {
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+// Перевір шлях
 import { allGames, popularGames } from '@/data/mockData.js'; 
 import GamesCarousel from '@/components/GamesCarousel.vue';
 
@@ -484,15 +485,16 @@ function toggleFullscreen() {
   }
 }
 
-// Функція для скролу вниз при кліку на "ручку"
+// --- КНОПКА СКРОЛУ ---
 function scrollPageDown() {
+  // Скролимо сторінку вниз на 500px плавно
   window.scrollBy({
-    top: window.innerHeight * 0.5, // Прокрутити на пів екрану вниз
+    top: 500, 
     behavior: 'smooth'
   });
 }
 
-// --- НОВА ФУНКЦІЯ: Розумна зміна мови (URL + Hash) ---
+// --- ФУНКЦІЯ МОВИ (Остання робоча версія) ---
 function enforceLanguage(url, langCode = 'ru') {
   if (!url) return '';
   
@@ -537,6 +539,7 @@ function enforceLanguage(url, langCode = 'ru') {
   }
 }
 
+// --- ОТРИМАННЯ СЕСІЇ ---
 async function fetchDynamicSession(launchId) {
   try {
     connectionStatus.value = 'Получение сессии...';
@@ -579,6 +582,7 @@ async function fetchDynamicSession(launchId) {
   }
 }
 
+// --- ЗАВАНТАЖЕННЯ ГРИ ---
 async function loadGame() {
   if (timerInterval) clearInterval(timerInterval);
   timeLeft.value = totalTime;
@@ -659,6 +663,7 @@ onUnmounted(() => {
     </div>
 
     <div class="game-wrapper" ref="gameContainer">
+      
       <div v-if="isLoading || !activeGameUrl" class="loader-overlay">
         <div class="spinner"></div>
         <p>{{ connectionStatus || 'Загрузка...' }}</p>
@@ -681,19 +686,22 @@ onUnmounted(() => {
           <div class="modal-icon">⌛</div>
           <h2>Пробный период завершен</h2>
           <p>Время ознакомительной сессии истекло.</p>
+          
           <button class="action-btn" @click="handleFullVersionAction">
             {{ isUserAuthenticated ? 'Пополнить баланс' : 'Регистрация' }}
           </button>
+          
           <button class="home-btn" @click="router.push('/')">
             Вернуться в лобби
           </button>
         </div>
       </div>
-    </div>
+      
+      <div class="mobile-scroll-handle" @click="scrollPageDown">
+         <span>Прокрутить вниз ⇩</span>
+      </div>
+      </div>
 
-    <div class="mobile-scroll-handle" @click="scrollPageDown">
-       <span>Прокрутить вниз ⇩</span>
-    </div>
     <div class="similar-games-section">
       <GamesCarousel 
         title="Похожие игры" 
@@ -705,7 +713,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Стилі для десктопу (без змін) */
+/* Основні стилі (десктоп) */
 .play-page {
   min-height: 100vh;
   background-color: #0f0f0f;
@@ -732,12 +740,31 @@ onUnmounted(() => {
 .full-version-btn { background: linear-gradient(90deg, #5a67d8, #4c51bf); color: white; box-shadow: 0 0 10px rgba(90, 103, 216, 0.4); }
 .timer-badge { display: flex; align-items: center; gap: 6px; font-family: 'Roboto Mono', monospace; font-size: 1.1rem; background: #252525; padding: 6px 12px; border-radius: 4px; border: 1px solid #ffbd13; color: #ffbd13; }
 .timer-badge.warning { color: #ff4d4d; border-color: #ff4d4d; animation: pulse 1s infinite; }
-.game-wrapper { flex: 1; position: relative; width: 100%; max-width: 1400px; margin: 0 auto; background: #000; overflow: hidden; }
-.game-iframe { width: 100%; height: 100%; min-height: 80vh; border: none; display: block; }
+
+/* Стандартний wrapper без хаків */
+.game-wrapper { 
+  flex: 1; 
+  position: relative; 
+  width: 100%; 
+  max-width: 1400px; 
+  margin: 0 auto; 
+  background: #000; 
+  /* overflow: hidden; Можна прибрати, якщо заважає */
+}
+
+/* Стандартний iframe */
+.game-iframe { 
+  width: 100%; 
+  height: 100%; 
+  min-height: 80vh; 
+  border: none; 
+  display: block; 
+}
+
 .loader-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; color: #888; }
 .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #ffbd13; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.fullscreen-fab { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 20; }
+.fullscreen-fab { position: absolute; bottom: 60px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 20; }
 .limit-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; animation: fadeIn 0.3s; }
 .limit-modal { background: #1e1e1e; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 .modal-icon { font-size: 3rem; margin-bottom: 10px; }
@@ -747,53 +774,36 @@ onUnmounted(() => {
 .home-btn { background: transparent; border: none; color: #666; cursor: pointer; }
 .similar-games-section { padding: 40px 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
-/* Блок ручки за замовчуванням прихований */
+/* Ручка прихована на десктопі */
 .mobile-scroll-handle { display: none; }
 
-/* === ВИПРАВЛЕННЯ ДЛЯ МОБІЛЬНИХ === */
+/* === МОБІЛЬНІ СТИЛІ (ПРОСТІ) === */
 @media (max-width: 768px) {
   .desktop-text { display: none; }
   .top-bar { padding: 8px 12px; }
   .timer-badge { font-size: 0.85rem; padding: 4px 8px; }
   .full-version-btn { padding: 6px 10px; font-size: 0.8rem; }
   
-  /* 1. Повертаємо гру на всю ширину */
-  .game-wrapper {
-    width: 100%; 
-    margin: 0;
-    border-radius: 0;
-  }
-  
-  /* 2. Обмежуємо висоту гри, щоб на екрані помістилася "ручка" */
-  .game-iframe {
-    /* 100vh (екран) 
-      - 50px (хедер) 
-      - 40px (ручка знизу) 
-      = Приблизно 70-75vh, щоб все влізло без скролу
-    */
-    height: 70vh; 
-    min-height: auto; /* Скидаємо старий min-height */
-  }
+  /* Зміщуємо кнопку фулскріну трохи вище, щоб не перекривала ручку */
+  .fullscreen-fab { bottom: 60px; }
 
-  /* 3. Показуємо ручку для скролу */
+  /* Налаштування ручки */
   .mobile-scroll-handle {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 40px;
-    background-color: #222; /* Трохи світліше за фон */
+    height: 44px; /* Зручний розмір для пальця */
+    background-color: #1a1a1a;
     border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
     color: #888;
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
-    
-    /* Щоб не перекривалася нічим */
-    position: relative;
-    z-index: 15;
+    /* Щоб була знизу гри */
+    position: relative; 
+    z-index: 10;
   }
   
   .mobile-scroll-handle:active {
