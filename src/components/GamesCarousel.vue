@@ -6,11 +6,9 @@ const props = defineProps({
   title: { type: String, required: true },
   games: { type: Array, required: true },
   viewAllLink: { type: String, default: '' },
-  // Нова властивість для передачі назви іконки
   icon: { type: String, default: null }
 });
 
-// Словник, що зіставляє назви іконок з SVG-шляхами
 const iconPaths = {
   fire: 'M9.98 2.05c-1.74-.48-3.66.38-4.63 1.8C3.26 6.79 4.6 9.35 6.99 10.51c2.39 1.16 5.11.36 6.3-1.79.8-1.44.57-3.29-.53-4.42-.9-1-2.12-1.38-3.32-1.38-.28 0-.56.03-.83.09zM12 0c-4.24 0-7.9 2.53-9.52 6.27-.72 1.67-.93 3.48-.68 5.25.32 2.32 1.63 4.39 3.48 5.86 3.7 2.93 9.07 2.93 12.77 0 1.85-1.47 3.16-3.54 3.48-5.86.25-1.77-.04-3.58-.68-5.25C19.9 2.53 16.24 0 12 0z',
   star: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z',
@@ -27,7 +25,6 @@ const currentIconPath = computed(() => {
   <div class="games-section">
     <div class="section-header">
       <h2 class="section-title">
-        <!-- Вставляємо SVG-іконку перед заголовком -->
         <svg v-if="currentIconPath" class="title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
           <path :d="currentIconPath"></path>
         </svg>
@@ -51,18 +48,17 @@ const currentIconPath = computed(() => {
   align-items: center;
   margin-bottom: 16px;
 }
-/* Нові стилі для заголовка з іконкою */
 .section-title {
   font-size: 1.8rem;
   color: var(--text, #fff);
   display: flex;
   align-items: center;
-  gap: 12px; /* Відступ між іконкою та текстом */
+  gap: 12px;
 }
 .title-icon {
   width: 28px;
   height: 28px;
-  fill: var(--accent, #5a67d8); /* Іконка буде в кольорі акценту */
+  fill: var(--accent, #5a67d8);
 }
 .view-all-link {
   color: var(--accent, #5a67d8);
@@ -85,4 +81,13 @@ const currentIconPath = computed(() => {
   border-radius: 10px;
 }
 .games-carousel > * { flex-shrink: 0; }
+
+/* === ОСЬ ГОЛОВНА МАГІЯ === */
+@media (max-width: 480px) {
+  /* Ми використовуємо :deep, щоб "залізти" всередину GameCard і змінити його стиль
+     ТІЛЬКИ коли він знаходиться всередині GamesCarousel */
+  .games-carousel :deep(.game-card) {
+    width: calc(30% - 3px); /* Твій широкий розмір для каруселі */
+  }
+}
 </style>

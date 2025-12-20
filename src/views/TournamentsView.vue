@@ -356,7 +356,9 @@ onUnmounted(() => { clearInterval(intervalId); });
               </label>
             </div>
               <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-            <button type="submit" class="cta-button primary submit-btn">Подтвердить и продолжить</button>
+              <div style="display: flex; justify-content:flex-start;">
+                <button type="submit" class="cta-button primary submit-btn">Подтвердить и продолжить</button>
+              </div>
           </form>
         </div>
 
@@ -370,7 +372,9 @@ onUnmounted(() => { clearInterval(intervalId); });
           <h2>✅ Данные подтверждены!</h2>
           <p class="modal-text">Остался последний шаг. Чтобы занять место в турнире, необходимо внести бай-ин (входную плату).</p>
           <p class="modal-text">Пополните баланс на нужную сумму, и вы будете автоматически зарегистрированы.</p>
-          <button @click="redirectToDeposit" class="cta-button primary submit-btn">Пополнить баланс</button>
+          <div style="display: flex; justify-content:flex-start;">
+            <button @click="redirectToDeposit" class="cta-button primary submit-btn">Пополнить баланс</button>
+          </div>
         </div>
         
         <div v-if="modalContent.type === 'results'">
@@ -428,7 +432,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 .prize-wrapper { display: flex; flex-direction: column; align-items: center; }
 .prize-wrapper strong { font-size: 1.7rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
 .prize-alt { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
-.card-footer { padding: 0 16px 16px; }
+.card-footer { padding: 0 16px 16px; display: flex; justify-content: center; }
 .cta-link { text-decoration: none; display: block; }
 .cta-button { width: 100%; padding: 14px; font-size: 1rem; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
 .cta-button.primary { background-color: var(--accent); color: #fff; } .cta-button.primary:hover { background-color: #00aaff; box-shadow: 0 0 15px var(--primary-glow); }
@@ -528,6 +532,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 }
 .submit-btn {
   margin-top: 16px;
+  margin-left: 30px;
 }
 .error-message {
   color: #ff4d4d;
@@ -561,7 +566,7 @@ onUnmounted(() => { clearInterval(intervalId); });
 
 @media (max-width: 540px) {
   .page-header p { white-space: normal; }
-  .modal-content { max-width: 90%; padding: 20px; }
+  .modal-content { max-width: 90%; padding: 20px; max-height: 90%; overflow: scroll; }
   .modal-content h2 { font-size: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
 }

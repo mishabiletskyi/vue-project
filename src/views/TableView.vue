@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import LeftSidebar from '../components/LeftSidebar.vue';
 import RightSidebar from '../components/RightSidebar.vue';
 import GameCard from '../components/GameCard.vue';
@@ -36,6 +36,68 @@ const heroBackgroundImage = `${SUPABASE_URL}/card10.webp`;
 .hero {
   height: 45vh;
   /* ЗМІНА 3: Властивість background-image видалено звідси */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 0 24px;
+}
+.hero-content {
+  max-width: 600px;
+}
+.hero h1 {
+  font-size: 3rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.hero p {
+  font-size: 1.25rem;
+  color: var(--muted);
+}
+</style> -->
+
+
+
+<script setup>
+import LeftSidebar from '../components/LeftSidebar.vue';
+import RightSidebar from '../components/RightSidebar.vue';
+import GameCard from '../components/GameCard.vue';
+import { Table } from '@/data/mockData.js';
+
+const SUPABASE_URL = 'https://vngvrmbpffrtfhkauous.supabase.co/storage/v1/object/public/img';
+const heroBackgroundImage = `${SUPABASE_URL}/card10.webp`;
+</script>
+
+<template>
+  <div>
+    <div
+      class="hero"
+      :style="{ backgroundImage: `linear-gradient(rgba(11, 12, 16, 0.8), rgba(11, 12, 16, 0.8)), url(${heroBackgroundImage})` }"
+    >
+      </div>
+    <div class="main-layout container">
+      <LeftSidebar />
+      <div class="main-content">
+        <div class="games-grid">
+          <GameCard 
+            v-for="(game, index) in Table" 
+            :key="index" 
+            :game="game" 
+            :requiresVerification="true"
+          />
+        </div>
+      </div>
+      <RightSidebar />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.hero {
+  height: 45vh;
   background-size: cover;
   background-position: center;
   display: flex;

@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import GameCard from './GameCard.vue';
 
 defineProps({
@@ -72,4 +72,80 @@ defineProps({
   color: var(--muted);
 }
 </style>
+ -->
 
+
+
+
+
+ <script setup>
+import GameCard from './GameCard.vue';
+
+defineProps({
+  games: {
+    type: Array,
+    required: true
+  },
+  requiresVerification: { // Приймаємо проп
+    type: Boolean,
+    default: false
+  }
+});
+</script>
+
+<template>
+  <div class="games-grid-container">
+    <ul v-if="games.length > 0" class="games-grid" aria-live="polite">
+      <GameCard 
+        v-for="game in games" 
+        :key="game.id || game.name" 
+        :game="game" 
+        :requiresVerification="requiresVerification"
+      />
+    </ul>
+    <div v-else class="no-games">
+      <p>Игры не найдены.</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.games-grid {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  margin: 0px -15px 0px 0px;
+  list-style: none;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (min-width: 540px) {
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .games-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, 175px);
+    justify-content: center;
+    gap: 35px;
+  }
+}
+
+.no-games {
+  text-align: center;
+  padding: 48px;
+  background: var(--card);
+  border-radius: var(--radius);
+  color: var(--muted);
+}
+</style>

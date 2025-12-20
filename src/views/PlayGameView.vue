@@ -1,30 +1,33 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { allGames, popularGames } from '@/data/mockData.js'; // Перевір шлях
-import GamesCarousel from '@/components/GamesCarousel.vue'; // Перевір шлях
+// Переконайся, що шляхи правильні
+import { allGames, popularGames } from '@/data/mockData.js'; 
+import GamesCarousel from '@/components/GamesCarousel.vue';
 
 const route = useRoute();
 const router = useRouter();
 
-// --- 1. Отримуємо об'єкт гри ---
-const gameId = parseInt(route.params.id);
-const game = allGames.find(g => g.id === gameId);
-
-// Реактивне посилання, яке ми будемо підставляти в iframe
+// Змінні стану
+const game = ref(null);
 const activeGameUrl = ref('');
-const connectionStatus = ref(''); // Для відображення тексту в лоадері
+const connectionStatus = ref('');
+const isLoading = ref(true);
+const gameContainer = ref(null);
 
-// Схожі ігри
-const similarGames = computed(() => {
-  return popularGames.filter(g => g.id !== gameId).slice(0, 10);
-});
-
-// --- 2. Логіка Таймера ---
-const totalTime = 150; 
+// Таймер
+const totalTime = 150;
 const timeLeft = ref(totalTime);
 const isTimeUp = ref(false);
 let timerInterval = null;
+
+// Схожі ігри (обчислюються на основі поточного game.value)
+const similarGames = computed(() => {
+  if (!game.value) return [];
+  return popularGames
+    .filter(g => g.id !== game.value.id)
+    .slice(0, 10);
+});
 
 const formattedTime = computed(() => {
   const m = Math.floor(timeLeft.value / 60).toString().padStart(2, '0');
@@ -32,7 +35,7 @@ const formattedTime = computed(() => {
   return `${m}:${s}`;
 });
 
-// --- 3. Авторизація ---
+// Авторизація
 const isUserAuthenticated = computed(() => {
   if (typeof window !== "undefined") {
     return !!localStorage.getItem("user-id");
@@ -48,32 +51,24 @@ function handleFullVersionAction() {
   }
 }
 
-// --- 4. Лоадер ---
-const isLoading = ref(true);
-
 function onIframeLoad() {
-  // Прибираємо лоадер тільки коли iframe реально завантажився
   isLoading.value = false;
 }
 
-// --- 5. Повноекранний режим ---
-const gameContainer = ref(null);
 function toggleFullscreen() {
-  if (!document.fullscreenElement) {
+  if (!document.fullscreenElement && gameContainer.value) {
     gameContainer.value.requestFullscreen().catch(err => console.error(err));
   } else {
     document.exitFullscreen();
   }
 }
 
+// Функція отримання сесії
 async function fetchDynamicSession(launchId) {
   try {
     connectionStatus.value = 'Отримання сесії...';
     
-    // ВСТАВ ТУТ СВОЄ ПОСИЛАННЯ З CLOUDFLARE
     const myWorkerUrl = 'https://patient-pond-7547.mikhailobiletskyi3.workers.dev/'; 
-    
-    // Робимо запит на твій особистий проксі
     const response = await fetch(`${myWorkerUrl}?id=${launchId}`);
     
     if (!response.ok) {
@@ -99,27 +94,44 @@ async function fetchDynamicSession(launchId) {
     connectionStatus.value = 'Помилка. Спробуйте пізніше.';
   }
 }
-// --- Lifecycle ---
-onMounted(() => {
-  if (!game) {
+
+// --- ГОЛОВНА ФУНКЦІЯ ЗАВАНТАЖЕННЯ ГРИ ---
+// Ми винесли це з onMounted, щоб викликати повторно
+async function loadGame() {
+  // 1. Очищаємо попередні стани
+  if (timerInterval) clearInterval(timerInterval);
+  timeLeft.value = totalTime;
+  isTimeUp.value = false;
+  activeGameUrl.value = '';
+  isLoading.value = true;
+  connectionStatus.value = '';
+
+  // 2. Отримуємо ID з URL
+  const gameId = parseInt(route.params.id);
+  
+  // 3. Знаходимо гру
+  const foundGame = allGames.find(g => g.id === gameId);
+  
+  if (!foundGame) {
     router.push('/games');
     return;
   }
+  
+  game.value = foundGame; // Оновлюємо реактивну змінну
 
-  // ГОЛОВНА ЛОГІКА ВИБОРУ ПОСИЛАННЯ
-  if (game.demoUrl && game.demoUrl.length > 5) {
-    // Варіант 1: Статичне посилання (Pragmatic, Evoplay)
+  // 4. Логіка вибору посилання
+  if (foundGame.demoUrl && foundGame.demoUrl.length > 5) {
     console.log("Using Static URL");
-    activeGameUrl.value = game.demoUrl;
-  } else if (game.launchId) {
-    // Варіант 2: Потрібно отримати сесію (Novomatic, Endorphina)
-    console.log("Fetching Dynamic URL for ID:", game.launchId);
-    fetchDynamicSession(game.launchId);
+    activeGameUrl.value = foundGame.demoUrl;
+  } else if (foundGame.launchId) {
+    console.log("Fetching Dynamic URL for ID:", foundGame.launchId);
+    await fetchDynamicSession(foundGame.launchId);
   } else {
     connectionStatus.value = 'Гра тимчасово недоступна';
+    isLoading.value = false; // Щоб показати повідомлення про помилку
   }
 
-  // Запуск таймера
+  // 5. Запуск таймера
   timerInterval = setInterval(() => {
     if (timeLeft.value > 0) {
       timeLeft.value--;
@@ -128,7 +140,23 @@ onMounted(() => {
       clearInterval(timerInterval);
     }
   }, 1000);
+}
+
+// --- Lifecycle & Watchers ---
+
+onMounted(() => {
+  loadGame();
 });
+
+// СЛІДКУЄМО ЗА ЗМІНОЮ ID В URL
+watch(
+  () => route.params.id,
+  (newId, oldId) => {
+    if (newId !== oldId) {
+      loadGame(); // Перезавантажуємо гру при зміні ID
+    }
+  }
+);
 
 onUnmounted(() => {
   if (timerInterval) clearInterval(timerInterval);

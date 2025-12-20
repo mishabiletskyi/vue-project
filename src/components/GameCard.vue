@@ -152,6 +152,7 @@ function handlePlayClick() {
 
 <script setup>
 import { useRouter } from "vue-router";
+import { eventBus } from "../eventBus.js"; // Імпортуємо eventBus
 
 const router = useRouter();
 
@@ -160,10 +161,20 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  requiresVerification: { // Новий проп
+    type: Boolean,
+    default: false
+  }
 });
 
 function handlePlayClick() {
-  // Просто перекидаємо на сторінку гри. Логіка таймера і реєстрації буде там.
+  // Якщо потрібна верифікація — викликаємо модалку
+  if (props.requiresVerification) {
+    eventBus.emit('require-verification');
+    return;
+  }
+
+  // Інакше перекидаємо на гру
   router.push({ name: 'play-game', params: { id: props.game.id } });
 }
 </script>
@@ -190,7 +201,6 @@ function handlePlayClick() {
 </template>
 
 <style scoped>
-/* Твій існуючий CSS залишаємо без змін */
 .game-card { width: 180px; flex-shrink: 0; list-style: none; }
 .game-link { display: block; text-decoration: none; color: inherit; border-radius: 8px; overflow: hidden; background: var(--card); position: relative; }
 .thumb img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
@@ -202,6 +212,7 @@ function handlePlayClick() {
 .provider { font-size: 0.75rem; color: #888; margin: 0; }
 
 @media (max-width: 480px) {
-  .game-card { width: calc(50% - 8px); }
+  .game-card { width: calc(85% - 3px);
+        margin: 5px; }
 }
 </style>

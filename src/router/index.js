@@ -1,11 +1,153 @@
+// // src/router/index.js
+
+// import { createRouter, createWebHistory } from "vue-router";
+
+// // --- Імпортуємо всі потрібні сторінки (views) ---
+// import HomeView from "../views/HomeView.vue";
+// import GamesView from "../views/GamesView.vue"; // Наш новий ігровий хаб
+// import GameCategoryView from "../views/GameCategoryView.vue"; // Сторінка для відображення конкретної категорії
+// import DropsAndWinsView from "../views/DropsAndWinsView.vue";
+// import LoginView from "../views/LoginView.vue";
+// import RegisterView from "../views/RegisterView.vue";
+// import PasswordRecoveryView from "../views/PasswordRecoveryView.vue";
+// import DepositView from "../views/DepositView.vue";
+// import BonusView from "../views/BonusView.vue";
+// import BonusInfoView from "../views/BonusInfoView.vue";
+// import AccountView from "../views/AccountView.vue";
+// import TableView from "../views/TableView.vue"; // <--- ЦЕЙ ІМПОРТ ПОТРІБНО ДОДАТИ
+// import PlayGameView from "../views/PlayGameView.vue"; // Сторінка для гри
+
+// // --- Імпортуємо ВСІ потрібні дані для ігор ---
+// import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } from "@/data/mockData.js"; 
+
+// const router = createRouter({
+//   history: createWebHistory(import.meta.env.BASE_URL),
+//   scrollBehavior(to, from, savedPosition) {
+//     // Завжди прокручувати сторінку наверх при переході
+//     return { top: 0 };
+//   },
+//   routes: [
+//     {
+//       path: "/",
+//       name: "home",
+//       component: HomeView,
+//     },
+//     // --- ОСНОВНІ ЗМІНИ ТУТ ---
+//     {
+//       // 1. Головна сторінка ігрового розділу (наш хаб)
+//       path: "/games",
+//       name: "games",
+//       component: GamesView,
+//     },
+//     {
+//       // 2. ДИНАМІЧНИЙ маршрут для всіх категорій ігор
+//       // Він буде обробляти адреси типу /games/popular, /games/new і т.д.
+//       path: "/games/:category",
+//       name: "game-category",
+//       component: GameCategoryView,
+//       // Використовуємо функцію, щоб динамічно передавати пропси в компонент
+//       props: route => {
+//         const category = route.params.category; // Отримуємо назву категорії з URL
+        
+//         // Створюємо об'єкт для пошуку потрібних даних
+//         const categoryData = {
+//           'popular': { title: 'Популярные', games: popularGames },
+//           'new': { title: 'Новинки', games: newGames },
+//           'live': { title: 'Live Казино', games: LiveGames },
+//           'roulette': { title: 'Рулетка', games: rouletteGames },
+//           // Сюди можна додати інші категорії, наприклад 'slots'
+//           'slots': { title: 'Слоты', games: allGames }, // Наприклад, слоти показують всі ігри
+//           'table': { title: 'Столы', games: Table },
+//         };
+        
+//         // Повертаємо потрібні дані або дані за замовчуванням, якщо категорію не знайдено
+//         return categoryData[category] || { title: 'Игры', games: allGames };
+//       }
+//     },
+//     // --- КІНЕЦЬ ОСНОВНИХ ЗМІН ---
+//     {
+//       path: "/drops-wins",
+//       name: "drops-wins",
+//       component: DropsAndWinsView,
+//     },
+
+//     {
+//       path: "/bonuses",
+//       name: "bonuses",
+//       component: BonusView,
+//     },
+//     {
+//       path: "/bonus-info",
+//       name: "bonus-info",
+//       component: BonusInfoView,
+//     },
+//     {
+//       path: "/tournaments",
+//       name: "tournaments",
+//       component: () => import("../views/TournamentsView.vue"),
+//     },
+//     {
+//       path: "/support",
+//       name: "support",
+//       component: () => import("../views/SupportView.vue"),
+//     },
+//     {
+//       path: "/login",
+//       name: "login",
+//       component: LoginView,
+//     },
+//     {
+//       path: "/register",
+//       name: "register",
+//       component: RegisterView,
+//     },
+//     {
+//       path: "/password-recovery",
+//       name: "password-recovery",
+//       component: PasswordRecoveryView,
+//     },
+//     {
+//       path: "/deposit",
+//       name: "deposit",
+//       component: DepositView,
+//     },
+//     {
+//       path: "/account",
+//       name: "account",
+//       component: AccountView,
+//       meta: { requiresAuth: true },
+//     },
+//     {
+//       path: "/terms",
+//       name: "terms",
+//       component: () => import("../views/TermsView.vue"),
+//     },
+//     {
+//       path: "/privacy",
+//       name: "privacy",
+//       component: () => import("../views/PrivacyView.vue"),
+//     },
+//     {
+//       path: "/play/:id",
+//       name: "play-game",
+//       component: PlayGameView,
+//     },
+//   ],
+// });
+
+// export default router;
+
+
+
+
 // src/router/index.js
 
 import { createRouter, createWebHistory } from "vue-router";
 
 // --- Імпортуємо всі потрібні сторінки (views) ---
 import HomeView from "../views/HomeView.vue";
-import GamesView from "../views/GamesView.vue"; // Наш новий ігровий хаб
-import GameCategoryView from "../views/GameCategoryView.vue"; // Сторінка для відображення конкретної категорії
+import GamesView from "../views/GamesView.vue"; 
+import GameCategoryView from "../views/GameCategoryView.vue"; 
 import DropsAndWinsView from "../views/DropsAndWinsView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
@@ -14,8 +156,8 @@ import DepositView from "../views/DepositView.vue";
 import BonusView from "../views/BonusView.vue";
 import BonusInfoView from "../views/BonusInfoView.vue";
 import AccountView from "../views/AccountView.vue";
-import TableView from "../views/TableView.vue"; // <--- ЦЕЙ ІМПОРТ ПОТРІБНО ДОДАТИ
-import PlayGameView from "../views/PlayGameView.vue"; // Сторінка для гри
+import TableView from "../views/TableView.vue"; 
+import PlayGameView from "../views/PlayGameView.vue"; 
 
 // --- Імпортуємо ВСІ потрібні дані для ігор ---
 import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } from "@/data/mockData.js"; 
@@ -23,7 +165,6 @@ import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } fro
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
-    // Завжди прокручувати сторінку наверх при переході
     return { top: 0 };
   },
   routes: [
@@ -32,45 +173,43 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
-    // --- ОСНОВНІ ЗМІНИ ТУТ ---
     {
-      // 1. Головна сторінка ігрового розділу (наш хаб)
       path: "/games",
       name: "games",
       component: GamesView,
     },
     {
-      // 2. ДИНАМІЧНИЙ маршрут для всіх категорій ігор
-      // Він буде обробляти адреси типу /games/popular, /games/new і т.д.
+      // ДИНАМІЧНИЙ маршрут для всіх категорій ігор
       path: "/games/:category",
       name: "game-category",
       component: GameCategoryView,
-      // Використовуємо функцію, щоб динамічно передавати пропси в компонент
       props: route => {
-        const category = route.params.category; // Отримуємо назву категорії з URL
+        const category = route.params.category;
         
-        // Створюємо об'єкт для пошуку потрібних даних
+        // Додаємо прапорець requiresVerification там, де потрібно
         const categoryData = {
           'popular': { title: 'Популярные', games: popularGames },
           'new': { title: 'Новинки', games: newGames },
-          'live': { title: 'Live Казино', games: LiveGames },
-          'roulette': { title: 'Рулетка', games: rouletteGames },
-          // Сюди можна додати інші категорії, наприклад 'slots'
-          'slots': { title: 'Слоты', games: allGames }, // Наприклад, слоти показують всі ігри
-          'table': { title: 'Столы', games: Table },
+          'live': { title: 'Live Казино', games: LiveGames, requiresVerification: true },     // <--- ТУТ
+          'roulette': { title: 'Рулетка', games: rouletteGames, requiresVerification: true }, // <--- ТУТ
+          'slots': { title: 'Слоты', games: allGames },
+          'table': { title: 'Столы', games: Table, requiresVerification: true },              // <--- ТУТ
         };
         
-        // Повертаємо потрібні дані або дані за замовчуванням, якщо категорію не знайдено
-        return categoryData[category] || { title: 'Игры', games: allGames };
+        const data = categoryData[category] || { title: 'Игры', games: allGames };
+
+        return { 
+          title: data.title, 
+          games: data.games,
+          requiresVerification: data.requiresVerification || false // Передаємо у компонент
+        };
       }
     },
-    // --- КІНЕЦЬ ОСНОВНИХ ЗМІН ---
     {
       path: "/drops-wins",
       name: "drops-wins",
       component: DropsAndWinsView,
     },
-
     {
       path: "/bonuses",
       name: "bonuses",
