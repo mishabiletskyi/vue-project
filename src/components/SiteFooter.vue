@@ -22,9 +22,6 @@
         <ul class="footer-links">
             <li><a href="mailto:support@example.com" class="contact-link">support@cristobest.com</a></li>
             <li><p class="copyright">© 2025 Cristo-Best • Casino</p></li>
-            <a href="https://freekassa.net" target="_blank" rel="noopener noreferrer">
-  <img src="https://cdn.freekassa.net/banners/big-dark-1.png" title="Прием платежей">
-</a>
         </ul>
       </div>
     </div>
