@@ -158,6 +158,8 @@ import BonusInfoView from "../views/BonusInfoView.vue";
 import AccountView from "../views/AccountView.vue";
 import TableView from "../views/TableView.vue"; 
 import PlayGameView from "../views/PlayGameView.vue"; 
+import PaymentSuccessView from "../views/PaymentSuccessView.vue"; // Додати
+import PaymentFailView from "../views/PaymentFailView.vue";       // Додати
 
 // --- Імпортуємо ВСІ потрібні дані для ігор ---
 import { allGames, popularGames, newGames, LiveGames, rouletteGames, Table } from "@/data/mockData.js"; 
@@ -270,6 +272,16 @@ const router = createRouter({
       path: "/play/:id",
       name: "play-game",
       component: PlayGameView,
+    },
+    {
+      path: "/payment-success",
+      name: "payment-success",
+      component: PaymentSuccessView,
+    },
+    {
+      path: "/payment-fail",
+      name: "payment-fail",
+      component: PaymentFailView,
     },
   ],
 });
