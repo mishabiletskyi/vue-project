@@ -6,10 +6,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-async function createMD5(message: string) {
+async function createSHA256(message: string) {
     const encoder = new TextEncoder();
     const data = encoder.encode(message);
-    const hashBuffer = await crypto.subtle.digest('MD5', data);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
@@ -20,22 +20,27 @@ serve(async (req) => {
   try {
     const { amount, userId } = await req.json()
     
-    // Беремо Merchant ID та Секретне слово 1
-    const merchantId = Deno.env.get('FREEKASSA_MERCHANT_ID') // Переконайся що зберіг його
-    const secretWord1 = Deno.env.get('FREEKASSA_SECRET_1')
-
-    if (!merchantId || !secretWord1) { throw new Error('FreeKassa keys not set') }
-
-    const orderId = `order_${userId}_${Date.now()}`
-    const currency = 'RUB'; // FreeKassa приймає RUB нормально
+    // Отримуємо ключ
+    const secretKey = Deno.env.get('INTERNAL_SECRET_KEY')
     
-    // Формула підпису для створення посилання: md5(merchant_id:amount:secret1:currency:order_id)
-    const signString = `${merchantId}:${amount}:${secretWord1}:${currency}:${orderId}`;
-    const sign = await createMD5(signString);
+    // 👇👇👇 ТУТ БУЛА ПОМИЛКА. СТАВИМО ПОСИЛАННЯ НА AZURE 👇👇👇
+    const bookstoreUrl = "https://cristo-tales-api.graypebble-a77dafcc.westeurope.azurecontainerapps.io/payment/checkout"; 
 
-    // Генеруємо посилання
-    // currency=RUB, em (email) - не обов'язково
-    const payUrl = `https://pay.freekassa.ru/?m=${merchantId}&oa=${amount}&o=${orderId}&s=${sign}&currency=${currency}`;
+    if (!secretKey) { throw new Error('INTERNAL_SECRET_KEY not set in Supabase') }
+
+    // Перетворюємо amount на рядок явно, щоб точно співпало з Python
+    const amountStr = String(amount);
+
+    // Формуємо рядок: userId:amount:secretKey
+    // Це має бути ідентично тому, як в Python: f"{user_id}:{amount}:{INTERNAL_SECRET_KEY}"
+    const signString = `${userId}:${amountStr}:${secretKey}`;
+    
+    const sign = await createSHA256(signString);
+
+    // Генеруємо фінальне посилання
+    const payUrl = `${bookstoreUrl}?amount=${amountStr}&user_id=${userId}&sign=${sign}`;
+
+    console.log(`Generated Link: ${payUrl}`);
 
     return new Response(JSON.stringify({ pay_url: payUrl }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
