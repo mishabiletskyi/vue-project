@@ -7,73 +7,113 @@ const createImageUrl = (localPath) => `${SUPABASE_URL}${localPath}`;
 // --- БАЗОВІ СЛОВА ДЛЯ ГЕНЕРАЦІЇ ---
 
 // Англійською мовою
-const prefixes = ['Lucky', 'Ace', 'Royal', 'Grand', 'Mega', 'Poker', 'Slot', 'Cash', 'Gold', 'Dr', 'Mr', 'Big', 'Mad', 'Spin'];
-const nouns = ['Shark', 'Joker', 'King', 'Queen', 'Spade', 'Heart', 'Chip', 'Spinner', 'Whale', 'Hunter', 'Wolf', 'Lion', 'Dragon', 'Winner', 'Player', 'Bet'];
-const names = ['Alex', 'Mike', 'Anna', 'Kate', 'John', 'Chris', 'Steve', 'Jack', 'Lana', 'Maria', 'Ivan', 'Serg', 'Den', 'Max', 'Olga'];
-const coolWords = ['Shadow', 'Phantom', 'Blaze', 'Vortex', 'Spectre', 'Ronin', 'Zenith', 'Cipher', 'Matrix', 'Gamble', 'Winner', 'Raptor', 'Cobra'];
+const prefixes = ['Lucky', 'Ace', 'Royal', 'Grand', 'Mega', 'Poker', 'Slot', 'Cash', 'Gold', 'Dr', 'Mr', 'Big', 'Mad', 'Spin', 'Super', 'Iron'];
+const nouns = ['Shark', 'Joker', 'King', 'Queen', 'Spade', 'Heart', 'Chip', 'Spinner', 'Whale', 'Hunter', 'Wolf', 'Lion', 'Dragon', 'Winner', 'Player', 'Bet', 'Man', 'Boy'];
+const names = ['Alex', 'Mike', 'Anna', 'Kate', 'John', 'Chris', 'Steve', 'Jack', 'Lana', 'Maria', 'Ivan', 'Serg', 'Den', 'Max', 'Olga', 'Nick', 'Dany'];
+const coolWords = ['Shadow', 'Phantom', 'Blaze', 'Vortex', 'Spectre', 'Ronin', 'Zenith', 'Cipher', 'Matrix', 'Gamble', 'Raptor', 'Cobra', 'Ninja', 'Kratos'];
 
 // Російською мовою
-const cyrillicPrefixes = ['Король', 'Туз', 'Фартовый', 'Император', 'Мега', 'Царь', 'Капитан', 'Лорд'];
-const cyrillicNouns = ['Карт', 'Фишек', 'Спинов', 'Удачи', 'Джoкeр', 'Джекпот', 'Охотник', 'Волк', 'Дракон', 'Победы'];
-const cyrillicNames = ['Дима', 'Олег', 'Иван', 'Анна', 'Лена', 'Макс', 'Сергей', 'Юрий', 'Катя', 'Света'];
-const cyrillicCoolWords = ['Фантом', 'Удача', 'Профи', 'Легенда', 'Счастливчик', 'Призрак', 'Зенит', 'Магнат', 'Миллион'];
+const cyrillicPrefixes = ['Король', 'Туз', 'Фартовый', 'Император', 'Мега', 'Царь', 'Капитан', 'Лорд', 'Мастер'];
+const cyrillicNouns = ['Карт', 'Фишек', 'Спинов', 'Удачи', 'Джoкeр', 'Джекпот', 'Охотник', 'Волк', 'Дракон', 'Победы', 'Игрок'];
+const cyrillicNames = ['Дима', 'Олег', 'Иван', 'Анна', 'Лена', 'Макс', 'Сергей', 'Юрий', 'Катя', 'Света', 'Вика', 'Артем'];
+const cyrillicCoolWords = ['Фантом', 'Удача', 'Профи', 'Легенда', 'Счастливчик', 'Призрак', 'Зенит', 'Магнат', 'Миллион', 'Зверь'];
 
 // --- ЛОГІКА ГЕНЕРАЦІЇ ---
 
 const generatedNames = new Set();
 
-// Шаблон 1: Префікс + Іменник (напр. LuckyShark, MegaSpinner)
+// ДОДАТОК: Генерируем простих юзерів (User1234, player_99), щоб розбавити "красиві" ніки
+for (let i = 0; i < 50; i++) {
+    const num = Math.floor(Math.random() * 10000);
+    generatedNames.add(`user${num}`); // user4821
+    generatedNames.add(`player_${Math.floor(Math.random() * 999)}`); // player_12
+    if (i < 20) generatedNames.add(`guest${Math.floor(Math.random() * 9999)}`); // guest3211
+}
+
+// Шаблон 1: Префікс + Іменник
 for (const prefix of prefixes) {
   for (const noun of nouns) {
-    generatedNames.add(`${prefix}${noun}`);
+    // 50% що буде LuckyShark, 30% що luckyshark (маленькими), 20% що Lucky_Shark
+    const rand = Math.random();
+    if (rand > 0.8) {
+        generatedNames.add(`${prefix}_${noun}`);
+    } else if (rand > 0.5) {
+        generatedNames.add(`${prefix.toLowerCase()}${noun.toLowerCase()}`);
+    } else {
+        generatedNames.add(`${prefix}${noun}`);
+    }
   }
 }
 
-// Шаблон 2: Ім'я + Числа (напр. Alex777, Kate_88)
+// Шаблон 2: Ім'я + Числа (Більше варіативності)
 for (const name of names) {
-  const number = Math.floor(Math.random() * 900) + 100; // 100-999
-  const year = Math.floor(Math.random() * (2005 - 1980 + 1)) + 1980; // 1980-2005
-  generatedNames.add(`${name}${number}`);
-  generatedNames.add(`${name}_${year}`);
+  // Варіант 1: Просто ім'я (рідкісно)
+  if (Math.random() > 0.7) generatedNames.add(name);
+
+  // Варіант 2: Ім'я + рік
+  const year = Math.floor(Math.random() * (2005 - 1980 + 1)) + 1980;
+  generatedNames.add(`${name}${year}`); // Alex1990
+  
+  // Варіант 3: Маленькими + короткі цифри
+  const shortNum = Math.floor(Math.random() * 999);
+  generatedNames.add(`${name.toLowerCase()}${shortNum}`); // alex12
+  
+  // Варіант 4: Через крапку або підкреслення
+  generatedNames.add(`${name}_${Math.floor(Math.random() * 99)}`); // Alex_99
 }
 
-// Шаблон 3: Одиночні круті слова + числа (напр. Shadow21, xPhantomx)
+// Шаблон 3: Круті слова
 for (const word of coolWords) {
-    const number = Math.floor(Math.random() * 99) + 1; // 1-99
-    generatedNames.add(`${word}${number}`);
+    const number = Math.floor(Math.random() * 99) + 1; 
+    
+    generatedNames.add(`${word}${number}`); // Shadow21
+    generatedNames.add(word); // Просто Shadow (чистий нік)
+    
+    if (Math.random() > 0.5) {
+        generatedNames.add(`x${word}x`); // xShadowx
+    }
+    // Іноді маленькими
     if (Math.random() > 0.7) {
-        generatedNames.add(`x${word}x`);
+        generatedNames.add(`${word.toLowerCase()}_${number}`); // shadow_21
     }
 }
 
-// Шаблон 4: Кириличні ніки (напр. КорольФишек, Дима_777)
+// Шаблон 4: Кириличні ніки
 for (const prefix of cyrillicPrefixes) {
     for (const noun of cyrillicNouns) {
-        generatedNames.add(`${prefix}${noun}`);
+        // Теж міксуємо регістр
+        if (Math.random() > 0.6) {
+             generatedNames.add(`${prefix}${noun}`);
+        } else {
+             generatedNames.add(`${prefix}_${noun}`);
+        }
     }
 }
 for (const name of cyrillicNames) {
-    const number = ['77', '88', '99', '777', '888'][Math.floor(Math.random() * 5)];
+    // Чисті імена
+    generatedNames.add(name); 
+    
+    const number = ['77', '88', '99', '777', '123'][Math.floor(Math.random() * 5)];
     generatedNames.add(`${name}${number}`);
-    generatedNames.add(`${name}_${number}`);
+    generatedNames.add(`${name.toLowerCase()}_${number}`); // дима_777
 }
 for (const word of cyrillicCoolWords) {
-    generatedNames.add(word); // Деякі ніки без чисел
-    generatedNames.add(`${word}${Math.floor(Math.random() * 99) + 1}`);
+    generatedNames.add(word); 
+    generatedNames.add(`${word}${Math.floor(Math.random() * 2024)}`);
 }
 
 // --- ФІНАЛІЗАЦІЯ ---
 
-// Перетворюємо Set в масив, щоб гарантувати унікальність
+// Перетворюємо Set в масив
 let allPossibleNames = Array.from(generatedNames);
 
-// Перемішуємо масив для випадкового порядку
+// Перемішуємо масив (алгоритм Фішера-Єйтса)
 for (let i = allPossibleNames.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
   [allPossibleNames[i], allPossibleNames[j]] = [allPossibleNames[j], allPossibleNames[i]];
 }
 
-// Експортуємо фінальний список
+// Експортуємо
 export const playerNamesArray = allPossibleNames;
 
 
@@ -124,7 +164,7 @@ export const gameData = originalGameData.map(game => ({
 // --- Дані для таблиці лідерів ---
 function generateLeaderboardData() {
   const leaderboard = [];
-  let score = 120904;
+  let score = 96711;
   const nicknames = [...playerNamesArray].sort(() => 0.5 - Math.random());
   for (let i = 0; i < 100; i++) {
     leaderboard.push({ place: i + 1, player: nicknames[i] || `Player${i + 1}`, score });
